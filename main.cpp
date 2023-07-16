@@ -3,23 +3,14 @@
 #include <conio.h>
 #include <windows.h>
 
-void setTerminalWindowSize(int columns, int rows) {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hConsole != INVALID_HANDLE_VALUE) {
-        SMALL_RECT rect = {0, 0, static_cast<SHORT>(columns - 1), static_cast<SHORT>(rows - 1)};
-        COORD size = {static_cast<SHORT>(columns), static_cast<SHORT>(rows)};
-        SetConsoleWindowInfo(hConsole, TRUE, &rect);
-        SetConsoleScreenBufferSize(hConsole, size);
-    }
-}
 
 void greet(){
 std::cout<<"Press any key to continue..."<<std::endl;
 _getch();        
 
 std::cout << "                                o" << std::endl;
-std::cout << "                            .-\"'|" << std::endl;
-std::cout << "                            |-\"'|" << std::endl;
+std::cout << "                           .-\"'|" << std::endl;
+std::cout << "                           |-\"'|" << std::endl;
 std::cout << "                                |   _.-'`." << std::endl;
 std::cout << "                               _|\"-\"_.-'|.`." << std::endl;
 std::cout << "                              |:^.-'_.-'`.;.`." << std::endl;
