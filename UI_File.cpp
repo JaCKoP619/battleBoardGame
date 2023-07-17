@@ -1,14 +1,16 @@
+
+#include "UI_File.h"
+
 #include <iostream>
 #include <conio.h>
 #include <chrono>
 #include <fstream>
 #include <string>
-#include "UI_File.h"
-
+#include <array>
 void greet()
 {
-    std::chrono::seconds pauseDuration(1);
-    std::cout << R"(
+  std::chrono::seconds pauseDuration(1);
+  std::cout << R"(
 _______  _______  _______ _________          _______  _______                     
 (  ____ \(  ___  )(  ____ )\__   __/|\     /|(  ____ )(  ____ \                    
 | (    \/| (   ) || (    )|   ) (   | )   ( || (    )|| (    \/                    
@@ -74,9 +76,48 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
  __ / /___ _ / ___// //_/___   / _ \                                   
 / // // _ `// /__ / ,<  / _ \ / ___/                                   
 \___/ \_,_/ \___//_/|_| \___//_/           
-                                                                                    )" << std::endl;
+                                                                                    )"
+            << std::endl;
 
-    std::cout << "Press any key to continue..." << std::endl;
-    _getch();
-    system("cls");
+  std::cout << "Press any key to continue..." << std::endl;
+  _getch();
+  system("cls");
+}
+const int row = 35, col = 35;
+std::array<std::array<char, 35>, 35> readMap()
+{
+  std::array<std::array<char, col>, row> mapArr;
+  std::ifstream file("map.txt");
+
+  if (file)
+  {
+    for (std::size_t i = 0; i < row; ++i)
+    {
+      for (std::size_t j = 0; j < col; ++j)
+      {
+        file >> mapArr[i][j];
+      }
+    }
+
+    file.close();
+  }
+  else
+  {
+    std::cout << "Failed to open the file." << std::endl;
+  }
+
+  return mapArr;
+}
+
+void printMap(std::array<std::array<char, col>, row> mapArr)
+{
+
+  for (std::size_t i = 0; i < row; ++i)
+  {
+    for (std::size_t j = 0; j < col; ++j)
+    {
+      std::cout << mapArr[i][j];
+    }
+    std::cout << std::endl;
+  }
 }
