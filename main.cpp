@@ -1,4 +1,5 @@
-#include "header.h"
+#include "class.h"
+#include "UI_File.h"
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
