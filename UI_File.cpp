@@ -7,7 +7,10 @@
 #include <fstream>
 #include <string>
 #include <array>
+
+const int row = 35, col = 35;
 void greet()
+
 {
   std::chrono::seconds pauseDuration(1);
   std::cout << R"(
@@ -83,7 +86,7 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
   _getch();
   system("cls");
 }
-const int row = 35, col = 35;
+
 std::array<std::array<char, 35>, 35> readMap()
 {
   std::array<std::array<char, col>, row> mapArr;
@@ -91,7 +94,7 @@ std::array<std::array<char, 35>, 35> readMap()
 
   if (file)
   {
-    for (std::size_t i = 0; i < row; ++i)
+    for (std::size_t i = 0; i < row-1; ++i)
     {
       for (std::size_t j = 0; j < col; ++j)
       {
@@ -112,7 +115,7 @@ std::array<std::array<char, 35>, 35> readMap()
 void printMap(std::array<std::array<char, col>, row> mapArr)
 {
 
-  for (std::size_t i = 0; i < row; ++i)
+  for (std::size_t i = 0; i < row-1; ++i)
   {
     for (std::size_t j = 0; j < col; ++j)
     {
