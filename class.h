@@ -1,7 +1,6 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef CLASS_H
+#define CLASS_H
 
-void greet();
 int typeToModifierArr(char chartype);
 
 class Unit
