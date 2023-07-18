@@ -5,10 +5,14 @@
 #include <conio.h>
 #include <chrono>
 #include <fstream>
-#include <string>
+#include <filesystem>
 #include <array>
 
+namespace fs = std::filesystem;
+
 const int row = 35, col = 35;
+
+//* opening text message display and wait for input to carry on---------------------------------------------------------------
 void greet()
 
 {
@@ -86,36 +90,60 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
   _getch();
   system("cls");
 }
-
+//* read map out of trxt file function ---------------------------------------------------------------------------------------
 std::array<std::array<char, 35>, 35> readMap()
 {
   std::array<std::array<char, col>, row> mapArr;
-  std::ifstream file("map.txt");
+  fs::path filePath = "map.txt";
 
-  if (file)
+  try
   {
-    for (std::size_t i = 0; i < row-1; ++i)
+    if (fs::exists(filePath))
     {
-      for (std::size_t j = 0; j < col; ++j)
+      try
       {
-        file >> mapArr[i][j];
+        fs::file_status fileStatus = fs::status(filePath);
+        std::ifstream file(filePath);
+        for (std::size_t i = 0; i < row - 1; ++i)
+        {
+          for (std::size_t j = 0; j < col; ++j)
+          {
+            file >> mapArr[i][j];
+          }
+        }
+
+        file.close();
+      }
+      catch (const std::filesystem::filesystem_error &e)
+      {
+        std::cout << e.what() << std::endl;
+        std::cout << "Press any key to continue..." << std::endl;
+        _getch();
       }
     }
-
-    file.close();
+    else
+    {
+      if (fs::exists(filePath) == false)
+      {
+        throw std::runtime_error("Map file not found at path: " + filePath.string());
+      }
+    }
   }
-  else
+  catch (const std::runtime_error &e)
   {
-    std::cout << "Failed to open the file." << std::endl;
+    std::cout << e.what() << std::endl;
+    std::cout << "Press any key to continue..." << std::endl;
+    _getch();
   }
 
   return mapArr;
 }
 
+// * print map function(mostly 4 testing but may reuse) -----------------------------------------------------------------------
 void printMap(std::array<std::array<char, col>, row> mapArr)
 {
 
-  for (std::size_t i = 0; i < row-1; ++i)
+  for (std::size_t i = 0; i < row - 1; ++i)
   {
     for (std::size_t j = 0; j < col; ++j)
     {
