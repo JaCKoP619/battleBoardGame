@@ -1,14 +1,23 @@
+
+#include "UI_File.h"
+
 #include <iostream>
 #include <conio.h>
 #include <chrono>
 #include <fstream>
-#include <string>
-#include "UI_File.h"
+#include <filesystem>
+#include <array>
 
+namespace fs = std::filesystem;
+
+const int row = 35, col = 35;
+
+//* opening text message display and wait for input to carry on---------------------------------------------------------------
 void greet()
+
 {
-    std::chrono::seconds pauseDuration(1);
-    std::cout << R"(
+  std::chrono::seconds pauseDuration(1);
+  std::cout << R"(
 _______  _______  _______ _________          _______  _______                     
 (  ____ \(  ___  )(  ____ )\__   __/|\     /|(  ____ )(  ____ \                    
 | (    \/| (   ) || (    )|   ) (   | )   ( || (    )|| (    \/                    
@@ -74,9 +83,85 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
  __ / /___ _ / ___// //_/___   / _ \                                   
 / // // _ `// /__ / ,<  / _ \ / ___/                                   
 \___/ \_,_/ \___//_/|_| \___//_/           
-                                                                                    )" << std::endl;
+                                                                                    )"
+            << std::endl;
 
+  std::cout << "Press any key to continue..." << std::endl;
+  _getch();
+  system("cls");
+}
+//* read map out of trxt file function ---------------------------------------------------------------------------------------
+std::array<std::array<char, 35>, 35> readMap()
+{
+  std::array<std::array<char, col>, row> mapArr;
+  fs::path filePath = "map.txt";
+
+  try
+  {
+    if (fs::exists(filePath))
+    {
+      try
+      {
+        fs::file_status fileStatus = fs::status(filePath);
+        std::ifstream file(filePath);
+        for (std::size_t i = 0; i < row - 1; ++i)
+        {
+          for (std::size_t j = 0; j < col; ++j)
+          {
+            file >> mapArr[i][j];
+          }
+        }
+
+        file.close();
+      }
+      catch (const std::filesystem::filesystem_error &e)
+      {
+        std::cout << e.what() << std::endl;
+        std::cout << "Press any key to continue..." << std::endl;
+        _getch();
+      }
+    }
+    else
+    {
+      if (fs::exists(filePath) == false)
+      {
+        throw std::runtime_error("Map file not found at path: " + filePath.string());
+      }
+    }
+  }
+  catch (const std::runtime_error &e)
+  {
+    std::cout << e.what() << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
     _getch();
-    system("cls");
+  }
+  return mapArr;
+}
+
+// * print map function(mostly 4 testing but may reuse) -----------------------------------------------------------------------
+void printMap(std::array<std::array<char, col>, row> mapArr)
+{
+
+  for (std::size_t i = 0; i < row - 1; ++i)
+  {
+    for (std::size_t j = 0; j < col; ++j)
+    {
+      std::cout << mapArr[i][j];
+    }
+    std::cout << std::endl;
+  }
+}
+
+char menu()
+{
+char input;
+std::cout << "Press 1 to list your units with modifiers" << std::endl;
+std::cout << "Press 2 give order to unit" << std::endl;
+std::cout << "Press 3 to commence recruitment of unit" << std::endl;
+
+
+
+input = getch ();
+return input;
+
 }

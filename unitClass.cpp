@@ -1,7 +1,6 @@
 #include <iostream>
 #include <conio.h>
-#include "class.h"
-
+#include "unitClass.h"
 
 int unitModifiers[7][5] = {
     //? format:
@@ -47,7 +46,7 @@ int typeToModifierArr(char chartype)
     }
 }
 
-Unit::Unit(char unitType, int id)
+Unit::Unit(char unitType, int id, bool assignTeam)
 { //! constructor
     type = unitType;
     ID = id;
@@ -58,8 +57,10 @@ Unit::Unit(char unitType, int id)
     cost = unitModifiers[tempType][2];
     range = unitModifiers[tempType][3];
     timeOfDeployment = unitModifiers[tempType][4];
+    team = assignTeam;
 
-    hpCurr = hpMax;
+
+    hp = hpMax;
     timeRemaining = timeOfDeployment;
 };
 
@@ -78,14 +79,14 @@ void Unit::setActive()
     Unit::active = true;
 };
 
-void Unit::damage(int damage)
+void Unit::takeDamage(int damage)
 {
-    Unit::hpCurr -= damage;
+    Unit::hp -= damage;
 };
 
 bool Unit::checkIfDead()
 {
-    if (Unit::hpCurr <= 0)
+    if (Unit::hp <= 0)
     {
         return true;
     }
@@ -94,3 +95,18 @@ bool Unit::checkIfDead()
         return false;
     }
 };
+
+
+
+Base::Base(bool assignTeam) : Unit('B', 1, assignTeam)
+{
+    team = assignTeam;
+    hp = hpMax=200;
+    gold = 1000;                //starting gold
+    if (team==true){
+        x,y=0;
+    }
+    else{
+        x,y=35;
+    }
+};  
