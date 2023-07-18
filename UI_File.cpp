@@ -135,7 +135,6 @@ std::array<std::array<char, 35>, 35> readMap()
     std::cout << "Press any key to continue..." << std::endl;
     _getch();
   }
-
   return mapArr;
 }
 
@@ -151,4 +150,18 @@ void printMap(std::array<std::array<char, col>, row> mapArr)
     }
     std::cout << std::endl;
   }
+}
+
+char menu()
+{
+char input;
+std::cout << "Press 1 to list your units with modifiers" << std::endl;
+std::cout << "Press 2 give order to unit" << std::endl;
+std::cout << "Press 3 to commence recruitment of unit" << std::endl;
+
+
+
+input = getch ();
+return input;
+
 }
