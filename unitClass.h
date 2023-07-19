@@ -3,6 +3,8 @@
 
 int typeToModifierArr(char chartype);
 
+std::vector<Unit> blueUnits;
+std::vector<Unit> redUnits;
 class Unit
 {
 protected:

@@ -10,8 +10,7 @@ int main()
         std::array<std::array<char, col>, row> mapArr;
 
         //* setup of vectors for storing units and constructing starting bases-------------
-        std::vector<Unit> blueUnits;
-        std::vector<Unit> redUnits;
+
         Base blueBase(true);
         Base redBase(false);
 

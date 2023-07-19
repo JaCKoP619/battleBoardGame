@@ -3,6 +3,10 @@
 #include <cmath>
 #include <string>
 #include "unitClass.h"
+#include <vector>
+
+std::vector<Unit> blueUnits;
+std::vector<Unit> redUnits;
 
 int unitModifiers[7][5] = {
     //? format:
@@ -262,6 +266,26 @@ void Base::turn()
         timeRemaining--;
         if (timeRemaining == 0)
         {
+            switch (team)
+            {
+            case true:
+                blueUnits.push_back(Unit(deployedUnit, idCount, true));
+                iddle = true;
+                timeRemaining = NULL;
+                idCount++;
+                deployedUnit=NULL;
+                break;
+            case false:
+                blueUnits.push_back(Unit(deployedUnit, idCount, false));
+                iddle = true;
+                timeRemaining = NULL;
+                idCount++;
+                deployedUnit=NULL;
+                break;
+            default:
+                throw std::runtime_error("base team value error");
+                break;
+            }
         }
     }
 };
