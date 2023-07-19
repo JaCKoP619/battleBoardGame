@@ -9,7 +9,7 @@ int unitModifiers[7][5] = {
     // *{hp,spd,cost,range,timeOfDeployment}
     {70, 5, 400, 1, 5}, // knights   "K"
     {60, 5, 250, 1, 3}, // Swordsman "S"
-    {40, 2, 250, 1, 3}, // Archers   "A"
+    {40, 2, 250, 5, 3}, // Archers   "A"
     {50, 2, 200, 2, 3}, // pikemans  "P"
     {90, 2, 500, 1, 4}, // Ram       "R"
     {50, 2, 800, 7, 6}, // Catapults "C"
@@ -54,7 +54,7 @@ Unit::Unit(char unitType, int id, bool assignTeam)
 { //! constructor
     type = unitType;
     ID = id;
-    tempType = typeToModifierArr(unitType); // using the predefined table of modifiers
+    int tempType = typeToModifierArr(unitType); // using the predefined table of modifiers
 
     hpMax = unitModifiers[tempType][0];
     spd = unitModifiers[tempType][1];
@@ -62,7 +62,16 @@ Unit::Unit(char unitType, int id, bool assignTeam)
     range = unitModifiers[tempType][3];
     timeOfDeployment = unitModifiers[tempType][4];
     team = assignTeam;
-
+    if (team == true)
+    {
+        x = 0;
+        y = 0;
+    }
+    else
+    {
+        x = 35;
+        y = 35;
+    }
     hp = hpMax;
 };
 
@@ -98,18 +107,16 @@ bool Unit::checkIfDead()
     }
 };
 //* method to display info about the unit (possibly for listing units)----------------------------------------
- void Unit::info()
+void Unit::info()
 {
     std::string typeStr;
     std::string activeStr;
     if (active == true)
-    {
         activeStr = "Active";
-    }
+
     else
-    {
         activeStr = "Iddle";
-    }
+
     switch (type)
     {
     case 'K':
@@ -138,8 +145,8 @@ bool Unit::checkIfDead()
         break;
     }
 
-    std::cout << "Unit ID: " << ID << "is a " << typeStr << ". Position: " << x << "/" << y << ". Speed: " << spd << ". Range: " << range << std::endl;
-    std::cout << "Currently " << activeStr << " and has " << hp << " health points." << std::endl;
+    std::cout << "Unit ID: " << ID << " is a " << typeStr << ". Position: " << x << "/" << y << ". Speed: " << spd << ". Range: " << range << std::endl;
+    std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp." << std::endl;
 };
 //* method for moving unit witch movement range check-----------------------------------------------------------
 void Unit::relocate(int movX, int movY)
@@ -165,6 +172,7 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
     type = 'B';
     ID = 0;
+    idCount = 1;
     team = assignTeam;
     hp = hpMax = 200;
     gold = 1000; // starting gold
@@ -180,8 +188,10 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     }
     active = false;
 };
+
 //* display info about the base-------------------------------------------------------
-void Base::info()  {
+void Base::info()
+{
     std::string typeStr;
 
     if (active == true)
@@ -214,12 +224,44 @@ void Base::info()  {
             break;
         }
 
-        std::cout << "Unit ID: " << Base::ID << " is a BASE. Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << std::endl;
+        std::cout << "This is a BASE. Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << "/" << hpMax << std::endl;
         std::cout << "Currently Deploying" << typeStr << " unit. Time left: " << Base::timeRemaining << std::endl;
+        std::cout << gold << " golden coins in the treasury." << std::endl;
     }
     else
     {
-        std::cout << "Unit ID: " << Base::ID <<" is a Base"<< ". Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << std::endl;
+        std::cout << "This is a BASE. Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << std::endl;
         std::cout << "Currently Iddle" << std::endl;
+        std::cout << gold << " golden coins in the treasury." << std::endl;
+    }
+};
+void Base::recruitUnit(char type, int id)
+{
+    int tempType;
+    if (iddle == true)
+    {
+        deployedUnit = type;
+        tempType = typeToModifierArr(deployedUnit); // using the predefined table of modifiers
+        int amount = unitModifiers[tempType][2];
+        if (gold >= amount)
+        {
+            gold -= amount;
+            iddle = false; // giving order to base
+            timeRemaining = unitModifiers[tempType][4];
+        }
+        else
+        {
+        }
+    }
+};
+
+void Base::turn()
+{
+    if (iddle == false)
+    {
+        timeRemaining--;
+        if (timeRemaining == 0)
+        {
+        }
     }
 };

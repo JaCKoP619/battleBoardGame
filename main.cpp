@@ -20,8 +20,8 @@ int main()
         mapArr = readMap();
         printMap(mapArr);
        //mapMenu();
-        //blueBase.info();
-        redBase.info(); 
+        blueUnits.push_back(Unit('A',1,true));
+        blueUnits[0].info();
 
         return 0;
 }

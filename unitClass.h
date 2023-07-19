@@ -8,7 +8,6 @@ class Unit
 protected:
         bool team; // true for blue and false for red, just a binary expression, not a boolean as true for me and false for enemy.
         int ID;    // unit id, should
-
         int x;     // x position
         int y;     // y position
         int hpMax; // constant value for maximum hp for given unit type
@@ -21,8 +20,7 @@ private:
         int spd;              // unit movement range for time of turn
         int cost;             // unit deployment cost
         int range;            // unit attack range
-        int timeOfDeployment; // TODO dont know if will be used here or in the Base class
-        int tempType;         // temporary variable to help pull unit type data from arrays
+        int timeOfDeployment; // TODO dont know if will be used here or in the Base clas
 
 public:
         Unit(char unitType, int ID, bool assignTeam);
@@ -31,7 +29,7 @@ public:
         void setActive();
         void takeDamage(int damage);
         bool checkIfDead();
-        void turnTick();
+        bool turn();
         void relocate(int movX, int movY); // implementation of unit movement witch movement range (int spd) checking
         virtual void info();
 };
@@ -49,11 +47,12 @@ protected:
         int y;      // y position of base
         int timeRemaining;
         char deployedUnit; // type of unit being deployed
+        int idCount;        // number of units deployed, won't be subtracted when unit is killed
 public:
         Base(bool assignTeam);
         bool checkIfDead();
-        void turnTick();
-        void recruitUnit(char type, int id, bool assignTeam);
+        void turn();
+        void recruitUnit(char type, int id);
         void info() override;
 };
 
