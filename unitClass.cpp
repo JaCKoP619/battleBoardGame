@@ -1,11 +1,12 @@
 #include <iostream>
 #include <conio.h>
 #include <cmath>
+#include <string>
 #include "unitClass.h"
 
 int unitModifiers[7][5] = {
-//? format:
-// *{hp,spd,cost,range,timeOfDeployment}
+    //? format:
+    // *{hp,spd,cost,range,timeOfDeployment}
     {70, 5, 400, 1, 5}, // knights   "K"
     {60, 5, 250, 1, 3}, // Swordsman "S"
     {40, 2, 250, 1, 3}, // Archers   "A"
@@ -40,13 +41,15 @@ int typeToModifierArr(char chartype)
     case 'W':
         return 6;
         break;
-
+    case 'B':
+        return NULL;
+        break;
     default:
-        throw std::runtime_error("Invalid UnitType (char)");
+        // throw std::runtime_error("Invalid UnitType (char)");
         break;
     }
 }
-
+//? Unit methods-----------------------------------------------------------------------------
 Unit::Unit(char unitType, int id, bool assignTeam)
 { //! constructor
     type = unitType;
@@ -60,9 +63,7 @@ Unit::Unit(char unitType, int id, bool assignTeam)
     timeOfDeployment = unitModifiers[tempType][4];
     team = assignTeam;
 
-
     hp = hpMax;
-    timeRemaining = timeOfDeployment;
 };
 
 int Unit::positionX()
@@ -96,43 +97,129 @@ bool Unit::checkIfDead()
         return false;
     }
 };
+//* method to display info about the unit (possibly for listing units)----------------------------------------
+ void Unit::info()
+{
+    std::string typeStr;
+    std::string activeStr;
+    if (active == true)
+    {
+        activeStr = "Active";
+    }
+    else
+    {
+        activeStr = "Iddle";
+    }
+    switch (type)
+    {
+    case 'K':
+        typeStr = "Knight";
+        break;
+    case 'S':
+        typeStr = "Swordsman";
+        break;
+    case 'A':
+        typeStr = "Archer";
+        break;
+    case 'P':
+        typeStr = "Pikeman";
+        break;
+    case 'R':
+        typeStr = "Ram";
+        break;
+    case 'C':
+        typeStr = "Catapult";
+        break;
+    case 'W':
+        typeStr = "Worker";
+        break;
+    default:
+        // throw std::runtime_error("Invalid UnitType (char)");
+        break;
+    }
 
+    std::cout << "Unit ID: " << ID << "is a " << typeStr << ". Position: " << x << "/" << y << ". Speed: " << spd << ". Range: " << range << std::endl;
+    std::cout << "Currently " << activeStr << " and has " << hp << " health points." << std::endl;
+};
+//* method for moving unit witch movement range check-----------------------------------------------------------
 void Unit::relocate(int movX, int movY)
 {
-if(spd >= (sqrt(pow(2.0, (x-movX)))+sqrt(pow(2.0, (y-movY))))){
+    if (spd >= (sqrt(pow(2.0, (x - movX))) + sqrt(pow(2.0, (y - movY)))))
+    {
 
-x=movX;
-y=movY;
-}else{
-    std::cout<<"Exceeded unit's range!"<<std::endl;
-    std::cout<<"pres any key to continue..."<<std::endl;
-    getch();
-    system("cls");
-}
-
-
+        x = movX;
+        y = movY;
+    }
+    else
+    {
+        std::cout << "Exceeded unit's range!" << std::endl;
+        std::cout << "pres any key to continue..." << std::endl;
+        getch();
+        system("cls");
+    }
 };
 
-//* Base methods ----------------------------------------------------------------
+//*?Base methods -------------------------------------------------------------------------------------------
 //! base constructor
 Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
     type = 'B';
     ID = 0;
     team = assignTeam;
-    hp = hpMax=200;
-    gold = 1000;                //starting gold
-    if (team==true){            //setting base position depending on a team
-        x=0;
-        y=0;
+    hp = hpMax = 200;
+    gold = 1000; // starting gold
+    if (team == true)
+    { // setting base position depending on a team
+        x = 0;
+        y = 0;
     }
-    else{
-        x=35;
-        y=35;
+    else
+    {
+        x = 35;
+        y = 35;
     }
+    active = false;
 };
+//* display info about the base-------------------------------------------------------
+void Base::info()  {
+    std::string typeStr;
 
+    if (active == true)
+    {
+        switch (deployedUnit)
+        {
+        case 'K':
+            typeStr = "Knight";
+            break;
+        case 'S':
+            typeStr = "Swordsman";
+            break;
+        case 'A':
+            typeStr = "Archer";
+            break;
+        case 'P':
+            typeStr = "Pikeman";
+            break;
+        case 'R':
+            typeStr = "Ram";
+            break;
+        case 'C':
+            typeStr = "Catapult";
+            break;
+        case 'W':
+            typeStr = "Worker";
+            break;
+        default:
+            throw std::runtime_error("Invalid UnitType (char)");
+            break;
+        }
 
-void Base::turnTick(){
-
+        std::cout << "Unit ID: " << Base::ID << " is a BASE. Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << std::endl;
+        std::cout << "Currently Deploying" << typeStr << " unit. Time left: " << Base::timeRemaining << std::endl;
+    }
+    else
+    {
+        std::cout << "Unit ID: " << Base::ID <<" is a Base"<< ". Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << std::endl;
+        std::cout << "Currently Iddle" << std::endl;
+    }
 };

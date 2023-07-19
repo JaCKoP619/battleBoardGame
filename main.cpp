@@ -11,14 +11,17 @@ int main()
 
         //* setup of vectors for storing units and constructing starting bases-------------
         std::vector<Unit> blueUnits;
-        blueUnits.push_back(Base(true));
         std::vector<Unit> redUnits;
-        redUnits.push_back(Base(false));
+        Base blueBase(true);
+        Base redBase(false);
+
 
         greet();
         mapArr = readMap();
         printMap(mapArr);
-        mapMenu();
+       //mapMenu();
+        //blueBase.info();
+        redBase.info(); 
 
         return 0;
 }

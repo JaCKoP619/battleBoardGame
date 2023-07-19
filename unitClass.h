@@ -9,13 +9,13 @@ protected:
         bool team; // true for blue and false for red, just a binary expression, not a boolean as true for me and false for enemy.
         int ID;    // unit id, should
 
-        int x;             // x position
-        int y;             // y position
-        int hpMax;         // constant value for maximum hp for given unit type
-        int hp;            // current hp, cant exceed hpMax
-        int timeRemaining; // TODO dont know if will be used here or in the Base class
-        bool active;       // info if unit has been activated this turn
-        char type;         // info about unit type
+        int x;     // x position
+        int y;     // y position
+        int hpMax; // constant value for maximum hp for given unit type
+        int hp;    // current hp, cant exceed hpMax
+
+        bool active; // info if unit has been activated this turn
+        char type;   // info about unit type
 
 private:
         int spd;              // unit movement range for time of turn
@@ -33,6 +33,7 @@ public:
         bool checkIfDead();
         void turnTick();
         void relocate(int movX, int movY); // implementation of unit movement witch movement range (int spd) checking
+        virtual void info();
 };
 class Base : public Unit
 {
@@ -46,12 +47,14 @@ protected:
         int id;     // for base it's always 1
         int x;      // x position of base
         int y;      // y position of base
-
+        int timeRemaining;
+        char deployedUnit; // type of unit being deployed
 public:
         Base(bool assignTeam);
         bool checkIfDead();
         void turnTick();
         void recruitUnit(char type, int id, bool assignTeam);
+        void info() override;
 };
 
-#endif  
+#endif
