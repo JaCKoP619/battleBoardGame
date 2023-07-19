@@ -1,6 +1,5 @@
 
 #include "UI_File.h"
-
 #include <iostream>
 #include <conio.h>
 #include <chrono>
@@ -152,7 +151,7 @@ void printMap(std::array<std::array<char, col>, row> mapArr)
   }
 }
 
-char menu()
+char mapMenu()
 {
 char input;
 std::cout << "Press 1 to list your units with modifiers" << std::endl;
@@ -161,7 +160,7 @@ std::cout << "Press 3 to commence recruitment of unit" << std::endl;
 
 
 
-input = getch ();
+input = static_cast<char>(getch());
 return input;
 
 }

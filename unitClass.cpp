@@ -1,10 +1,11 @@
 #include <iostream>
 #include <conio.h>
+#include <cmath>
 #include "unitClass.h"
 
 int unitModifiers[7][5] = {
-    //? format:
-    // *{hp,spd,cost,range,timeOfDeployment}
+//? format:
+// *{hp,spd,cost,range,timeOfDeployment}
     {70, 5, 400, 1, 5}, // knights   "K"
     {60, 5, 250, 1, 3}, // Swordsman "S"
     {40, 2, 250, 1, 3}, // Archers   "A"
@@ -96,17 +97,42 @@ bool Unit::checkIfDead()
     }
 };
 
-
-
-Base::Base(bool assignTeam) : Unit('B', 1, assignTeam)
+void Unit::relocate(int movX, int movY)
 {
+if(spd >= (sqrt(pow(2.0, (x-movX)))+sqrt(pow(2.0, (y-movY))))){
+
+x=movX;
+y=movY;
+}else{
+    std::cout<<"Exceeded unit's range!"<<std::endl;
+    std::cout<<"pres any key to continue..."<<std::endl;
+    getch();
+    system("cls");
+}
+
+
+};
+
+//* Base methods ----------------------------------------------------------------
+//! base constructor
+Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
+{
+    type = 'B';
+    ID = 0;
     team = assignTeam;
     hp = hpMax=200;
     gold = 1000;                //starting gold
-    if (team==true){
-        x,y=0;
+    if (team==true){            //setting base position depending on a team
+        x=0;
+        y=0;
     }
     else{
-        x,y=35;
+        x=35;
+        y=35;
     }
-};  
+};
+
+
+void Base::turnTick(){
+
+};
