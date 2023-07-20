@@ -1,10 +1,10 @@
 #ifndef CLASS_H
 #define CLASS_H
+#include <vector>
 
 int typeToModifierArr(char chartype);
 
-std::vector<Unit> blueUnits;
-std::vector<Unit> redUnits;
+
 class Unit
 {
 protected:
@@ -58,4 +58,6 @@ public:
         void info() override;
 };
 
+extern std::vector<Unit> blueUnits;
+extern std::vector<Unit> redUnits;
 #endif

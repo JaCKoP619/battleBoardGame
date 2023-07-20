@@ -5,6 +5,7 @@
 #include "unitClass.h"
 #include <vector>
 
+
 std::vector<Unit> blueUnits;
 std::vector<Unit> redUnits;
 
@@ -152,6 +153,9 @@ void Unit::info()
     std::cout << "Unit ID: " << ID << " is a " << typeStr << ". Position: " << x << "/" << y << ". Speed: " << spd << ". Range: " << range << std::endl;
     std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp." << std::endl;
 };
+
+
+
 //* method for moving unit witch movement range check-----------------------------------------------------------
 void Unit::relocate(int movX, int movY)
 {
@@ -276,7 +280,7 @@ void Base::turn()
                 deployedUnit=NULL;
                 break;
             case false:
-                blueUnits.push_back(Unit(deployedUnit, idCount, false));
+                redUnits.push_back(Unit(deployedUnit, idCount, false));
                 iddle = true;
                 timeRemaining = NULL;
                 idCount++;

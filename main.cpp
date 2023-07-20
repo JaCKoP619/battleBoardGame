@@ -4,6 +4,7 @@
 #include <iostream>
 #include <conio.h>
 #include <vector>
+
 int main()
 {
         const int row = 35, col = 35;
