@@ -2,7 +2,9 @@
 #define CLASS_H
 #include <vector>
 
-int typeToModifierArr(char chartype);
+extern int typeToModifierArr(char chartype);
+extern int typeToModifier(char chartype);
+extern int unitModifiers[7][5];
 
 
 class Unit
@@ -15,7 +17,7 @@ protected:
         int hpMax; // constant value for maximum hp for given unit type
         int hp;    // current hp, cant exceed hpMax
 
-        bool active; // info if unit has been activated this turn
+        bool iddle; // info if unit has been activated this turn
         char type;   // info about unit type
 
 private:
@@ -39,7 +41,6 @@ class Base : public Unit
 {
 
 protected:
-        bool iddle; // check if base is recruiting unit
         int hpMax;  // starting value of hp points
         int hp;     // currernt hp points, cannot exceed hpMax
         int gold;   // current gold
@@ -54,7 +55,7 @@ public:
         Base(bool assignTeam);
         bool checkIfDead();
         void turn();
-        void recruitUnit(char type, int id);
+        void recruitUnit(char type);
         void info() override;
 };
 

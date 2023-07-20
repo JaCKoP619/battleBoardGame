@@ -15,13 +15,23 @@ int main()
         Base blueBase(true);
         Base redBase(false);
 
-
         greet();
         mapArr = readMap();
         printMap(mapArr);
-       //mapMenu();
-        blueUnits.push_back(Unit('A',1,true));
-        blueUnits[0].info();
+        blueBase.info();
+
+        blueBase.recruitUnit('K');
+        std::cout<< "recruitment starts"<< std::endl;
+        blueBase.info();
+        
+
+
+
+        // for (int i = 0; i <= 6; i++)
+        // {
+        //         blueBase.info();
+        //         blueBase.turn();
+        // }
 
         return 0;
 }

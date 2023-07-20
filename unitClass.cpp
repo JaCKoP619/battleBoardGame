@@ -5,7 +5,6 @@
 #include "unitClass.h"
 #include <vector>
 
-
 std::vector<Unit> blueUnits;
 std::vector<Unit> redUnits;
 
@@ -50,10 +49,10 @@ int typeToModifierArr(char chartype)
         return NULL;
         break;
     default:
-        // throw std::runtime_error("Invalid UnitType (char)");
+        //throw std::runtime_error("Invalid UnitType (char)");
         break;
     }
-}
+};
 //? Unit methods-----------------------------------------------------------------------------
 Unit::Unit(char unitType, int id, bool assignTeam)
 { //! constructor
@@ -67,7 +66,10 @@ Unit::Unit(char unitType, int id, bool assignTeam)
     range = unitModifiers[tempType][3];
     timeOfDeployment = unitModifiers[tempType][4];
     team = assignTeam;
+    iddle = true;
+
     if (team == true)
+
     {
         x = 0;
         y = 0;
@@ -92,7 +94,7 @@ int Unit::positionY()
 
 void Unit::setActive()
 {
-    Unit::active = true;
+    Unit::iddle = false;
 };
 
 void Unit::takeDamage(int damage)
@@ -116,7 +118,7 @@ void Unit::info()
 {
     std::string typeStr;
     std::string activeStr;
-    if (active == true)
+    if (iddle != true)
         activeStr = "Active";
 
     else
@@ -153,8 +155,6 @@ void Unit::info()
     std::cout << "Unit ID: " << ID << " is a " << typeStr << ". Position: " << x << "/" << y << ". Speed: " << spd << ". Range: " << range << std::endl;
     std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp." << std::endl;
 };
-
-
 
 //* method for moving unit witch movement range check-----------------------------------------------------------
 void Unit::relocate(int movX, int movY)
@@ -194,7 +194,7 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
         x = 35;
         y = 35;
     }
-    active = false;
+    iddle = false;
 };
 
 //* display info about the base-------------------------------------------------------
@@ -202,7 +202,7 @@ void Base::info()
 {
     std::string typeStr;
 
-    if (active == true)
+    if (iddle != true)
     {
         switch (deployedUnit)
         {
@@ -228,7 +228,7 @@ void Base::info()
             typeStr = "Worker";
             break;
         default:
-            throw std::runtime_error("Invalid UnitType (char)");
+            //throw std::runtime_error("Invalid UnitType (char)");
             break;
         }
 
@@ -236,55 +236,57 @@ void Base::info()
         std::cout << "Currently Deploying" << typeStr << " unit. Time left: " << Base::timeRemaining << std::endl;
         std::cout << gold << " golden coins in the treasury." << std::endl;
     }
-    else
+    else // Base is iddle
     {
         std::cout << "This is a BASE. Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << std::endl;
         std::cout << "Currently Iddle" << std::endl;
         std::cout << gold << " golden coins in the treasury." << std::endl;
     }
 };
-void Base::recruitUnit(char type, int id)
+void Base::recruitUnit(char type)
 {
     int tempType;
-    if (iddle == true)
+    if (Base::iddle == true)
     {
-        deployedUnit = type;
+
+        Base::deployedUnit = type;
         tempType = typeToModifierArr(deployedUnit); // using the predefined table of modifiers
         int amount = unitModifiers[tempType][2];
-        if (gold >= amount)
+        if (Base::gold >= amount)
         {
-            gold -= amount;
-            iddle = false; // giving order to base
-            timeRemaining = unitModifiers[tempType][4];
+            Base::gold -= amount;
+            Base::iddle = false; // giving order to base
+            Base::timeRemaining = unitModifiers[tempType][4];
         }
         else
         {
+            std::cout<<"The treasury is empty, my lord!"<<std::endl;
         }
     }
 };
-
+//* method for progressing the turn
 void Base::turn()
 {
-    if (iddle == false)
+    if (Base::iddle == false)
     {
-        timeRemaining--;
-        if (timeRemaining == 0)
+        Base::timeRemaining--;
+        if (Base::timeRemaining == 0)
         {
             switch (team)
             {
             case true:
-                blueUnits.push_back(Unit(deployedUnit, idCount, true));
-                iddle = true;
-                timeRemaining = NULL;
-                idCount++;
-                deployedUnit=NULL;
+                blueUnits.push_back(Unit(Base::deployedUnit, Base::idCount, Base::team));
+                Base::iddle = true;
+                Base::timeRemaining = NULL;
+                Base::idCount++;
+                Base::deployedUnit = NULL;
                 break;
             case false:
-                redUnits.push_back(Unit(deployedUnit, idCount, false));
-                iddle = true;
-                timeRemaining = NULL;
-                idCount++;
-                deployedUnit=NULL;
+                redUnits.push_back(Unit(deployedUnit, idCount, Base::team));
+                Base::iddle = true;
+                Base::timeRemaining = NULL;
+                Base::idCount++;
+                Base::deployedUnit = NULL;
                 break;
             default:
                 throw std::runtime_error("base team value error");
@@ -293,3 +295,5 @@ void Base::turn()
         }
     }
 };
+
+
