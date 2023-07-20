@@ -137,7 +137,7 @@ std::array<std::array<char, 35>, 35> readMap()
   return mapArr;
 }
 
-// * print map function(mostly 4 testing but may reuse) -----------------------------------------------------------------------
+// * print map function(mostly 4 testing but may reuse) --------------------------------asdasdasdasadsadgrt-asdsad-------------------------------------
 void printMap(std::array<std::array<char, col>, row> mapArr)
 {
 

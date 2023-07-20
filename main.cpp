@@ -21,17 +21,24 @@ int main()
         blueBase.info();
 
         blueBase.recruitUnit('K');
-        std::cout<< "recruitment starts"<< std::endl;
-        blueBase.info();
-        
 
+        for (int i = 0; i <= 5; i++)
+        {
+                blueBase.info();
+                blueBase.turn();
+        }
+                blueBase.recruitUnit('A');
 
+        for (int i = 0; i <= 5; i++)
+        {
+                blueBase.info();
+                blueBase.turn();
+        }
+        blueUnits[0].relocate(1,1);
 
-        // for (int i = 0; i <= 6; i++)
-        // {
-        //         blueBase.info();
-        //         blueBase.turn();
-        // }
+        for (size_t i = 0; i < blueUnits.size(); i++) {
+                blueUnits[i].info();
+        }
 
         return 0;
 }

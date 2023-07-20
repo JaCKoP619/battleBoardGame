@@ -19,7 +19,7 @@ int unitModifiers[7][5] = {
     {50, 2, 800, 7, 6}, // Catapults "C"
     {20, 2, 100, 1, 2}  // Workers   "W"
 };
-
+// Auxilary functions to convert char to an int tor array
 int typeToModifierArr(char chartype)
 {
     switch (chartype)
@@ -49,14 +49,15 @@ int typeToModifierArr(char chartype)
         return NULL;
         break;
     default:
-        //throw std::runtime_error("Invalid UnitType (char)");
+        // throw std::runtime_error("Invalid UnitType (char)");
+        return NULL;
         break;
     }
 };
 //? Unit methods-----------------------------------------------------------------------------
-Unit::Unit(char unitType, int id, bool assignTeam)
-{ //! constructor
-    type = unitType;
+Unit::Unit(char giveType, int id, bool assignTeam)
+{ //! constructor============================================= TESTED OK
+    unitType = giveType;
     ID = id;
     int tempType = typeToModifierArr(unitType); // using the predefined table of modifiers
 
@@ -64,7 +65,6 @@ Unit::Unit(char unitType, int id, bool assignTeam)
     spd = unitModifiers[tempType][1];
     cost = unitModifiers[tempType][2];
     range = unitModifiers[tempType][3];
-    timeOfDeployment = unitModifiers[tempType][4];
     team = assignTeam;
     iddle = true;
 
@@ -113,7 +113,9 @@ bool Unit::checkIfDead()
         return false;
     }
 };
-//* method to display info about the unit (possibly for listing units)----------------------------------------
+
+
+//* method to display info about the unit (possibly for listing units)-------------------------;'---------------
 void Unit::info()
 {
     std::string typeStr;
@@ -124,7 +126,7 @@ void Unit::info()
     else
         activeStr = "Iddle";
 
-    switch (type)
+    switch (unitType)
     {
     case 'K':
         typeStr = "Knight";
@@ -153,7 +155,7 @@ void Unit::info()
     }
 
     std::cout << "Unit ID: " << ID << " is a " << typeStr << ". Position: " << x << "/" << y << ". Speed: " << spd << ". Range: " << range << std::endl;
-    std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp." << std::endl;
+    std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp.\n" << std::endl;
 };
 
 //* method for moving unit witch movement range check-----------------------------------------------------------
@@ -174,11 +176,11 @@ void Unit::relocate(int movX, int movY)
     }
 };
 
-//*?Base methods -------------------------------------------------------------------------------------------
+//*?Base methods ----------------------------------------------------asdasda----------------------------------TESTED
 //! base constructor
 Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
-    type = 'B';
+    unitType = 'B';
     ID = 0;
     idCount = 1;
     team = assignTeam;
@@ -194,10 +196,15 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
         x = 35;
         y = 35;
     }
-    iddle = false;
+    iddle = true;
+    timeRemaining = 0;
+};
+void Base::relocate(int movX, int movY)
+{
+//does nothing 
 };
 
-//* display info about the base-------------------------------------------------------
+//* display info about the base-------------------------------------------------TESTED
 void Base::info()
 {
     std::string typeStr;
@@ -228,72 +235,72 @@ void Base::info()
             typeStr = "Worker";
             break;
         default:
-            //throw std::runtime_error("Invalid UnitType (char)");
+            // throw std::runtime_error("Invalid UnitType (char)");
             break;
         }
 
-        std::cout << "This is a BASE. Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << "/" << hpMax << std::endl;
-        std::cout << "Currently Deploying" << typeStr << " unit. Time left: " << Base::timeRemaining << std::endl;
-        std::cout << gold << " golden coins in the treasury." << std::endl;
+        std::cout << "This is a BASE. Position: " << x << " / " << y << ". Hp: " << hp << "/" << hpMax << std::endl;
+        std::cout << "Currently Deploying " << typeStr << " unit. Time left: " <<timeRemaining << std::endl;
+        std::cout << gold << " golden coins in the treasury.\n" << std::endl;
     }
     else // Base is iddle
     {
-        std::cout << "This is a BASE. Position: " << Base::x << " / " << Base::y << ". Hp: " << Base::hp << std::endl;
+        std::cout << "This is a BASE. Position: " << x << " / " << y << ". Hp: " << hp << std::endl;
         std::cout << "Currently Iddle" << std::endl;
-        std::cout << gold << " golden coins in the treasury." << std::endl;
+        std::cout << gold << " golden coins in the treasury.\n" << std::endl;
+        
     }
 };
-void Base::recruitUnit(char type)
+
+void Base::addGold(int amount)
+{
+    gold += amount;
+};
+void Base::recruitUnit(char giveType)
 {
     int tempType;
-    if (Base::iddle == true)
+    if (iddle == true)
     {
 
-        Base::deployedUnit = type;
+        deployedUnit = giveType;
         tempType = typeToModifierArr(deployedUnit); // using the predefined table of modifiers
         int amount = unitModifiers[tempType][2];
-        if (Base::gold >= amount)
+        if (gold >= amount)
         {
-            Base::gold -= amount;
-            Base::iddle = false; // giving order to base
-            Base::timeRemaining = unitModifiers[tempType][4];
+            gold -= amount;
+            iddle = false; // giving order to base
+            timeRemaining = unitModifiers[tempType][4];
         }
         else
         {
-            std::cout<<"The treasury is empty, my lord!"<<std::endl;
+            std::cout << "The treasury is empty, my lord!\n" << std::endl;
         }
     }
 };
 //* method for progressing the turn
 void Base::turn()
 {
-    if (Base::iddle == false)
+    if (iddle == false)
     {
-        Base::timeRemaining--;
-        if (Base::timeRemaining == 0)
+        timeRemaining-=1;
+        if (timeRemaining == 0)
         {
-            switch (team)
+            if (team == true)
             {
-            case true:
-                blueUnits.push_back(Unit(Base::deployedUnit, Base::idCount, Base::team));
-                Base::iddle = true;
-                Base::timeRemaining = NULL;
-                Base::idCount++;
-                Base::deployedUnit = NULL;
-                break;
-            case false:
-                redUnits.push_back(Unit(deployedUnit, idCount, Base::team));
-                Base::iddle = true;
-                Base::timeRemaining = NULL;
-                Base::idCount++;
-                Base::deployedUnit = NULL;
-                break;
-            default:
-                throw std::runtime_error("base team value error");
-                break;
+                blueUnits.push_back(Unit(deployedUnit, idCount, team));
+                iddle = true;
+                timeRemaining = NULL;
+                idCount++;
+                deployedUnit = NULL;
+            }
+            else
+            {
+                redUnits.push_back(Unit(deployedUnit, idCount, team));
+                iddle = true;
+                timeRemaining = NULL;
+                idCount++;
+                deployedUnit = NULL;
             }
         }
     }
 };
-
-
