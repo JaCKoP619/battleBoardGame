@@ -7,7 +7,8 @@
 
 std::vector<Unit> blueUnits;
 std::vector<Unit> redUnits;
-
+const int maxX = 35;
+const int maxY = maxX;
 int unitModifiers[7][5] = {
     //? format:
     // *{hp,spd,cost,range,timeOfDeployment}
@@ -56,7 +57,7 @@ int typeToModifierArr(char chartype)
 };
 //? Unit methods-----------------------------------------------------------------------------
 Unit::Unit(char giveType, int id, bool assignTeam)
-{ //! constructor============================================= TESTED OK
+{ //! constructor============================================= TESTED OK=============
     unitType = giveType;
     ID = id;
     int tempType = typeToModifierArr(unitType); // using the predefined table of modifiers
@@ -76,8 +77,8 @@ Unit::Unit(char giveType, int id, bool assignTeam)
     }
     else
     {
-        x = 35;
-        y = 35;
+        x = maxX;
+        y = maxY;
     }
     hp = hpMax;
 };
@@ -114,8 +115,7 @@ bool Unit::checkIfDead()
     }
 };
 
-
-//* method to display info about the unit (possibly for listing units)-------------------------;'---------------
+//* method to display info about the unit (possibly for listing units)-----TESTED OK---------------------
 void Unit::info()
 {
     std::string typeStr;
@@ -155,29 +155,37 @@ void Unit::info()
     }
 
     std::cout << "Unit ID: " << ID << " is a " << typeStr << ". Position: " << x << "/" << y << ". Speed: " << spd << ". Range: " << range << std::endl;
-    std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp.\n" << std::endl;
+    std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp.\n"
+              << std::endl;
 };
 
 //* method for moving unit witch movement range check-----------------------------------------------------------
 void Unit::relocate(int movX, int movY)
 {
-    if (spd >= (sqrt(pow(2.0, (x - movX))) + sqrt(pow(2.0, (y - movY)))))
+    if (movX>maxX || movX<0 ||movY>maxY || movY<0)
     {
-
-        x = movX;
-        y = movY;
+        std::cout<<"Leaving map, belay that order!\n"<<std::endl;
     }
     else
     {
-        std::cout << "Exceeded unit's range!" << std::endl;
-        std::cout << "pres any key to continue..." << std::endl;
-        getch();
-        system("cls");
+        if (spd >= (sqrt(pow(2.0, (x - movX))) + sqrt(pow(2.0, (y - movY)))))
+        {
+
+            x = movX;
+            y = movY;
+        }
+        else
+        {
+            std::cout << "Exceeded unit's range!" << std::endl;
+            std::cout << "pres any key to continue..." << std::endl;
+            getch();
+            system("cls");
+        }
     }
 };
 
-//*?Base methods ----------------------------------------------------asdasda----------------------------------TESTED
-//! base constructor
+//*?Base methods --------------------------------------------------------------------------
+//! base constructor ---------------------------TESTED OK------------------------------------
 Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
     unitType = 'B';
@@ -193,18 +201,17 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     }
     else
     {
-        x = 35;
-        y = 35;
+        x = maxX;
+        y = maxY;
     }
     iddle = true;
     timeRemaining = 0;
 };
-void Base::relocate(int movX, int movY)
-{
-//does nothing 
+void Base::relocate(int movX, int movY){
+    // does nothing
 };
 
-//* display info about the base-------------------------------------------------TESTED
+//* display info about the base-------------------------------------------------TESTED OK
 void Base::info()
 {
     std::string typeStr;
@@ -240,15 +247,16 @@ void Base::info()
         }
 
         std::cout << "This is a BASE. Position: " << x << " / " << y << ". Hp: " << hp << "/" << hpMax << std::endl;
-        std::cout << "Currently Deploying " << typeStr << " unit. Time left: " <<timeRemaining << std::endl;
-        std::cout << gold << " golden coins in the treasury.\n" << std::endl;
+        std::cout << "Currently Deploying " << typeStr << " unit. Time left: " << timeRemaining << std::endl;
+        std::cout << gold << " golden coins in the treasury.\n"
+                  << std::endl;
     }
     else // Base is iddle
     {
         std::cout << "This is a BASE. Position: " << x << " / " << y << ". Hp: " << hp << std::endl;
         std::cout << "Currently Iddle" << std::endl;
-        std::cout << gold << " golden coins in the treasury.\n" << std::endl;
-        
+        std::cout << gold << " golden coins in the treasury.\n"
+                  << std::endl;
     }
 };
 
@@ -256,6 +264,8 @@ void Base::addGold(int amount)
 {
     gold += amount;
 };
+
+//'Base' method for unit recruitment---------------------------TESTED OK------------------------------------
 void Base::recruitUnit(char giveType)
 {
     int tempType;
@@ -273,16 +283,18 @@ void Base::recruitUnit(char giveType)
         }
         else
         {
-            std::cout << "The treasury is empty, my lord!\n" << std::endl;
+            std::cout << "The treasury is empty, my lord!\n"
+                      << std::endl;
         }
     }
 };
-//* method for progressing the turn
+//* method for progressing the turn for the base------------------------------------------------TESTED OK
+// TODO maybe will implement something global, this one is for testing 4 now
 void Base::turn()
 {
     if (iddle == false)
     {
-        timeRemaining-=1;
+        timeRemaining -= 1;
         if (timeRemaining == 0)
         {
             if (team == true)
