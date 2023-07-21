@@ -5,11 +5,12 @@ const std::size_t ROWS = 35;
 const std::size_t COLS = 35;
 
 extern std::array<std::array<char, ROWS>, COLS> mapArr;
+extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 void greet();
 std::array<std::array<char,ROWS>,COLS> readMap();
-void printMap(std::array<std::array<char, COLS>, ROWS> map);
+void printMap();
 char mapMenu();
-std::array<std::array<char,ROWS>,COLS> updateUnitMap(bool team);
-
+void updateUnitMap();
+void printUnitMap();
 
 #endif

@@ -7,44 +7,49 @@
 extern Base blueBase;
 extern Base redBase;
 extern std::array<std::array<char, ROWS>, COLS> mapArr;
+extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 int main()
 {
 
-
         //* setup of vectors for storing units and constructing starting bases-------------
-std::array<std::array<char, ROWS>, COLS> blueUnitsMap;
 
         greet();
         mapArr = readMap();
-        printMap(mapArr);
+        printMap();
         blueBase.info();
-
+        redBase.info();
         blueBase.recruitUnit('K');
+        redBase.recruitUnit('S');
 
         for (int i = 0; i <= 5; i++)
         {
-                blueBase.info();
+                redBase.turn();
                 blueBase.turn();
         }
         blueBase.recruitUnit('A');
-
+        redBase.recruitUnit('P');
         for (int i = 0; i <= 5; i++)
         {
-                blueBase.info();
+                redBase.turn();
                 blueBase.turn();
         }
         blueUnits[0].relocate(1, 1);
-
+        redUnits[0].relocate(33, 33);
         for (size_t i = 0; i < blueUnits.size(); i++)
         {
                 blueUnits[i].info();
         }
-        blueUnitsMap=updateUnitMap(true);
-        printMap(blueUnitsMap);
+
+        for (size_t i = 0; i < blueUnits.size(); i++)
+        {
+                redUnits[i].info();
+        }
+        unitsMap = mapArr;
 
 
+         updateUnitMap();
 
-
+        printUnitMap();
         std::cout << "Press any key to continue..." << std::endl;
         _getch();
         system("cls");

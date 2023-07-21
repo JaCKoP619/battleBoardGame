@@ -46,12 +46,9 @@ int typeToModifierArr(char chartype)
     case 'W':
         return 6;
         break;
-    case 'B':
-        return NULL;
-        break;
     default:
         // throw std::runtime_error("Invalid UnitType (char)");
-        return NULL;
+        return 9;
         break;
     }
 };
@@ -83,8 +80,9 @@ Unit::Unit(char giveType, int id, bool assignTeam)
     hp = hpMax;
 };
 
-char Unit::getUnitType(){
-return unitType;
+char Unit::getUnitType()
+{
+    return unitType;
 };
 
 int Unit::positionX()
@@ -166,9 +164,10 @@ void Unit::info()
 //* method for moving unit witch movement range check-----------------------------------------------------------
 void Unit::relocate(int movX, int movY)
 {
-    if (movX>maxX || movX<0 ||movY>maxY || movY<0)
+    if (movX > maxX || movX < 0 || movY > maxY || movY < 0)
     {
-        std::cout<<"Leaving map, belay that order!\n"<<std::endl;
+        std::cout << "Leaving map, belay that order!\n"
+                  << std::endl;
     }
     else
     {
@@ -205,14 +204,14 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     }
     else
     {
-        x = maxX;
-        y = maxY;
+        x = maxX-1;
+        y = maxY-1;
     }
     iddle = true;
     timeRemaining = 0;
 };
 
-Base redBase(false);//Base declaration with constructor for external use
+Base redBase(false); // Base declaration with constructor for external use
 Base blueBase(true);
 
 void Base::relocate(int movX, int movY){
@@ -248,6 +247,9 @@ void Base::info()
             break;
         case 'W':
             typeStr = "Worker";
+            break;
+        case 'B':
+            typeStr = "Base";
             break;
         default:
             // throw std::runtime_error("Invalid UnitType (char)");
@@ -309,18 +311,29 @@ void Base::turn()
             {
                 blueUnits.push_back(Unit(deployedUnit, idCount, team));
                 iddle = true;
-                timeRemaining = NULL;
+                timeRemaining = 0;
                 idCount++;
-                deployedUnit = NULL;
+                deployedUnit = '0';
             }
             else
             {
                 redUnits.push_back(Unit(deployedUnit, idCount, team));
                 iddle = true;
-                timeRemaining = NULL;
+                timeRemaining = 0;
                 idCount++;
-                deployedUnit = NULL;
+                deployedUnit = '0';
             }
         }
     }
+};
+
+int Base::positionX()
+{
+
+    return x;
+};
+int Base::positionY()
+{
+
+    return y;
 };
