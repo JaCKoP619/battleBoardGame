@@ -1,6 +1,5 @@
 
 #include "UI_File.h"
-
 #include <iostream>
 #include <conio.h>
 #include <chrono>
@@ -104,7 +103,7 @@ std::array<std::array<char, 35>, 35> readMap()
       {
         fs::file_status fileStatus = fs::status(filePath);
         std::ifstream file(filePath);
-        for (std::size_t i = 0; i < row - 1; ++i)
+        for (std::size_t i = 0; i < row; ++i)
         {
           for (std::size_t j = 0; j < col; ++j)
           {
@@ -138,11 +137,11 @@ std::array<std::array<char, 35>, 35> readMap()
   return mapArr;
 }
 
-// * print map function(mostly 4 testing but may reuse) -----------------------------------------------------------------------
+// * print map function(mostly 4 testing but may reuse) --------------------------------asdasdasdasadsadgrt-asdsad-------------------------------------
 void printMap(std::array<std::array<char, col>, row> mapArr)
 {
 
-  for (std::size_t i = 0; i < row - 1; ++i)
+  for (std::size_t i = 0; i < row; ++i)
   {
     for (std::size_t j = 0; j < col; ++j)
     {
@@ -152,7 +151,7 @@ void printMap(std::array<std::array<char, col>, row> mapArr)
   }
 }
 
-char menu()
+char mapMenu()
 {
 char input;
 std::cout << "Press 1 to list your units with modifiers" << std::endl;
@@ -161,7 +160,7 @@ std::cout << "Press 3 to commence recruitment of unit" << std::endl;
 
 
 
-input = getch ();
+input = static_cast<char>(getch());
 return input;
 
 }
