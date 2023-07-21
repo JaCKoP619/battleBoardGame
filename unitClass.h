@@ -6,6 +6,7 @@ extern int typeToModifierArr(char chartype);
 extern int typeToModifier(char chartype);
 extern int unitModifiers[7][5];
 
+
 class Unit
 {
 protected:
@@ -57,6 +58,8 @@ public:
         void addGold(int amount);
         void relocate(int movX, int movY);
 };
+extern Base blueBase;
+extern Base redBase;
 
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;

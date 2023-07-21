@@ -4,7 +4,8 @@
 #include <iostream>
 #include <conio.h>
 #include <vector>
-
+extern Base blueBase;
+extern Base redBase;
 int main()
 {
         const int row = 35, col = 35;
@@ -12,8 +13,6 @@ int main()
 
         //* setup of vectors for storing units and constructing starting bases-------------
 
-        Base blueBase(true);
-        Base redBase(false);
 
         greet();
         mapArr = readMap();

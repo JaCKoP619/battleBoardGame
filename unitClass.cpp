@@ -83,6 +83,8 @@ Unit::Unit(char giveType, int id, bool assignTeam)
     hp = hpMax;
 };
 
+
+
 int Unit::positionX()
 {
     return x;
@@ -207,6 +209,10 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     iddle = true;
     timeRemaining = 0;
 };
+
+Base redBase(false);//Base declaration with constructor for external use
+Base blueBase(true);
+
 void Base::relocate(int movX, int movY){
     // does nothing
 };
