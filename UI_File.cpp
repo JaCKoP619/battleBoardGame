@@ -11,8 +11,10 @@
 namespace fs = std::filesystem;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
+
 std::array<std::array<char, ROWS>, COLS> mapArr;
 const int row = 35, col = 35;
+std::array<std::array<char, ROWS>, COLS> unitsMap;
 
 //* opening text message display and wait for input to carry on---------------------------------------------------------------
 void greet()
@@ -141,64 +143,59 @@ std::array<std::array<char, 35>, 35> readMap()
 }
 
 // * print map function(mostly 4 testing but may reuse) ---------------------------------------------------------------------
-void printMap(std::array<std::array<char, col>, row> map)
+void printMap()
 {
 
   for (std::size_t i = 0; i < row; ++i)
   {
     for (std::size_t j = 0; j < col; ++j)
     {
-      std::cout << map[i][j];
+      std::cout << mapArr[i][j];
     }
     std::cout << std::endl;
   }
 }
 
-std::array<std::array<char, ROWS>, COLS> updateUnitMap(bool team)
+void updateUnitMap()
 {
   int x;
   int y;
-  std::array<std::array<char, ROWS>, COLS> tempMap;
-  tempMap = mapArr;
-  if (team == true)
+  unitsMap = mapArr;
+  x = blueBase.positionX();
+  y = blueBase.positionY();
+  unitsMap[x][y] = blueBase.getUnitType();
+
+  x = redBase.positionX();
+  y = redBase.positionY();
+  unitsMap[x][y] = redBase.getUnitType();
+
+  for (size_t i = 0; i < blueUnits.size(); i++)
   {
-    x = blueBase.positionX();
-    y = blueBase.positionY();
-    tempMap[x][y] = blueBase.getUnitType();
-    for (size_t i = 0; i < blueUnits.size(); i++)
+    x = blueUnits[i].positionX();
+    y = blueUnits[i].positionY();
+    if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6')
     {
-      x = blueUnits[i].positionX();
-      y = blueUnits[i].positionY();
-      if (tempMap[x][y] == '0' || tempMap[x][y] == '6')
-      {
-        tempMap[x][y] = blueUnits[i].getUnitType();
-      }
-      else if (tempMap[x][y] == 'K' || tempMap[x][y] == 'S' || tempMap[x][y] == 'A' || tempMap[x][y] == 'P' || tempMap[x][y] == 'R' || tempMap[x][y] == 'C' || tempMap[x][y] == 'W' || tempMap[x][y] == 'B')
-      {
-        tempMap[x][y] = 'M';
-      }
+      unitsMap[x][y] = blueUnits[i].getUnitType();
+    }
+    else if (unitsMap[x][y] == 'K' || unitsMap[x][y] == 'S' || unitsMap[x][y] == 'A' || unitsMap[x][y] == 'P' || unitsMap[x][y] == 'R' || unitsMap[x][y] == 'C' || unitsMap[x][y] == 'W' || unitsMap[x][y] == 'B')
+    {
+      unitsMap[x][y] = 'M';
     }
   }
-  else
+  for (size_t i = 0; i < redUnits.size(); i++)
   {
-    x = redBase.positionX();
-    y = redBase.positionY();
-    tempMap[x][y] = redBase.getUnitType();
-    for (size_t i = 0; i < redUnits.size(); i++)
+    x = redUnits[i].positionX();
+    y = redUnits[i].positionY();
+    if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6')
     {
-      x = redUnits[i].positionX();
-      y = redUnits[i].positionY();
-      if (tempMap[x][y] == '0' || tempMap[x][y] == '6')
-      {
-        tempMap[x][y] = redUnits[i].getUnitType();
-      }
-      else if (tempMap[x][y] == 'K' || tempMap[x][y] == 'S' || tempMap[x][y] == 'A' || tempMap[x][y] == 'P' || tempMap[x][y] == 'R' || tempMap[x][y] == 'C' || tempMap[x][y] == 'W' || tempMap[x][y] == 'B')
-      {
-        tempMap[x][y] = 'M';
-      }
+      unitsMap[x][y] = redUnits[i].getUnitType();
+    }
+    else if (unitsMap[x][y] == 'K' || unitsMap[x][y] == 'S' || unitsMap[x][y] == 'A' || unitsMap[x][y] == 'P' || unitsMap[x][y] == 'R' || unitsMap[x][y] == 'C' || unitsMap[x][y] == 'W' || unitsMap[x][y] == 'B')
+    {
+      unitsMap[x][y] = 'M';
     }
   }
-  return tempMap;
+
 };
 
 char mapMenu()
@@ -211,3 +208,46 @@ char mapMenu()
   input = static_cast<char>(getch());
   return input;
 };
+
+void printUnitMap()
+{
+  int x;
+  int y;
+
+    for (std::size_t i = 0; i < row; ++i) {
+        for (std::size_t j = 0; j < col; ++j) {
+            if (unitsMap[i][j]  != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9') {
+                bool unitFound = false;
+
+                for (size_t k = 0; k < redUnits.size(); k++) {
+                    x = redUnits[k].positionX();
+                    y = redUnits[k].positionY();
+                    if (x == j && y == i) {
+                        std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+                        unitFound = true;
+                        break;
+                    }
+                }
+
+                if (!unitFound) {
+                    for (size_t k = 0; k < blueUnits.size(); k++) {
+                        x = blueUnits[k].positionX();
+                        y = blueUnits[k].positionY();
+                        if (x == j && y == i) {
+                            std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+                            unitFound = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!unitFound) {
+                    std::cout << unitsMap[i][j];
+                }
+            } else {
+                std::cout << unitsMap[i][j];
+            }
+        }
+        std::cout << std::endl;
+    }
+}
