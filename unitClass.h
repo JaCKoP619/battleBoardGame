@@ -35,6 +35,7 @@ public:
         bool turn();
         void relocate(int movX, int movY); // implementation of unit movement witch movement range (int spd) checking
         virtual void info();
+        char getUnitType();
 };
 class Base : public Unit
 {

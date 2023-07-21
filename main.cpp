@@ -6,13 +6,13 @@
 #include <vector>
 extern Base blueBase;
 extern Base redBase;
+extern std::array<std::array<char, ROWS>, COLS> mapArr;
 int main()
 {
-        const int row = 35, col = 35;
-        std::array<std::array<char, col>, row> mapArr;
+
 
         //* setup of vectors for storing units and constructing starting bases-------------
-
+std::array<std::array<char, ROWS>, COLS> blueUnitsMap;
 
         greet();
         mapArr = readMap();
@@ -39,6 +39,12 @@ int main()
         {
                 blueUnits[i].info();
         }
+        blueUnitsMap=updateUnitMap(true);
+        printMap(blueUnitsMap);
+
+
+
+
         std::cout << "Press any key to continue..." << std::endl;
         _getch();
         system("cls");

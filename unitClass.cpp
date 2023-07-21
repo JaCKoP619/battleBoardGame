@@ -83,7 +83,9 @@ Unit::Unit(char giveType, int id, bool assignTeam)
     hp = hpMax;
 };
 
-
+char Unit::getUnitType(){
+return unitType;
+};
 
 int Unit::positionX()
 {

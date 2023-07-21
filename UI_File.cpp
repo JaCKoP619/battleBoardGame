@@ -1,5 +1,6 @@
 
 #include "UI_File.h"
+#include "unitClass.h"
 #include <iostream>
 #include <conio.h>
 #include <chrono>
@@ -8,7 +9,9 @@
 #include <array>
 
 namespace fs = std::filesystem;
-
+extern std::vector<Unit> blueUnits;
+extern std::vector<Unit> redUnits;
+std::array<std::array<char, ROWS>, COLS> mapArr;
 const int row = 35, col = 35;
 
 //* opening text message display and wait for input to carry on---------------------------------------------------------------
@@ -137,30 +140,74 @@ std::array<std::array<char, 35>, 35> readMap()
   return mapArr;
 }
 
-// * print map function(mostly 4 testing but may reuse) --------------------------------asdasdasdasadsadgrt-asdsad-------------------------------------
-void printMap(std::array<std::array<char, col>, row> mapArr)
+// * print map function(mostly 4 testing but may reuse) ---------------------------------------------------------------------
+void printMap(std::array<std::array<char, col>, row> map)
 {
 
   for (std::size_t i = 0; i < row; ++i)
   {
     for (std::size_t j = 0; j < col; ++j)
     {
-      std::cout << mapArr[i][j];
+      std::cout << map[i][j];
     }
     std::cout << std::endl;
   }
 }
 
+std::array<std::array<char, ROWS>, COLS> updateUnitMap(bool team)
+{
+  int x;
+  int y;
+  std::array<std::array<char, ROWS>, COLS> tempMap;
+  tempMap = mapArr;
+  if (team == true)
+  {
+    x = blueBase.positionX();
+    y = blueBase.positionY();
+    tempMap[x][y] = blueBase.getUnitType();
+    for (size_t i = 0; i < blueUnits.size(); i++)
+    {
+      x = blueUnits[i].positionX();
+      y = blueUnits[i].positionY();
+      if (tempMap[x][y] == '0' || tempMap[x][y] == '6')
+      {
+        tempMap[x][y] = blueUnits[i].getUnitType();
+      }
+      else if (tempMap[x][y] == 'K' || tempMap[x][y] == 'S' || tempMap[x][y] == 'A' || tempMap[x][y] == 'P' || tempMap[x][y] == 'R' || tempMap[x][y] == 'C' || tempMap[x][y] == 'W' || tempMap[x][y] == 'B')
+      {
+        tempMap[x][y] = 'M';
+      }
+    }
+  }
+  else
+  {
+    x = redBase.positionX();
+    y = redBase.positionY();
+    tempMap[x][y] = redBase.getUnitType();
+    for (size_t i = 0; i < redUnits.size(); i++)
+    {
+      x = redUnits[i].positionX();
+      y = redUnits[i].positionY();
+      if (tempMap[x][y] == '0' || tempMap[x][y] == '6')
+      {
+        tempMap[x][y] = redUnits[i].getUnitType();
+      }
+      else if (tempMap[x][y] == 'K' || tempMap[x][y] == 'S' || tempMap[x][y] == 'A' || tempMap[x][y] == 'P' || tempMap[x][y] == 'R' || tempMap[x][y] == 'C' || tempMap[x][y] == 'W' || tempMap[x][y] == 'B')
+      {
+        tempMap[x][y] = 'M';
+      }
+    }
+  }
+  return tempMap;
+};
+
 char mapMenu()
 {
-char input;
-std::cout << "Press 1 to list your units with modifiers" << std::endl;
-std::cout << "Press 2 give order to unit" << std::endl;
-std::cout << "Press 3 to commence recruitment of unit" << std::endl;
+  char input;
+  std::cout << "Press 1 to list your units with modifiers" << std::endl;
+  std::cout << "Press 2 give order to unit" << std::endl;
+  std::cout << "Press 3 to commence recruitment of unit" << std::endl;
 
-
-
-input = static_cast<char>(getch());
-return input;
-
-}
+  input = static_cast<char>(getch());
+  return input;
+};
