@@ -103,7 +103,7 @@ std::array<std::array<char, 35>, 35> readMap()
       {
         fs::file_status fileStatus = fs::status(filePath);
         std::ifstream file(filePath);
-        for (std::size_t i = 0; i < row - 1; ++i)
+        for (std::size_t i = 0; i < row; ++i)
         {
           for (std::size_t j = 0; j < col; ++j)
           {
@@ -141,7 +141,7 @@ std::array<std::array<char, 35>, 35> readMap()
 void printMap(std::array<std::array<char, col>, row> mapArr)
 {
 
-  for (std::size_t i = 0; i < row - 1; ++i)
+  for (std::size_t i = 0; i < row; ++i)
   {
     for (std::size_t j = 0; j < col; ++j)
     {

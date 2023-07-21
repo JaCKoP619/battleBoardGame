@@ -27,18 +27,21 @@ int main()
                 blueBase.info();
                 blueBase.turn();
         }
-                blueBase.recruitUnit('A');
+        blueBase.recruitUnit('A');
 
         for (int i = 0; i <= 5; i++)
         {
                 blueBase.info();
                 blueBase.turn();
         }
-        blueUnits[0].relocate(1,1);
+        blueUnits[0].relocate(1, 1);
 
-        for (size_t i = 0; i < blueUnits.size(); i++) {
+        for (size_t i = 0; i < blueUnits.size(); i++)
+        {
                 blueUnits[i].info();
         }
-
+        std::cout << "Press any key to continue..." << std::endl;
+        _getch();
+        system("cls");
         return 0;
 }
