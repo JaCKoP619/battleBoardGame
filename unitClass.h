@@ -51,6 +51,8 @@ protected:
         char deployedUnit; // type of unit being deployed
         int idCount;       // number of units deployed, won't be subtracted when unit is killed
 public:
+        int positionX(); // returns x position of unit
+        int positionY(); // returns y position of unit
         Base(bool assignTeam);
         bool checkIfDead();
         void turn();
@@ -58,7 +60,10 @@ public:
         void info() override;
         void addGold(int amount);
         void relocate(int movX, int movY);
+
 };
+
+
 extern Base blueBase;
 extern Base redBase;
 

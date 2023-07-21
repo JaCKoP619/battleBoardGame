@@ -97,7 +97,6 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
 //* read map out of trxt file function ---------------------------------------------------------------------------------------
 std::array<std::array<char, 35>, 35> readMap()
 {
-  std::array<std::array<char, col>, row> mapArr;
   fs::path filePath = "map.txt";
 
   try
@@ -158,21 +157,22 @@ void printMap()
 
 void updateUnitMap()
 {
-  int x;
-  int y;
+  //  std::cout << blueUnits.size() << std::endl;
+  //  size_t i = blueUnits.size()+1;
+  //   std::cout << i << std::endl;
+
+  std::size_t x;
+  std::size_t y;
+
   unitsMap = mapArr;
-  x = blueBase.positionX();
-  y = blueBase.positionY();
-  unitsMap[x][y] = blueBase.getUnitType();
+  unitsMap[std::size_t(blueBase.positionX())][std::size_t(blueBase.positionY())] = char(redBase.getUnitType());
+  unitsMap[std::size_t(redBase.positionX())][std::size_t(redBase.positionY())] = char(redBase.getUnitType());
 
-  x = redBase.positionX();
-  y = redBase.positionY();
-  unitsMap[x][y] = redBase.getUnitType();
-
-  for (size_t i = 0; i < blueUnits.size(); i++)
+  for (std::size_t i = 0; i < blueUnits.size(); i++)
   {
-    x = blueUnits[i].positionX();
-    y = blueUnits[i].positionY();
+
+    x = std::size_t(blueUnits[i].positionX());
+    y = std::size_t(blueUnits[i].positionY());
     if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6')
     {
       unitsMap[x][y] = blueUnits[i].getUnitType();
@@ -182,10 +182,10 @@ void updateUnitMap()
       unitsMap[x][y] = 'M';
     }
   }
-  for (size_t i = 0; i < redUnits.size(); i++)
+  for (std::size_t i = 0; i < redUnits.size(); i++)
   {
-    x = redUnits[i].positionX();
-    y = redUnits[i].positionY();
+    x = std::size_t(redUnits[i].positionX());
+    y = std::size_t(redUnits[i].positionY());
     if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6')
     {
       unitsMap[x][y] = redUnits[i].getUnitType();
@@ -195,7 +195,6 @@ void updateUnitMap()
       unitsMap[x][y] = 'M';
     }
   }
-
 };
 
 char mapMenu()
@@ -211,43 +210,66 @@ char mapMenu()
 
 void printUnitMap()
 {
-  int x;
-  int y;
+  std::size_t x;
+  std::size_t y;
 
-    for (std::size_t i = 0; i < row; ++i) {
-        for (std::size_t j = 0; j < col; ++j) {
-            if (unitsMap[i][j]  != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9') {
-                bool unitFound = false;
+  for (std::size_t i = 0; i < row; ++i)
+  {
+    for (std::size_t j = 0; j < col; ++j)
+    {
+      if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
+      {
+        bool unitFound = false;
 
-                for (size_t k = 0; k < redUnits.size(); k++) {
-                    x = redUnits[k].positionX();
-                    y = redUnits[k].positionY();
-                    if (x == j && y == i) {
-                        std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
-                        unitFound = true;
-                        break;
-                    }
-                }
-
-                if (!unitFound) {
-                    for (size_t k = 0; k < blueUnits.size(); k++) {
-                        x = blueUnits[k].positionX();
-                        y = blueUnits[k].positionY();
-                        if (x == j && y == i) {
-                            std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
-                            unitFound = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!unitFound) {
-                    std::cout << unitsMap[i][j];
-                }
-            } else {
-                std::cout << unitsMap[i][j];
-            }
+        for (size_t k = 0; k < redUnits.size(); k++)
+        {
+          x = std::size_t(redUnits[k].positionX());
+          y = std::size_t(redUnits[k].positionY());
+          if (34 == j && 34 == i)
+          {
+            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            unitFound = true;
+            break;
+          }
+          if (x == j && y == i)
+          {
+            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            unitFound = true;
+            break;
+          }
         }
-        std::cout << std::endl;
+
+        if (!unitFound)
+        {
+          for (size_t k = 0; k < blueUnits.size(); k++)
+          {
+            x = std::size_t(blueUnits[k].positionX());
+            y = std::size_t(blueUnits[k].positionY());
+            if (0 == j && 0 == i)
+            {
+              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              unitFound = true;
+              break;
+            }
+            else if (x == j && y == i)
+            {
+              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              unitFound = true;
+              break;
+            }
+          }
+        }
+
+        if (!unitFound)
+        {
+          std::cout << unitsMap[i][j];
+        }
+      }
+      else
+      {
+        std::cout << unitsMap[i][j];
+      }
     }
+    std::cout << std::endl;
+  }
 }

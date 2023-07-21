@@ -34,7 +34,7 @@ int main()
                 blueBase.turn();
         }
         blueUnits[0].relocate(1, 1);
-        redUnits[0].relocate(35, 35);
+        redUnits[0].relocate(33, 33);
         for (size_t i = 0; i < blueUnits.size(); i++)
         {
                 blueUnits[i].info();
@@ -44,12 +44,12 @@ int main()
         {
                 redUnits[i].info();
         }
-        unitsMap=mapArr;
-        printUnitMap();
-        updateUnitMap();
+        unitsMap = mapArr;
+
+
+         updateUnitMap();
 
         printUnitMap();
-
         std::cout << "Press any key to continue..." << std::endl;
         _getch();
         system("cls");
