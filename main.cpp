@@ -6,16 +6,16 @@
 #include <vector>
 extern Base blueBase;
 extern Base redBase;
-extern std::array<std::array<char, ROWS>, COLS> mapArr;
+extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 int main()
 {
 
-        //* setup of vectors for storing units and constructing starting bases-------------
-
         greet();
-        mapArr = readMap();
-        printMap();
+        terainMap = readMap();
+        unitsMap = terainMap; //! do not delete those two at main start
+
+        blueBase.addGold();
         blueBase.info();
         redBase.info();
         blueBase.recruitUnit('K');
@@ -34,7 +34,7 @@ int main()
                 blueBase.turn();
         }
         blueUnits[0].relocate(1, 1);
-        redUnits[0].relocate(33, 33);
+        redUnits[0].relocate(35, 35);
         for (size_t i = 0; i < blueUnits.size(); i++)
         {
                 blueUnits[i].info();
@@ -44,14 +44,17 @@ int main()
         {
                 redUnits[i].info();
         }
-        unitsMap = mapArr;
+        unitsMap = terainMap;
 
+        updateUnitMap();
 
-         updateUnitMap();
-
-        printUnitMap();
+        printBothMaps();
         std::cout << "Press any key to continue..." << std::endl;
         _getch();
-        system("cls");
+        listUnitsInfo(true);
+
+        std::cout << "Press any key to continue..." << std::endl;
+        _getch();
+
         return 0;
 }

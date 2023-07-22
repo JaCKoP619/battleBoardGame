@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
 
-std::array<std::array<char, ROWS>, COLS> mapArr;
+std::array<std::array<char, ROWS>, COLS> terainMap; // map of terrain
 const int row = 35, col = 35;
 std::array<std::array<char, ROWS>, COLS> unitsMap;
 
@@ -111,7 +111,7 @@ std::array<std::array<char, 35>, 35> readMap()
         {
           for (std::size_t j = 0; j < col; ++j)
           {
-            file >> mapArr[i][j];
+            file >> terainMap[i][j];
           }
         }
 
@@ -138,7 +138,7 @@ std::array<std::array<char, 35>, 35> readMap()
     std::cout << "Press any key to continue..." << std::endl;
     _getch();
   }
-  return mapArr;
+  return terainMap;
 }
 
 // * print map function(mostly 4 testing but may reuse) ---------------------------------------------------------------------
@@ -149,12 +149,12 @@ void printMap()
   {
     for (std::size_t j = 0; j < col; ++j)
     {
-      std::cout << mapArr[i][j];
+      std::cout << terainMap[i][j];
     }
     std::cout << std::endl;
   }
 }
-
+// * function updating values of unit map based on terrainMap and unit positons
 void updateUnitMap()
 {
   //  std::cout << blueUnits.size() << std::endl;
@@ -164,7 +164,7 @@ void updateUnitMap()
   std::size_t x;
   std::size_t y;
 
-  unitsMap = mapArr;
+  unitsMap = terainMap;
   unitsMap[std::size_t(blueBase.positionX())][std::size_t(blueBase.positionY())] = char(redBase.getUnitType());
   unitsMap[std::size_t(redBase.positionX())][std::size_t(redBase.positionY())] = char(redBase.getUnitType());
 
@@ -207,7 +207,7 @@ char mapMenu()
   input = static_cast<char>(getch());
   return input;
 };
-
+//*function printing unitMap array, with checking units aligance and changing print colour for them, also sets 'M' value to indicate multiple units at the same position, TESTED OK
 void printUnitMap()
 {
   std::size_t x;
@@ -271,5 +271,100 @@ void printUnitMap()
       }
     }
     std::cout << std::endl;
+  }
+}
+//* Function to conviniently print both maps at same level, with keeping their funcionality ------------------------------TESTED OK
+void printBothMaps()
+{
+  std::size_t x;
+  std::size_t y;
+  std::cout << "Terrain map:                                              Unit Positions map:" << std::endl;
+  for (std::size_t i = 0; i < row; ++i)
+  {
+    for (std::size_t j = 0; j < col; ++j)
+    {
+      std::cout << terainMap[i][j];
+    }
+    std::cout << "                       ";
+    for (std::size_t j = 0; j < col; ++j)
+    {
+      if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
+      {
+        bool unitFound = false;
+
+        for (size_t k = 0; k < redUnits.size(); k++)
+        {
+          x = std::size_t(redUnits[k].positionX());
+          y = std::size_t(redUnits[k].positionY());
+          if (34 == j && 34 == i)
+          {
+            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            unitFound = true;
+            break;
+          }
+          if (x == j && y == i)
+          {
+            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            unitFound = true;
+            break;
+          }
+        }
+
+        if (!unitFound)
+        {
+          for (size_t k = 0; k < blueUnits.size(); k++)
+          {
+            x = std::size_t(blueUnits[k].positionX());
+            y = std::size_t(blueUnits[k].positionY());
+            if (0 == j && 0 == i)
+            {
+              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              unitFound = true;
+              break;
+            }
+            else if (x == j && y == i)
+            {
+              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              unitFound = true;
+              break;
+            }
+          }
+        }
+
+        if (!unitFound)
+        {
+          std::cout << unitsMap[i][j];
+        }
+      }
+      else
+      {
+        std::cout << unitsMap[i][j];
+      }
+    }
+    std::cout<< std::endl;
+  }
+}
+
+void listUnitsInfo(bool team)
+{
+  system("cls");
+
+  printBothMaps();
+  std::cout<<std::endl;
+  if (team == true)
+  {
+    blueBase.info();
+    for (size_t i = 0; i < blueUnits.size(); i++)
+    {
+      blueUnits[i].info();
+    }
+  }
+  else
+  {
+    redBase.info();
+    for (size_t i = 0; i < redUnits.size(); i++)
+    {
+      blueUnits[i].info();
+    }
   }
 }

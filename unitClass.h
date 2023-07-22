@@ -4,8 +4,7 @@
 
 extern int typeToModifierArr(char chartype);
 extern int typeToModifier(char chartype);
-extern int unitModifiers[7][5];
-
+extern const int unitModifiers[7][5];
 
 class Unit
 {
@@ -19,11 +18,11 @@ protected:
 
         bool iddle;    // info if unit has been activated this turn
         char unitType; // info about unit type
-
+        int spdMax;    // unit default movement range 
+        int spd;       // unit movement speed decrementing while moving
+        int range;     // unit attack range
 private:
-        int spd;   // unit movement range for time of turn
-        int cost;  // unit deployment cost
-        int range; // unit attack range
+        int cost; // unit deployment cost
 
 public:
         Unit(char unitType, int ID, bool assignTeam);
@@ -41,28 +40,17 @@ class Base : public Unit
 {
 
 protected:
-        int hpMax;         // starting value of hp points
-        int hp;            // currernt hp points, cannot exceed hpMax
-        int gold;          // current gold
-        int id;            // for base it's always 1
-        int x;             // x position of base
-        int y;             // y position of base
+        long gold;         // current gold
         int timeRemaining; // recruitment time remaining
         char deployedUnit; // type of unit being deployed
         int idCount;       // number of units deployed, won't be subtracted when unit is killed
 public:
-        int positionX(); // returns x position of unit
-        int positionY(); // returns y position of unit
         Base(bool assignTeam);
-        bool checkIfDead();
         void turn();
         void recruitUnit(char giveType);
         void info() override;
-        void addGold(int amount);
-        void relocate(int movX, int movY);
-
+        void addGold();
 };
-
 
 extern Base blueBase;
 extern Base redBase;
