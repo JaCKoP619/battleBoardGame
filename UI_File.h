@@ -9,10 +9,11 @@ extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 void greet();
 std::array<std::array<char,ROWS>,COLS> readMap();
 void printMap();
-char mapMenu();
+char Menu();
 void updateUnitMap();
 void printUnitMap();
 void printBothMaps();
 void listUnitsInfo(bool team);
+void recruitmentMenu();
 
 #endif

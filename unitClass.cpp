@@ -15,10 +15,10 @@ const int maxY = maxX;
 const int unitModifiers[7][5] = {
     //? format:
     // *{hp,spd,cost,range,timeOfDeployment}
-    {70, 5, 400, 1, 5}, // knights   "K"
+    {70, 5, 400, 1, 5}, // Knights   "K"
     {60, 5, 250, 1, 3}, // Swordsman "S"
     {40, 2, 250, 5, 3}, // Archers   "A"
-    {50, 2, 200, 2, 3}, // pikemans  "P"
+    {50, 2, 200, 2, 3}, // Pikemans  "P"
     {90, 2, 500, 1, 4}, // Ram       "R"
     {50, 2, 800, 7, 6}, // Catapults "C"
     {20, 2, 100, 1, 2}  // Workers   "W"
@@ -77,8 +77,8 @@ Unit::Unit(char giveType, int id, bool assignTeam)
     }
     else
     {
-        x = maxX-1;
-        y = maxY-1;
+        x = maxX - 1;
+        y = maxY - 1;
     }
     hp = hpMax;
 };
@@ -190,29 +190,40 @@ void Unit::info()
               << std::endl;
 };
 
+bool Unit::getStatus()
+{
+    return iddle;
+}
 //* method for moving unit witch movement range check--------------------------------------------TESTED OK---------------
 void Unit::relocate(int movX, int movY)
 {
-    if (movX >= maxX || movX < 0 || movY >= maxY || movY < 0)  //check if order is leading outside map range
+    if (movX >= maxX || movX < 0 || movY >= maxY || movY < 0) // check if order is leading outside map range
     {
-        std::cout << "Leaving map, belay that order!\n"<< std::endl;
+        std::cout << "Leaving map, belay that order!\n"
+                  << std::endl;
+        std::cout << "pres any key to continue..." << std::endl;
+        getch();
     }
-    else
+    else if (terainMap[std::size_t(movX)][std::size_t(movY)] == '9')
     {
-        if (spd >= (sqrt(pow(2.0, (x - movX))) + sqrt(pow(2.0, (y - movY)))))
-        {
 
-            x = movX;
-            y = movY;
-            spd-=(sqrt(pow(2.0, (x - movX))) + sqrt(pow(2.0, (y - movY))));
-        }
-        else
-        {
-            std::cout << "Exceeded unit's range!" << std::endl;
-            std::cout << "pres any key to continue..." << std::endl;
-            getch();
-            system("cls");
-        }
+        std::cout << "Inaccessible terrain, belay that order!\n"
+                  << std::endl;
+        std::cout << "pres any key to continue..." << std::endl;
+        getch();
+    }
+    else if (spd < sqrt(pow((x - movX), 2) + pow((y - movY), 2)))
+    {
+        std::cout << "Exceeded unit's range!" << std::endl;
+        std::cout << "pres any key to continue..." << std::endl;
+        getch();
+    }
+    else if (spd >= sqrt(pow((x - movX), 2) + pow((y - movY), 2)))
+    {
+
+        x = movX;
+        y = movY;
+        spd -= sqrt(pow((x - movX), 2) + pow((y - movY), 2));
     }
 };
 
@@ -249,6 +260,11 @@ Base blueBase(true);
 void Base::info()
 {
     std::string typeStr;
+    std::string teamStr;
+    if (team == true)
+        teamStr = "\x1B[34mBlue team Base.\x1B[0m ";
+    else
+        teamStr = "\x1B[31mRed team Base.\x1B[0m ";
 
     if (iddle != true)
     {
@@ -283,14 +299,14 @@ void Base::info()
             break;
         }
 
-        std::cout << "This is a BASE. Position: " << x << " / " << y << ". Hp: " << hp << "/" << hpMax << std::endl;
+        std::cout << "This is a " << teamStr << "Position: " << x << " / " << y << ". Hp: " << hp << "/" << hpMax << std::endl;
         std::cout << "Currently Deploying " << typeStr << " unit. Time left: " << timeRemaining << std::endl;
         std::cout << gold << " golden coins in the treasury.\n"
                   << std::endl;
     }
     else // Base is iddle
     {
-        std::cout << "This is a BASE. Position: " << x << " / " << y << ". Hp: " << hp << std::endl;
+        std::cout << "This is a " << teamStr << "Position: " << x << " / " << y << ". Hp: " << hp << std::endl;
         std::cout << "Currently Iddle" << std::endl;
         std::cout << gold << " golden coins in the treasury.\n"
                   << std::endl;
