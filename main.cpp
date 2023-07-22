@@ -10,7 +10,7 @@ extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 int main()
 {
-
+        
         greet();
         terainMap = readMap();
         unitsMap = terainMap; //! do not delete those two at main start
@@ -33,8 +33,8 @@ int main()
                 redBase.turn();
                 blueBase.turn();
         }
-        blueUnits[0].relocate(1, 1);
-        redUnits[0].relocate(35, 35);
+        blueUnits[0].relocate(2,3);
+        redUnits[0].relocate(33, 32);
         for (size_t i = 0; i < blueUnits.size(); i++)
         {
                 blueUnits[i].info();
@@ -48,10 +48,10 @@ int main()
 
         updateUnitMap();
 
-        printBothMaps();
+        printUnitMap();
         std::cout << "Press any key to continue..." << std::endl;
         _getch();
-        listUnitsInfo(true);
+        listUnitsInfo(false);
 
         std::cout << "Press any key to continue..." << std::endl;
         _getch();

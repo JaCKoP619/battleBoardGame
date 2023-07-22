@@ -212,6 +212,7 @@ void printUnitMap()
 {
   std::size_t x;
   std::size_t y;
+  bool unitFound;
 
   for (std::size_t i = 0; i < row; ++i)
   {
@@ -219,19 +220,15 @@ void printUnitMap()
     {
       if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
       {
-        bool unitFound = false;
+        unitFound = false;
 
+        // Check red units
         for (size_t k = 0; k < redUnits.size(); k++)
         {
           x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
-          if (34 == j && 34 == i)
-          {
-            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
-            unitFound = true;
-            break;
-          }
-          if (x == j && y == i)
+
+          if (x == i && y == j) // <-- Adjusted comparison here
           {
             std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
             unitFound = true;
@@ -239,19 +236,15 @@ void printUnitMap()
           }
         }
 
+        // Check blue units if red unit not found
         if (!unitFound)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
           {
             x = std::size_t(blueUnits[k].positionX());
             y = std::size_t(blueUnits[k].positionY());
-            if (0 == j && 0 == i)
-            {
-              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
-              unitFound = true;
-              break;
-            }
-            else if (x == j && y == i)
+
+            if (x == i && y == j) // <-- Adjusted comparison here
             {
               std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
               unitFound = true;
@@ -260,6 +253,7 @@ void printUnitMap()
           }
         }
 
+        // If unit not found, print regular character
         if (!unitFound)
         {
           std::cout << unitsMap[i][j];
@@ -273,6 +267,7 @@ void printUnitMap()
     std::cout << std::endl;
   }
 }
+
 //* Function to conviniently print both maps at same level, with keeping their funcionality ------------------------------TESTED OK
 void printBothMaps()
 {
@@ -296,13 +291,13 @@ void printBothMaps()
         {
           x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
-          if (34 == j && 34 == i)
+          if (34 == i && 34 == j)
           {
             std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
             unitFound = true;
             break;
           }
-          if (x == j && y == i)
+          if (x == i && y == j)
           {
             std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
             unitFound = true;
@@ -316,13 +311,13 @@ void printBothMaps()
           {
             x = std::size_t(blueUnits[k].positionX());
             y = std::size_t(blueUnits[k].positionY());
-            if (0 == j && 0 == i)
+            if (0 == i && 0 == j)
             {
               std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
               unitFound = true;
               break;
             }
-            else if (x == j && y == i)
+            else if (x == i && y == j)
             {
               std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
               unitFound = true;
@@ -341,7 +336,7 @@ void printBothMaps()
         std::cout << unitsMap[i][j];
       }
     }
-    std::cout<< std::endl;
+    std::cout << std::endl;
   }
 }
 
@@ -350,7 +345,7 @@ void listUnitsInfo(bool team)
   system("cls");
 
   printBothMaps();
-  std::cout<<std::endl;
+  std::cout << std::endl;
   if (team == true)
   {
     blueBase.info();
