@@ -3,13 +3,16 @@
 #include <cmath>
 #include <string>
 #include "unitClass.h"
+#include "UI_File.h"
 #include <vector>
 
 std::vector<Unit> blueUnits;
 std::vector<Unit> redUnits;
+
+extern std::array<std::array<char, ROWS>, COLS> terainMap;
 const int maxX = 35;
 const int maxY = maxX;
-int unitModifiers[7][5] = {
+const int unitModifiers[7][5] = {
     //? format:
     // *{hp,spd,cost,range,timeOfDeployment}
     {70, 5, 400, 1, 5}, // knights   "K"
@@ -20,7 +23,7 @@ int unitModifiers[7][5] = {
     {50, 2, 800, 7, 6}, // Catapults "C"
     {20, 2, 100, 1, 2}  // Workers   "W"
 };
-// Auxilary functions to convert char to an int tor array
+//*Auxilary functions to convert char to an int tor array
 int typeToModifierArr(char chartype)
 {
     switch (chartype)
@@ -74,12 +77,12 @@ Unit::Unit(char giveType, int id, bool assignTeam)
     }
     else
     {
-        x = maxX;
-        y = maxY;
+        x = maxX-1;
+        y = maxY-1;
     }
     hp = hpMax;
 };
-
+//* returns unit type as char-------------------------------------------------------------TESTED OK-----------
 char Unit::getUnitType()
 {
     return unitType;
@@ -94,7 +97,7 @@ int Unit::positionY()
 {
     return y;
 };
-
+//* method to set iddle to false when unit conducted an attack
 void Unit::setActive()
 {
     Unit::iddle = false;
@@ -104,7 +107,7 @@ void Unit::takeDamage(int damage)
 {
     Unit::hp -= damage;
 };
-
+//* checking if unit hp is less than 0, implemented inside turn(),
 bool Unit::checkIfDead()
 {
     if (Unit::hp <= 0)
@@ -116,8 +119,34 @@ bool Unit::checkIfDead()
         return false;
     }
 };
+//* method to manage finishing turn, with reseting modifiers and controll variables and managing gold collection if unit met the conditions
+//*contains checkifDead() method, returns false if unit is dead, to be used with destructor method at the higher scope
+bool Unit::turn()
+{
+    if (hp <= 0)
+    {
+        return false;
+    }
+    else
+    {
+        spd = spdMax;
+        iddle = true;
+        if (unitType == 'W' && terainMap[std::size_t(positionY())][std::size_t(positionX())] == '6')
+        {
+            if (team == true)
+            {
+                blueBase.addGold();
+            }
+            else
+            {
+                redBase.addGold();
+            }
+        }
+        return true;
+    }
+};
 
-//* method to display info about the unit (possibly for listing units)-----TESTED OK---------------------
+//* method to display info about the unit (possibly for listing units)--------------------------TESTED OK---------------
 void Unit::info()
 {
     std::string typeStr;
@@ -161,13 +190,12 @@ void Unit::info()
               << std::endl;
 };
 
-//* method for moving unit witch movement range check-----------------------------------------------------------
+//* method for moving unit witch movement range check--------------------------------------------TESTED OK---------------
 void Unit::relocate(int movX, int movY)
 {
-    if (movX > maxX || movX < 0 || movY > maxY || movY < 0)
+    if (movX >= maxX || movX < 0 || movY >= maxY || movY < 0)  //check if order is leading outside map range
     {
-        std::cout << "Leaving map, belay that order!\n"
-                  << std::endl;
+        std::cout << "Leaving map, belay that order!\n"<< std::endl;
     }
     else
     {
@@ -176,6 +204,7 @@ void Unit::relocate(int movX, int movY)
 
             x = movX;
             y = movY;
+            spd-=(sqrt(pow(2.0, (x - movX))) + sqrt(pow(2.0, (y - movY))));
         }
         else
         {
@@ -191,12 +220,14 @@ void Unit::relocate(int movX, int movY)
 //! base constructor ---------------------------TESTED OK------------------------------------
 Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
+    spdMax = 0;
+    range = 0;
     unitType = 'B';
     ID = 0;
     idCount = 1;
     team = assignTeam;
-    hp = hpMax = 200;
-    gold = 1000; // starting gold
+    hp = hpMax = 200; // starting hp points, hpMax is constant
+    gold = 2000;      // starting gold
     if (team == true)
     { // setting base position depending on a team
         x = 0;
@@ -204,8 +235,8 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     }
     else
     {
-        x = maxX-1;
-        y = maxY-1;
+        x = maxX - 1;
+        y = maxY - 1;
     }
     iddle = true;
     timeRemaining = 0;
@@ -213,10 +244,6 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 
 Base redBase(false); // Base declaration with constructor for external use
 Base blueBase(true);
-
-void Base::relocate(int movX, int movY){
-    // does nothing
-};
 
 //* display info about the base-------------------------------------------------TESTED OK
 void Base::info()
@@ -270,12 +297,13 @@ void Base::info()
     }
 };
 
-void Base::addGold(int amount)
+//*designed for worker to call, adds 50gold to the treasury---------------------TESTED OK
+void Base::addGold()
 {
-    gold += amount;
+    gold += 50;
 };
 
-//'Base' method for unit recruitment---------------------------TESTED OK------------------------------------
+//*'Base' method for unit recruitment-------------------------------------------TESTED OK--
 void Base::recruitUnit(char giveType)
 {
     int tempType;
@@ -298,7 +326,7 @@ void Base::recruitUnit(char giveType)
         }
     }
 };
-//* method for progressing the turn for the base------------------------------------------------TESTED OK
+//* method for progressing the turn for the base--------------------------------TESTED OK
 // TODO maybe will implement something global, this one is for testing 4 now
 void Base::turn()
 {
@@ -325,15 +353,4 @@ void Base::turn()
             }
         }
     }
-};
-
-int Base::positionX()
-{
-
-    return x;
-};
-int Base::positionY()
-{
-
-    return y;
 };
