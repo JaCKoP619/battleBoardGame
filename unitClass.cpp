@@ -463,7 +463,7 @@ void Base::recruitUnit(char giveType)
         }
     }
 };
-//* method for progressing the turn for the base--------------------------------TESTED OK
+//*workaround method for reading and updating the base class from textfile-------------------------------TESTED OK
 void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining,  int setIdCount, long setGold)
 {
     hp = setHp;
@@ -473,6 +473,7 @@ void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining,  
         gold = setGold;
     idCount = setIdCount;
 }
+//*workaround method for reading and updating the base class from textfile, overloaded-------------------------------TESTED OK
 void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, int setIdCount)
 {
     hp = setHp;
@@ -483,7 +484,7 @@ void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, i
     idCount = setIdCount;
 }
 
-
+//* method for progressing the turn for the base--------------------------------TESTED OK
 // TODO maybe will implement something global, this one is for testing 4 now
 void Base::turn()
 {
