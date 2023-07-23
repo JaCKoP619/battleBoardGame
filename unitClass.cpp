@@ -68,10 +68,12 @@ int typeToModifierArr(char chartype)
         break;
     }
 };
+
 //? Unit methods-----------------------------------------------------------------------------
-Unit::Unit(char giveType, int id, bool assignTeam)
-{ //! constructor============================================= TESTED OK=============
-    unitType = giveType;
+//! starting constructor============================================= TESTED OK=============
+Unit::Unit(char setType, int id, bool assignTeam)
+{
+    unitType = setType;
     ID = id;
     int tempType = typeToModifierArr(unitType); // using the predefined table of modifiers
 
@@ -94,6 +96,24 @@ Unit::Unit(char giveType, int id, bool assignTeam)
         y = maxY - 1;
     }
     hp = hpMax;
+};
+//! midgame constructor for .txt file comunication
+Unit::Unit(char setType, int setId, bool assignTeam, int setX, int setY, int setHp)
+{
+    unitType = setType;
+    ID = setId;
+    int tempType = typeToModifierArr(unitType); // using the predefined table of modifiers
+
+    hpMax = unitModifiers[tempType][0];
+    spd = unitModifiers[tempType][1];
+    cost = unitModifiers[tempType][2];
+    range = unitModifiers[tempType][3];
+    team = assignTeam;
+    iddle = true;
+    x = setX;
+    y = setY;
+    hp = setHp;
+
 };
 //* returns unit type as char-------------------------------------------------------------TESTED OK-----------
 char Unit::getUnitType()
@@ -256,11 +276,12 @@ std::string Unit::writeToFile()
         output = "B ";
     else
         output = "R ";
-    output += (getUnitType() + " " + std::to_string(getID()) + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()) + " " );
+
+    output += (std::string(1, getUnitType()) + " " + std::to_string(getID()) + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()));
     return output;
 }
 //*? BASE methods -----------------------------------------------------------------------------------------------------------------
-//! base constructor ---------------------------TESTED OK------------------------------------
+//! base starting constructor ---------------------------TESTED OK------------------------------------
 Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
     spdMax = 0;
@@ -284,10 +305,75 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     iddle = true;
     timeRemaining = 0;
 };
+//! constructor for friendly base for reading from textfile
+Base::Base(bool assignTeam, int setHp, char setDeployedType, int setTimeRemaining, long setGold,int setIdCount) : Unit('B', 0, assignTeam)
+{
+    spdMax = 0;
+    range = 0;
+    unitType = 'B';
+    ID = 0;
+    idCount = setIdCount;
+    team = assignTeam;
+    hpMax = 200;
+    hp = setHp;     // sethp from text file
+    gold = setGold; // starting gold
+    if (team == true)
+    { // setting base position depending on a team
+        x = 0;
+        y = 0;
+    }
+    else
+    {
+        x = maxX - 1;
+        y = maxY - 1;
+    }
+    if (setDeployedType == '0')
+    {
+        iddle = true;
+        timeRemaining = 0;
+    }
+    else
+    {
+        iddle = false;
+        timeRemaining = setTimeRemaining;
+        deployedUnit = setDeployedType;
+    }
+}
 
-Base redBase(false); // Base declaration with constructor for external use
-Base blueBase(true);
-
+//! constructor for enemy base  reading from textfile
+Base::Base(bool assignTeam, int setHp, char setDeployedType, int setTimeRemaining, int setIdCount) : Unit('B', 0, assignTeam)
+{
+    spdMax = 0;
+    range = 0;
+    unitType = 'B';
+    ID = 0;
+    idCount = setIdCount;
+    team = assignTeam;
+    hpMax = 200;
+    hp = setHp;  // sethp from text file
+    gold = 2000; // starting gold
+    if (team == true)
+    { // setting base position depending on a team
+        x = 0;
+        y = 0;
+    }
+    else
+    {
+        x = maxX - 1;
+        y = maxY - 1;
+    }
+    if (setDeployedType == '0')
+    {
+        iddle = true;
+        timeRemaining = 0;
+    }
+    else
+    {
+        iddle = false;
+        timeRemaining = setTimeRemaining;
+        deployedUnit = setDeployedType;
+    }
+}
 //* display info about the base-------------------------------------------------TESTED OK
 void Base::info()
 {
@@ -351,6 +437,10 @@ void Base::addGold()
     gold += 50;
 };
 
+int Base::getTimeRemaining()
+{
+    return timeRemaining;
+}
 //*'Base' method for unit recruitment-------------------------------------------TESTED OK--
 void Base::recruitUnit(char giveType)
 {
@@ -411,9 +501,17 @@ int Base::getID()
 {
     return ID;
 }
+char Base::getUnitType()
+{
+    return unitType;
+}
 long Base::getGold()
 {
     return gold;
+}
+int Base::getIdCount()
+{
+    return idCount;
 }
 //* creates string to write to comm file describing the base obiect--------------------------TESTED OK
 std::string Base::writeToFile()
@@ -423,6 +521,10 @@ std::string Base::writeToFile()
         output = "B ";
     else
         output = "R ";
-    output += (std::to_string(getUnitType()) + std::to_string(getID())  + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()) + " " + getDeployedUnitType());
+
+    output += (std::string(1, getUnitType()) + " " + std::to_string(getID()) + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()) + " " + getDeployedUnitType() + " "+ std::to_string(getTimeRemaining())+ " "+ std::to_string(getIdCount()));
     return output;
 }
+
+Base redBase(false); // Base declaration with constructor for external use
+Base blueBase(true);

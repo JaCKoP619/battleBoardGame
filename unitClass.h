@@ -27,6 +27,7 @@ private:
 
 public:
         Unit(char unitType, int ID, bool assignTeam);
+        Unit(char unitType, int ID, bool assignTeam, int setX, int setY, int setHp);
         int positionX(); // returns x position of unit
         int positionY(); // returns y position of unit
         void setActive();
@@ -51,10 +52,14 @@ protected:
         char deployedUnit; // type of unit being deployed
         int idCount;
         int ID;
+        char unitType;
+
 
               // number of units deployed, won't be subtracted when unit is killed
 public:
         Base(bool assignTeam);
+        Base(bool assignTeam, int setHp, char setDeployedType, int setTimeRemaining,long setGold,int setIdCount);
+        Base(bool assignTeam, int setHp, char setDeployedType, int setTimeRemaining,int setIdCount);
         void turn();
         void recruitUnit(char giveType);
         void info() override;
@@ -63,6 +68,9 @@ public:
         std::string writeToFile();
         char getDeployedUnitType();
         int getID();
+        char getUnitType();
+        int getTimeRemaining();
+        int getIdCount();
 };
 
 extern Base blueBase;
