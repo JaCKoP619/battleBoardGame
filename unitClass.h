@@ -71,6 +71,10 @@ public:
         char getUnitType();
         int getTimeRemaining();
         int getIdCount();
+        void readFromFile( int setHp, char setDeployedType, int setTimeRemaining, int setIdCount, long setGold);
+        void readFromFile( int setHp, char setDeployedType, int setTimeRemaining, int setIdCount);
+        
+
 };
 
 extern Base blueBase;

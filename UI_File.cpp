@@ -14,8 +14,8 @@
 bool playerTeam = true;
 // namespace and paths for unit txt files for both teams
 namespace fs = std::filesystem;
-fs::path readRed = "units4Red.txt";
-fs::path readBlue = "units4Blue.txt";
+fs::path readRed = "list4Red.txt";
+fs::path readBlue = "list4Blue.txt";
 fs::path mapFile = "map.txt";
 
 extern std::vector<Unit> blueUnits;
@@ -27,7 +27,6 @@ int col = int(COLS);
 //* maps: terrain and strategic
 std::array<std::array<char, ROWS>, COLS> terainMap;
 std::array<std::array<char, ROWS>, COLS> unitsMap;
-
 //* opening text message display and wait for input to carry on---------------------------------------------------------------TESTED OK----------
 void greet()
 
@@ -399,7 +398,7 @@ void listUnitsInfo(bool team)
   std::cout << std::endl;
   if (team == true)
   {
-    blueBase.info();
+     blueBase.info();
     for (size_t i = 0; i < blueUnits.size(); i++)
     {
       blueUnits[i].info();
@@ -476,8 +475,6 @@ bool readUnits(bool auxteam, int turnTIME)
   extern fs::path readRed;
   fs::path filePath;
   std::string line;
-  std::string strBlue;
-  std::string strRed;
   char readTeam;
   char readType;
   int readID;
@@ -513,7 +510,7 @@ bool readUnits(bool auxteam, int turnTIME)
       // execute a different function and return false.
       return false;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 
   // If file appears within turnTIME:
@@ -528,44 +525,46 @@ bool readUnits(bool auxteam, int turnTIME)
     gold = std::stol(line);
     // reading blue constructor
     std::getline(file, line);
-    strBlue = line;
+
     iss.str(line);
-    iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime>>setIdCounter;
+    iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
     if (auxteam == true)
-      Base blueBase(true, readHp, readDeployType, readRemainingTime, gold,setIdCounter);
+       blueBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, gold);
     else
-      Base blueBase(true, readHp, readDeployType, readRemainingTime,setIdCounter);
-    iss.clear();
+       blueBase.readFromFile( readHp, readDeployType, readRemainingTime, setIdCounter);
 
     // reading red constructor
     std::getline(file, line);
-    strRed = line;
 
-    iss.str(line);
-    iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime;
-    if (auxteam == true)
-      Base redBase(true, readHp, readDeployType, readRemainingTime,setIdCounter);
-    else
-      Base redBase(true, readHp, readDeployType, readRemainingTime, gold,setIdCounter);
     iss.clear();
+    iss.str(line);
+    iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
+    std::cout<<readTeam<<readType<<readID<<readX<<readY<<readHp<<std::endl;
+    if (auxteam == true)
+      redBase.readFromFile(true, readHp, readDeployType, readRemainingTime, setIdCounter);
+    else
+      redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter,gold);
+
     while (std::getline(file, line))
     {
-     iss.str(line);
+      iss.clear();
+      iss.str(line);
       iss >> readTeam >> readType >> readID >> readX >> readY >> readHp;
+      std::cout<<readTeam<<readType<<readID<<readX<<readY<<readHp<<std::endl;
       if (readTeam == 'B')
       {
         bool boolTeam = true;
         blueUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
       }
-      else if (readTeam == 'R')
+      else
       {
         bool boolTeam = false;
         redUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
       }
-      iss.clear();
     }
     file.close();
   }
+
   catch (const std::filesystem::filesystem_error &e)
   {
     std::cout << e.what() << std::endl;

@@ -14,8 +14,6 @@ extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
 int main()
 {
-        blueBase.~Base();
-        redBase.~Base();
         readUnits(false,15);
 
         std::chrono::seconds pauseDuration(1);

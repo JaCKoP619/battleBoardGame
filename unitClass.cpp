@@ -113,7 +113,6 @@ Unit::Unit(char setType, int setId, bool assignTeam, int setX, int setY, int set
     x = setX;
     y = setY;
     hp = setHp;
-
 };
 //* returns unit type as char-------------------------------------------------------------TESTED OK-----------
 char Unit::getUnitType()
@@ -306,7 +305,7 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     timeRemaining = 0;
 };
 //! constructor for friendly base for reading from textfile
-Base::Base(bool assignTeam, int setHp, char setDeployedType, int setTimeRemaining, long setGold,int setIdCount) : Unit('B', 0, assignTeam)
+Base::Base(bool assignTeam, int setHp, char setDeployedType, int setTimeRemaining, long setGold, int setIdCount) : Unit('B', 0, assignTeam)
 {
     spdMax = 0;
     range = 0;
@@ -465,6 +464,26 @@ void Base::recruitUnit(char giveType)
     }
 };
 //* method for progressing the turn for the base--------------------------------TESTED OK
+void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining,  int setIdCount, long setGold)
+{
+    hp = setHp;
+    deployedUnit = setDeployedType;
+    timeRemaining = setTimeRemaining;
+    
+        gold = setGold;
+    idCount = setIdCount;
+}
+void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, int setIdCount)
+{
+    hp = setHp;
+    deployedUnit = setDeployedType;
+    timeRemaining = setTimeRemaining;
+    
+        gold = 2000;
+    idCount = setIdCount;
+}
+
+
 // TODO maybe will implement something global, this one is for testing 4 now
 void Base::turn()
 {
@@ -522,7 +541,7 @@ std::string Base::writeToFile()
     else
         output = "R ";
 
-    output += (std::string(1, getUnitType()) + " " + std::to_string(getID()) + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()) + " " + getDeployedUnitType() + " "+ std::to_string(getTimeRemaining())+ " "+ std::to_string(getIdCount()));
+    output += (std::string(1, getUnitType()) + " " + std::to_string(getID()) + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()) + " " + getDeployedUnitType() + " " + std::to_string(getTimeRemaining()) + " " + std::to_string(getIdCount()));
     return output;
 }
 
