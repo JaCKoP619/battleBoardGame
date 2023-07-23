@@ -10,17 +10,18 @@ extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 int main()
 {
-        recruitmentMenu();
+
+        // recruitmentMenu();
         // greet();
         // terainMap = readMap();
         // unitsMap = terainMap; //! do not delete those two at main start
 
-        // blueBase.addGold();
-        // blueBase.info();
-        // redBase.info();
-        // blueBase.recruitUnit('K');
-        // redBase.recruitUnit('S');
-
+        blueBase.addGold();
+        blueBase.info();
+        redBase.info();
+        blueBase.recruitUnit('K');
+        redBase.recruitUnit('S');
+        std::cout<<blueBase.writeToFile()<<std::endl;
         // for (int i = 0; i <= 5; i++)
         // {
         //         redBase.turn();

@@ -15,5 +15,5 @@ void printUnitMap();
 void printBothMaps();
 void listUnitsInfo(bool team);
 void recruitmentMenu();
-
+void writeUnits();
 #endif

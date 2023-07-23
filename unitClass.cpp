@@ -23,7 +23,17 @@ const int unitModifiers[7][5] = {
     {50, 2, 800, 7, 6}, // Catapults "C"
     {20, 2, 100, 1, 2}  // Workers   "W"
 };
-//*Auxilary functions to convert char to an int tor array
+
+const int damageTable[7][8] = {
+    // Knight,Swordman,Archer,Pikeman,Ram,Catapult,Worker,Base
+    {35, 35, 35, 35, 35, 50, 35, 35}, // Knight
+    {30, 30, 30, 20, 20, 30, 30, 30}, // swordsman
+    {15, 15, 15, 15, 10, 10, 15, 15}, // Archers
+    {35, 15, 15, 15, 15, 10, 15, 10}, // Pikemans
+    {40, 40, 40, 40, 40, 40, 40, 50}, // Ram
+    {10, 10, 10, 10, 10, 10, 10, 50}, // Catapults
+    {5, 5, 5, 5, 5, 5, 5, 1}};        // Workers
+//*Auxilary functions to convert char to an int for unitModifiers array
 int typeToModifierArr(char chartype)
 {
     switch (chartype)
@@ -48,6 +58,9 @@ int typeToModifierArr(char chartype)
         break;
     case 'W':
         return 6;
+        break;
+    case 'B':
+        return 7;
         break;
     default:
         // throw std::runtime_error("Invalid UnitType (char)");
@@ -102,7 +115,7 @@ void Unit::setActive()
 {
     Unit::iddle = false;
 };
-
+// TODO: implement properly and test, add damage table
 void Unit::takeDamage(int damage)
 {
     Unit::hp -= damage;
@@ -145,7 +158,6 @@ bool Unit::turn()
         return true;
     }
 };
-
 //* method to display info about the unit (possibly for listing units)--------------------------TESTED OK---------------
 void Unit::info()
 {
@@ -189,12 +201,13 @@ void Unit::info()
     std::cout << "Currently " << activeStr << " and has " << hp << "/" << hpMax << " hp.\n"
               << std::endl;
 };
-
+//*returns bool iddle
 bool Unit::getStatus()
 {
     return iddle;
 }
 //* method for moving unit witch movement range check--------------------------------------------TESTED OK---------------
+// TODO: implement blocking movement to space occupied by enemy unit
 void Unit::relocate(int movX, int movY)
 {
     if (movX >= maxX || movX < 0 || movY >= maxY || movY < 0) // check if order is leading outside map range
@@ -227,7 +240,26 @@ void Unit::relocate(int movX, int movY)
     }
 };
 
-//*?Base methods --------------------------------------------------------------------------
+int Unit::getID()
+{
+    return ID;
+}
+
+int Unit::getHp()
+{
+    return hp;
+}
+std::string Unit::writeToFile()
+{
+    std::string output;
+    if (team == true)
+        output = "B ";
+    else
+        output = "R ";
+    output += (getUnitType() + " " + std::to_string(getID()) + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()) + " " );
+    return output;
+}
+//*? BASE methods -----------------------------------------------------------------------------------------------------------------
 //! base constructor ---------------------------TESTED OK------------------------------------
 Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
@@ -370,3 +402,27 @@ void Base::turn()
         }
     }
 };
+
+char Base::getDeployedUnitType()
+{
+    return deployedUnit;
+}
+int Base::getID()
+{
+    return ID;
+}
+long Base::getGold()
+{
+    return gold;
+}
+//* creates string to write to comm file describing the base obiect--------------------------TESTED OK
+std::string Base::writeToFile()
+{
+    std::string output;
+    if (team == true)
+        output = "B ";
+    else
+        output = "R ";
+    output += (std::to_string(getUnitType()) + std::to_string(getID())  + " " + std::to_string(positionX()) + " " + std::to_string(positionY()) + " " + std::to_string(getHp()) + " " + getDeployedUnitType());
+    return output;
+}

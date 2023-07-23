@@ -8,7 +8,7 @@
 #include <filesystem>
 #include <array>
 
-bool playerTeam=true;
+bool playerTeam = true;
 namespace fs = std::filesystem;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
@@ -228,13 +228,13 @@ void recruitmentMenu()
       {
       case 'y':
         std::cout << "Input:  | Unit:   |  HP:  | Speed: |  Cost: | Range| Time of deployment" << std::endl;
-        std::cout << "1.      |Knight   |  " << unitModifiers[0][0] << "   | " << unitModifiers[0][1] << "      |  " << unitModifiers[0][2] << "   | " << unitModifiers[0][3] << "    | " << unitModifiers[0][4] <<" turns"<< std::endl;
-        std::cout << "2.      |Swordsman|  " << unitModifiers[1][0] << "   | " << unitModifiers[1][1] << "      |  " << unitModifiers[1][2] << "   | " << unitModifiers[1][3] << "    | " << unitModifiers[1][4] <<" turns"<< std::endl;
-        std::cout << "3.      |Archers  |  " << unitModifiers[2][0] << "   | " << unitModifiers[2][1] << "      |  " << unitModifiers[2][2] << "   | " << unitModifiers[2][3] << "    | " << unitModifiers[2][4] <<" turns"<< std::endl;
-        std::cout << "4.      |Pikemans |  " << unitModifiers[3][0] << "   | " << unitModifiers[3][1] << "      |  " << unitModifiers[3][2] << "   | " << unitModifiers[3][3] << "    | " << unitModifiers[3][4] <<" turns"<< std::endl;
-        std::cout << "5.      |Ram      |  " << unitModifiers[4][0] << "   | " << unitModifiers[4][1] << "      |  " << unitModifiers[4][2] << "   | " << unitModifiers[4][3] << "    | " << unitModifiers[4][4] <<" turns"<< std::endl;
-        std::cout << "6.      |Catapults|  " << unitModifiers[5][0] << "   | " << unitModifiers[5][1] << "      |  " << unitModifiers[5][2] << "   | " << unitModifiers[5][3] << "    | " << unitModifiers[5][4] <<" turns"<< std::endl;
-        std::cout << "7.      |Workers  |  " << unitModifiers[6][0] << "   | " << unitModifiers[6][1] << "      |  " << unitModifiers[6][2] << "   | " << unitModifiers[6][3] << "    | " << unitModifiers[6][4] <<" turns"<< std::endl;
+        std::cout << "1.      |Knight   |  " << unitModifiers[0][0] << "   | " << unitModifiers[0][1] << "      |  " << unitModifiers[0][2] << "   | " << unitModifiers[0][3] << "    | " << unitModifiers[0][4] << " turns" << std::endl;
+        std::cout << "2.      |Swordsman|  " << unitModifiers[1][0] << "   | " << unitModifiers[1][1] << "      |  " << unitModifiers[1][2] << "   | " << unitModifiers[1][3] << "    | " << unitModifiers[1][4] << " turns" << std::endl;
+        std::cout << "3.      |Archers  |  " << unitModifiers[2][0] << "   | " << unitModifiers[2][1] << "      |  " << unitModifiers[2][2] << "   | " << unitModifiers[2][3] << "    | " << unitModifiers[2][4] << " turns" << std::endl;
+        std::cout << "4.      |Pikemans |  " << unitModifiers[3][0] << "   | " << unitModifiers[3][1] << "      |  " << unitModifiers[3][2] << "   | " << unitModifiers[3][3] << "    | " << unitModifiers[3][4] << " turns" << std::endl;
+        std::cout << "5.      |Ram      |  " << unitModifiers[4][0] << "   | " << unitModifiers[4][1] << "      |  " << unitModifiers[4][2] << "   | " << unitModifiers[4][3] << "    | " << unitModifiers[4][4] << " turns" << std::endl;
+        std::cout << "6.      |Catapults|  " << unitModifiers[5][0] << "   | " << unitModifiers[5][1] << "      |  " << unitModifiers[5][2] << "   | " << unitModifiers[5][3] << "    | " << unitModifiers[5][4] << " turns" << std::endl;
+        std::cout << "7.      |Workers  |  " << unitModifiers[6][0] << "   | " << unitModifiers[6][1] << "      |  " << unitModifiers[6][2] << "   | " << unitModifiers[6][3] << "    | " << unitModifiers[6][4] << " turns" << std::endl;
       case 'n':
         break;
       }
@@ -396,5 +396,35 @@ void listUnitsInfo(bool team)
     {
       blueUnits[i].info();
     }
+  }
+}
+
+void writeUnits(bool team)
+{
+  if (team == true)
+  {
+    std::ofstream outputFile("list4Blue.txt", std::ios::out);
+
+    if (outputFile.is_open())
+    {
+   outputFile<<blueBase.getGold()<<std::endl;
+   
+  
+    }
+    else
+    {
+      std::cout << "Error opening the file." << std::endl;
+      return;
+    }
+  }
+  else
+  {
+    std::ofstream outputFile("list4Red.txt", std::ios::out);
+    if (outputFile.is_open()) {
+    // Write to the file here
+} else {
+    std::cout << "Error opening the file." << std::endl;
+    return;
+}
   }
 }

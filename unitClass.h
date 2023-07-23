@@ -1,6 +1,7 @@
 #ifndef CLASS_H
 #define CLASS_H
 #include <vector>
+#include <string>
 
 extern int typeToModifierArr(char chartype);
 extern int typeToModifier(char chartype);
@@ -18,7 +19,7 @@ protected:
 
         bool iddle;    // info if unit has been activated this turn
         char unitType; // info about unit type
-        int spdMax;    // unit default movement range 
+        int spdMax;    // unit default movement range
         int spd;       // unit movement speed decrementing while moving
         int range;     // unit attack range
 private:
@@ -36,6 +37,10 @@ public:
         virtual void info();
         char getUnitType();
         bool getStatus();
+        void attack();
+        std::string writeToFile();
+        int getID();
+        int getHp();
 };
 class Base : public Unit
 {
@@ -44,13 +49,20 @@ protected:
         long gold;         // current gold
         int timeRemaining; // recruitment time remaining
         char deployedUnit; // type of unit being deployed
-        int idCount;       // number of units deployed, won't be subtracted when unit is killed
+        int idCount;
+        int ID;
+
+              // number of units deployed, won't be subtracted when unit is killed
 public:
         Base(bool assignTeam);
         void turn();
         void recruitUnit(char giveType);
         void info() override;
         void addGold();
+        long getGold();
+        std::string writeToFile();
+        char getDeployedUnitType();
+        int getID();
 };
 
 extern Base blueBase;
