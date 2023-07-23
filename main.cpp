@@ -26,7 +26,7 @@ int main()
         updateUnitMap();
         listUnitsInfo(false);
 
-
+//TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
 
 
 
