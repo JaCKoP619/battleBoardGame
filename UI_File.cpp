@@ -9,6 +9,7 @@
 #include <array>
 #include <thread>
 #include <sstream>
+#include <algorithm>
 
 // TODO: temp bool team variable 4 testing
 bool playerTeam = false;
@@ -27,7 +28,7 @@ int col = int(COLS);
 //* maps: terrain and strategic
 std::array<std::array<char, ROWS>, COLS> terainMap;
 std::array<std::array<char, ROWS>, COLS> unitsMap;
-//* opening text message display and wait for input to carry on---------------------------------------------------------------TESTED OK----------
+//* opening text message display and wait for input to carry on---------------------------------------------------------------TESTED OK
 void greet()
 
 {
@@ -106,6 +107,7 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
   _getch();
   system("cls");
 }
+
 void loadSaveMenu()
 {
 
@@ -125,7 +127,7 @@ void loadSaveMenu()
   }
 }
 
-//* read map out of trxt file function ---------------------------------------------------------------------------------------TESTED OK----------
+//* read map out of trxt file function ---------------------------------------------------------------------------------------TESTED OK
 std::array<std::array<char, ROWS>, COLS> readMap()
 {
   extern fs::path mapFile;
@@ -229,17 +231,16 @@ void updateUnitMap()
 };
 
 char menu()
-{
+{ // moved to main
   char input;
   while (true)
   {
     printBothMaps();
-
     std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;
     std::cout << "Press 2 give order to relocate to unit." << std::endl;
-    std::cout << "Press 3 give order to relocate to unit" << std::endl;
+    std::cout << "Press 3 give order for unit to attack" << std::endl;
     std::cout << "Press 4 to check your base status and recruitment menu." << std::endl;
-    std::cout << "Press 5 to send orders to your men." << std::endl;
+    std::cout << "Press 5 to send orders to your men. This will send data to moderator.exe and close this program." << std::endl;
     std::cout << "Press 6 to create save file." << std::endl;
 
     input = static_cast<char>(getch());
@@ -249,7 +250,7 @@ char menu()
     return input;
   }
 }
-//* menu for recruiting units, prints base info and lists of units ----------------------------------------------------------------TESTED OK----------
+//* menu for recruiting units, prints base info and lists of units ----------------------------------------------------------------TESTED OK
 void recruitmentMenu()
 {
 
@@ -555,7 +556,7 @@ void printBothMaps()
     std::cout << std::endl;
   }
 }
-//* function to list player's units, now intended for use inside navigateList() ---------------------------------------TESTED OK
+//* function to list player's units, now intended for use inside navigateList() ------------------------------------------TESTED OK
 void listUnitsInfo(int count)
 {
 
@@ -628,13 +629,16 @@ void writeUnits(bool team)
       {
         outputFile << redUnits[i].writeToFile() << std::endl;
       }
+
+      std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
+      _getch();
+      outputFile.close();
     }
     else
     {
       std::cout << "Error opening the file." << std::endl;
       return;
     }
-    outputFile.close();
   }
   else
   {
@@ -650,13 +654,15 @@ void writeUnits(bool team)
       {
         outputFile << blueUnits[i].writeToFile() << std::endl;
       }
+      std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
+      _getch();
+      outputFile.close();
     }
     else
     {
       std::cout << "Error opening the file." << std::endl;
       return;
     }
-    outputFile.close();
   }
 }
 //* function to read saved files-------------------------------------------------TESTED OK
@@ -742,7 +748,7 @@ void readSave()
   }
 }
 
-//*function to write save to text file, similar to writeUnits() but with added gold value for both players
+//*function to write save to text file, similar to writeUnits() but with added gold value for both players-----------------TESTED OK
 void writeSave()
 {
   std::ofstream outputFile("saveFile.txt", std::ios::out);
@@ -751,7 +757,7 @@ void writeSave()
   {
     outputFile << blueBase.getGold() << std::endl;
     outputFile << blueBase.writeToFile() << std::endl;
-    outputFile << redBase.writeToFile() << std::endl;
+    outputFile << redBase.getGold() << std::endl;
     outputFile << redBase.writeToFile() << std::endl;
 
     for (size_t i = 0; i < blueUnits.size(); i++)
@@ -762,13 +768,15 @@ void writeSave()
     {
       outputFile << redUnits[i].writeToFile() << std::endl;
     }
+
+    std::cout << "Game saved, window will close now." << std::endl;
+    outputFile.close();
   }
   else
   {
     std::cout << "Error opening the save file." << std::endl;
     return;
   }
-  outputFile.close();
 }
 
 //* Function to read units info from file--------------------------------------------------TESTED OK (i think)
@@ -882,6 +890,38 @@ bool readUnits(int turnTIME)
   return true;
 }
 
-void moveMenu()
+void relocateMenu()
 {
+  int selectedId;
+  int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
+  while (true)
+  {
+    system("cls");
+    // printBothMaps();
+    listUnitsInfo(setcount);
+    std::cout << "press 'e' to enter unit selection mode, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
+    char option = static_cast<char>(getch());
+    if (option == 'q')
+    {
+      break; // quits the loop
+    }
+    else if (option == 'n')
+    {
+      if (setcount * 10 < blueUnits.size())
+        setcount++;
+    }
+    else if (option == 'p')
+    {
+      if (setcount > 0)
+        setcount--;
+    }
+    else if (option == 'e')
+    {
+      std::cout << "Please enter the Id number of the unit you would like to relocate: " << std::endl;
+      std::cin >> selectedId;
+      std::cout << std::endl;
+
+
+    }
+  }
 }

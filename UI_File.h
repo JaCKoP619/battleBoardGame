@@ -10,6 +10,7 @@ extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
+extern bool playerTeam;
 void greet();
 std::array<std::array<char,ROWS>,COLS> readMap();
 void printMap();
@@ -23,9 +24,9 @@ void writeUnits(bool team);
 bool readUnits(int TurnTIME);
 void readSave();
 void writeSave();
-void moveMenu();
 void navigateList();
 void loadSaveMenu();
+void relocateMenu();
 
 
 #endif
