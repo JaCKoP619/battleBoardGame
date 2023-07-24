@@ -26,9 +26,9 @@ int main()
 //         terainMap = readMap();
 //         updateUnitMap();
 //         navigateList();
-greet();
-loadSaveMenu();
-menu();
+
+recruitmentMenu();
+
 
 
 

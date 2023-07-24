@@ -113,7 +113,6 @@ void loadSaveMenu()
   {
     std::cout << "would you like to load saved file? If not, program will start a new game.\n Y/N?" << std::endl;
     char input = static_cast<char>(getch());
-    input = std::tolower(input);
     system("cls");
 
     if (input == 'y')
@@ -173,7 +172,7 @@ std::array<std::array<char, ROWS>, COLS> readMap()
   return terainMap;
 }
 
-// * print map function(mostly 4 testing but may reuse) ---------------------------------------------------------------------
+// * print map function(mostly 4 testing but may reuse) ---------------------------------------------------------------------TESTED OK
 void printMap()
 {
 
@@ -232,45 +231,198 @@ void updateUnitMap()
 char menu()
 {
   char input;
-  std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;
-  std::cout << "Press 2 give order to relocate to unit." << std::endl;
-  std::cout << "Press 3 give order to relocate to unit" << std::endl;
-  std::cout << "Press 4 to check your base status and recruitment menu." << std::endl;
-  std::cout << "Press 5 to send orders to your men." << std::endl;
-  std::cout << "Press 6 to create save file." << std::endl;
+  while (true)
+  {
+    printBothMaps();
 
-  input = static_cast<char>(getch());
-  return input;
-};
+    std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;
+    std::cout << "Press 2 give order to relocate to unit." << std::endl;
+    std::cout << "Press 3 give order to relocate to unit" << std::endl;
+    std::cout << "Press 4 to check your base status and recruitment menu." << std::endl;
+    std::cout << "Press 5 to send orders to your men." << std::endl;
+    std::cout << "Press 6 to create save file." << std::endl;
+
+    input = static_cast<char>(getch());
+
+    if (input == '1' || input == '2' || input == '3' || input == '4' || input == '5' || input == '6')
+      break;
+    return input;
+  }
+}
+//* menu for recruiting units, prints base info and lists of units ----------------------------------------------------------------TESTED OK----------
 void recruitmentMenu()
 {
+
   char input;
   system("cls");
-  if (playerTeam == true)
+
+  while (true)
   {
-    blueBase.info();
-    if (blueBase.getStatus() == true)
+    if (playerTeam == true)
     {
-      std::cout << "Base is not recruiting at this moment. Would you like to begin recruitment? Y/N" << std::endl;
-      input = static_cast<char>(getch());
-      switch (input)
+
+      if (blueBase.getStatus() == true)
       {
-      case 'y':
-        std::cout << "Input:  | Unit:   |  HP:  | Speed: |  Cost: | Range| Time of deployment" << std::endl;
-        std::cout << "1.      |Knight   |  " << unitModifiers[0][0] << "   | " << unitModifiers[0][1] << "      |  " << unitModifiers[0][2] << "   | " << unitModifiers[0][3] << "    | " << unitModifiers[0][4] << " turns" << std::endl;
-        std::cout << "2.      |Swordsman|  " << unitModifiers[1][0] << "   | " << unitModifiers[1][1] << "      |  " << unitModifiers[1][2] << "   | " << unitModifiers[1][3] << "    | " << unitModifiers[1][4] << " turns" << std::endl;
-        std::cout << "3.      |Archers  |  " << unitModifiers[2][0] << "   | " << unitModifiers[2][1] << "      |  " << unitModifiers[2][2] << "   | " << unitModifiers[2][3] << "    | " << unitModifiers[2][4] << " turns" << std::endl;
-        std::cout << "4.      |Pikemans |  " << unitModifiers[3][0] << "   | " << unitModifiers[3][1] << "      |  " << unitModifiers[3][2] << "   | " << unitModifiers[3][3] << "    | " << unitModifiers[3][4] << " turns" << std::endl;
-        std::cout << "5.      |Ram      |  " << unitModifiers[4][0] << "   | " << unitModifiers[4][1] << "      |  " << unitModifiers[4][2] << "   | " << unitModifiers[4][3] << "    | " << unitModifiers[4][4] << " turns" << std::endl;
-        std::cout << "6.      |Catapults|  " << unitModifiers[5][0] << "   | " << unitModifiers[5][1] << "      |  " << unitModifiers[5][2] << "   | " << unitModifiers[5][3] << "    | " << unitModifiers[5][4] << " turns" << std::endl;
-        std::cout << "7.      |Workers  |  " << unitModifiers[6][0] << "   | " << unitModifiers[6][1] << "      |  " << unitModifiers[6][2] << "   | " << unitModifiers[6][3] << "    | " << unitModifiers[6][4] << " turns" << std::endl;
-      case 'n':
+        system("cls");
+        blueBase.info();
+        std::cout << "Base is not recruiting at this moment. Would you like to begin recruitment? Y/N" << std::endl;
+        input = static_cast<char>(getch());
+
+        if (input == 'y')
+        {
+          while (true)
+          {
+            system("cls");
+            std::cout << "Input:  | Unit:   |  HP:  | Speed: |  Cost: | Range| Time of deployment" << std::endl;
+            std::cout << "1.      |Knight   |  " << unitModifiers[0][0] << "   | " << unitModifiers[0][1] << "      |  " << unitModifiers[0][2] << "   | " << unitModifiers[0][3] << "    | " << unitModifiers[0][4] << " turns" << std::endl;
+            std::cout << "2.      |Swordsman|  " << unitModifiers[1][0] << "   | " << unitModifiers[1][1] << "      |  " << unitModifiers[1][2] << "   | " << unitModifiers[1][3] << "    | " << unitModifiers[1][4] << " turns" << std::endl;
+            std::cout << "3.      |Archers  |  " << unitModifiers[2][0] << "   | " << unitModifiers[2][1] << "      |  " << unitModifiers[2][2] << "   | " << unitModifiers[2][3] << "    | " << unitModifiers[2][4] << " turns" << std::endl;
+            std::cout << "4.      |Pikemans |  " << unitModifiers[3][0] << "   | " << unitModifiers[3][1] << "      |  " << unitModifiers[3][2] << "   | " << unitModifiers[3][3] << "    | " << unitModifiers[3][4] << " turns" << std::endl;
+            std::cout << "5.      |Ram      |  " << unitModifiers[4][0] << "   | " << unitModifiers[4][1] << "      |  " << unitModifiers[4][2] << "   | " << unitModifiers[4][3] << "    | " << unitModifiers[4][4] << " turns" << std::endl;
+            std::cout << "6.      |Catapults|  " << unitModifiers[5][0] << "   | " << unitModifiers[5][1] << "      |  " << unitModifiers[5][2] << "   | " << unitModifiers[5][3] << "    | " << unitModifiers[5][4] << " turns" << std::endl;
+            std::cout << "7.      |Workers  |  " << unitModifiers[6][0] << "   | " << unitModifiers[6][1] << "      |  " << unitModifiers[6][2] << "   | " << unitModifiers[6][3] << "    | " << unitModifiers[6][4] << " turns" << std::endl;
+            std::cout << "press the input number to order rectrutation of an unit. To quit press 'q'" << std::endl;
+
+            char recruitmentInput = static_cast<char>(getch());
+
+            if (recruitmentInput == '1')
+            {
+              blueBase.recruitUnit('K');
+              break;
+            }
+            else if (recruitmentInput == '2')
+            {
+              blueBase.recruitUnit('S');
+              break;
+            }
+            else if (recruitmentInput == '3')
+            {
+              blueBase.recruitUnit('A');
+              break;
+            }
+            else if (recruitmentInput == '4')
+            {
+              blueBase.recruitUnit('P');
+              break;
+            }
+            else if (recruitmentInput == '5')
+            {
+              blueBase.recruitUnit('R');
+              break;
+            }
+            else if (recruitmentInput == '6')
+            {
+              blueBase.recruitUnit('C');
+              break;
+            }
+            else if (recruitmentInput == '7')
+            {
+              blueBase.recruitUnit('W');
+              break;
+            }
+            else if (recruitmentInput == 'q')
+            {
+              break;
+            }
+          }
+        }
+        else if (input == 'n')
+          break;
+      }
+      else
+      {
+        system("cls");
+        blueBase.info();
+        std::cout << "Base is currently recruiting. Come back when it deploys recruited unit" << std::endl;
+        std::cout << "Press any key to continue..." << std::endl;
+        _getch();
+        break;
+      }
+    }
+
+    if (playerTeam == false)
+    {
+
+      if (redBase.getStatus() == true)
+      {
+        system("cls");
+        redBase.info();
+        std::cout << "Base is not recruiting at this moment. Would you like to begin recruitment? Y/N" << std::endl;
+        input = static_cast<char>(getch());
+
+        if (input == 'y')
+        {
+          while (true)
+          {
+            system("cls");
+            std::cout << "Input:  | Unit:   |  HP:  | Speed: |  Cost: | Range| Time of deployment" << std::endl;
+            std::cout << "1.      |Knight   |  " << unitModifiers[0][0] << "   | " << unitModifiers[0][1] << "      |  " << unitModifiers[0][2] << "   | " << unitModifiers[0][3] << "    | " << unitModifiers[0][4] << " turns" << std::endl;
+            std::cout << "2.      |Swordsman|  " << unitModifiers[1][0] << "   | " << unitModifiers[1][1] << "      |  " << unitModifiers[1][2] << "   | " << unitModifiers[1][3] << "    | " << unitModifiers[1][4] << " turns" << std::endl;
+            std::cout << "3.      |Archers  |  " << unitModifiers[2][0] << "   | " << unitModifiers[2][1] << "      |  " << unitModifiers[2][2] << "   | " << unitModifiers[2][3] << "    | " << unitModifiers[2][4] << " turns" << std::endl;
+            std::cout << "4.      |Pikemans |  " << unitModifiers[3][0] << "   | " << unitModifiers[3][1] << "      |  " << unitModifiers[3][2] << "   | " << unitModifiers[3][3] << "    | " << unitModifiers[3][4] << " turns" << std::endl;
+            std::cout << "5.      |Ram      |  " << unitModifiers[4][0] << "   | " << unitModifiers[4][1] << "      |  " << unitModifiers[4][2] << "   | " << unitModifiers[4][3] << "    | " << unitModifiers[4][4] << " turns" << std::endl;
+            std::cout << "6.      |Catapults|  " << unitModifiers[5][0] << "   | " << unitModifiers[5][1] << "      |  " << unitModifiers[5][2] << "   | " << unitModifiers[5][3] << "    | " << unitModifiers[5][4] << " turns" << std::endl;
+            std::cout << "7.      |Workers  |  " << unitModifiers[6][0] << "   | " << unitModifiers[6][1] << "      |  " << unitModifiers[6][2] << "   | " << unitModifiers[6][3] << "    | " << unitModifiers[6][4] << " turns" << std::endl;
+            std::cout << "press the input number to order rectrutation of an unit. To quit press 'q'" << std::endl;
+
+            char recruitmentInput = static_cast<char>(getch());
+
+            if (recruitmentInput == '1')
+            {
+              redBase.recruitUnit('K');
+              break;
+            }
+            else if (recruitmentInput == '2')
+            {
+              redBase.recruitUnit('S');
+              break;
+            }
+            else if (recruitmentInput == '3')
+            {
+              redBase.recruitUnit('A');
+              break;
+            }
+            else if (recruitmentInput == '4')
+            {
+              redBase.recruitUnit('P');
+              break;
+            }
+            else if (recruitmentInput == '5')
+            {
+              redBase.recruitUnit('R');
+              break;
+            }
+            else if (recruitmentInput == '6')
+            {
+              redBase.recruitUnit('C');
+              break;
+            }
+            else if (recruitmentInput == '7')
+            {
+              redBase.recruitUnit('W');
+              break;
+            }
+            else if (recruitmentInput == 'q')
+            {
+              break;
+            }
+          }
+        }
+        else if (input == 'n')
+          break;
+      }
+      else
+      {
+        system("cls");
+        redBase.info();
+        std::cout << "Base is currently recruiting. Come back when it deploys recruited unit" << std::endl;
+        std::cout << "Press any key to continue..." << std::endl;
+        _getch();
         break;
       }
     }
   }
 }
-
 //*function printing unitMap array, with checking units aligance and changing print colour for them, also sets 'M' value to indicate multiple units at the same position, TESTED OK
 void printUnitMap()
 {
