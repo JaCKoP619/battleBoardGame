@@ -6,34 +6,37 @@
 #include <vector>
 #include <chrono>
 
-extern Base blueBase;
-extern Base redBase;
 extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
 int main()
 {
-        readUnits(false,15);
+        blueUnits.clear();
+        redUnits.clear(); 
 
-        std::chrono::seconds pauseDuration(1);
+//        readUnits(15);
 
-        redBase.info();
-        blueBase.info();
-        std::cout << "Press any key to continue..." << std::endl;
-        _getch();
-        terainMap = readMap();
-        updateUnitMap();
-        listUnitsInfo(false);
+//         std::chrono::seconds pauseDuration(1);
 
-//TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
+//         redBase.info();
+//         blueBase.info();
+//         std::cout << "Press any key to continue..." << std::endl;
+//         _getch();
+//         terainMap = readMap();
+//         updateUnitMap();
+//         navigateList();
+greet();
+loadSaveMenu();
+menu();
 
 
 
 
+        // TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
 
         // recruitmentMenu();
-        //greet();
+        // greet();
         // terainMap = readMap();
         // unitsMap = terainMap; //! do not delete those two at main start
 

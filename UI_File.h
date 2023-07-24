@@ -13,15 +13,19 @@ extern std::vector<Unit> redUnits;
 void greet();
 std::array<std::array<char,ROWS>,COLS> readMap();
 void printMap();
-char Menu();
+char menu();
 void updateUnitMap();
 void printUnitMap();
 void printBothMaps();
-void listUnitsInfo(bool team);
+void listUnitsInfo(int coun);
 void recruitmentMenu();
 void writeUnits(bool team);
-bool readUnits(bool team, int TurnTIME);
+bool readUnits(int TurnTIME);
 void readSave();
 void writeSave();
+void moveMenu();
+void navigateList();
+void loadSaveMenu();
+
 
 #endif

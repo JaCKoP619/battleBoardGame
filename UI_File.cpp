@@ -11,7 +11,7 @@
 #include <sstream>
 
 // TODO: temp bool team variable 4 testing
-bool playerTeam = true;
+bool playerTeam = false;
 // namespace and paths for unit txt files for both teams
 namespace fs = std::filesystem;
 fs::path readRed = "list4Red.txt";
@@ -105,13 +105,27 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
   std::cout << "Press any key to continue..." << std::endl;
   _getch();
   system("cls");
-  do
-  {
-    std::cout << "would you like to load saved file? (not implemented yet) If not, program will start a new game.\n Y/N?" << std::endl;
-    input = static_cast<char>(getch());
-    system("cls");
-  } while (input != 'n');
 }
+void loadSaveMenu()
+{
+
+  while (true)
+  {
+    std::cout << "would you like to load saved file? If not, program will start a new game.\n Y/N?" << std::endl;
+    char input = static_cast<char>(getch());
+    input = std::tolower(input);
+    system("cls");
+
+    if (input == 'y')
+    {
+      readSave();
+      break;
+    }
+    else if (input == 'n')
+      break;
+  }
+}
+
 //* read map out of trxt file function ---------------------------------------------------------------------------------------TESTED OK----------
 std::array<std::array<char, ROWS>, COLS> readMap()
 {
@@ -215,7 +229,7 @@ void updateUnitMap()
   }
 };
 
-char Menu()
+char menu()
 {
   char input;
   std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;
@@ -389,31 +403,59 @@ void printBothMaps()
     std::cout << std::endl;
   }
 }
-
-void listUnitsInfo(bool team)
+//* function to list player's units, now intended for use inside navigateList() ---------------------------------------TESTED OK
+void listUnitsInfo(int count)
 {
-  system("cls");
 
   printBothMaps();
   std::cout << std::endl;
-  if (team == true)
+  if (playerTeam == true)
   {
-     blueBase.info();
-    for (size_t i = 0; i < blueUnits.size(); i++)
+    blueBase.info();
+    for (int i = count * 10; i < ((count * 10) + 10); i++)
     {
-      blueUnits[i].info();
+      if (i < blueUnits.size())
+        blueUnits[i].info();
     }
   }
   else
   {
     redBase.info();
-    for (size_t i = 0; i < redUnits.size(); i++)
+    for (int i = count * 10; i < ((count * 10) + 10); i++)
     {
-      blueUnits[i].info();
+      if (i < redUnits.size())
+        redUnits[i].info();
     }
   }
 }
-
+//* function to list player's units, with menu allowing to navigate between lists of 10 to prevent overwhelming -----------TESTED OK, after initial issues workls like a charm
+void navigateList()
+{
+  int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
+  while (true)
+  {
+    system("cls");
+    // printBothMaps();
+    listUnitsInfo(setcount);
+    std::cout << "Enter the unit ID to select, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
+    char option = static_cast<char>(getch());
+    if (option == 'q')
+    {
+      break; // quits the loop
+    }
+    else if (option == 'n')
+    {
+      if (setcount * 10 < blueUnits.size())
+        setcount++;
+    }
+    else if (option == 'p')
+    {
+      if (setcount > 0)
+        setcount--;
+    }
+  }
+}
+//* Function to write units to file------------------------------------------------TESTED OK
 void writeUnits(bool team)
 {
   if (team == true)
@@ -465,10 +507,121 @@ void writeUnits(bool team)
     outputFile.close();
   }
 }
+//* function to read saved files-------------------------------------------------TESTED OK
+void readSave()
 
-//* Function to read units info from file
+{
+  long gold;
+
+  fs::path filePath = "saveFile.txt";
+  std::string line;
+  char readTeam;
+  char readType;
+  int readID;
+  int readX;
+  int readY;
+  int readHp;
+  char readDeployType;
+  int readRemainingTime;
+  int setIdCounter;
+
+  // assign path depending on team
+
+  std::filesystem::path file(filePath);
+
+  // If file appears within turnTIME:
+  try
+  {
+    fs::file_status fileStatus = fs::status(filePath);
+    std::ifstream file(filePath);
+    std::istringstream iss;
+
+    // reading units file file
+    std::getline(file, line);
+    gold = std::stol(line);
+    // reading blue Base constructor
+    iss.clear();
+    std::getline(file, line);
+
+    iss.str(line);
+    iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
+    blueBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, gold);
+
+    // reading red Base constructor
+    iss.clear();
+
+    std::getline(file, line);
+    gold = std::stol(line);
+
+    std::getline(file, line);
+    iss.str(line);
+    iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
+    std::cout << readTeam << readType << readID << readX << readY << readHp << std::endl;
+    redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, gold);
+
+    // reading units
+    iss.clear();
+    while (std::getline(file, line))
+    {
+
+      iss.str(line);
+      iss >> readTeam >> readType >> readID >> readX >> readY >> readHp;
+
+      if (readTeam == 'B')
+      {
+        bool boolTeam = true;
+        blueUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
+      }
+      else if (readTeam == 'R')
+      {
+        bool boolTeam = false;
+        redUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
+      }
+      iss.clear();
+    }
+    file.close();
+  }
+
+  catch (const std::filesystem::filesystem_error &e)
+  {
+    std::cout << e.what() << std::endl;
+    std::cout << "Press any key to continue..." << std::endl;
+    _getch();
+  }
+}
+
+//*function to write save to text file, similar to writeUnits() but with added gold value for both players
+void writeSave()
+{
+  std::ofstream outputFile("saveFile.txt", std::ios::out);
+
+  if (outputFile.is_open())
+  {
+    outputFile << blueBase.getGold() << std::endl;
+    outputFile << blueBase.writeToFile() << std::endl;
+    outputFile << redBase.writeToFile() << std::endl;
+    outputFile << redBase.writeToFile() << std::endl;
+
+    for (size_t i = 0; i < blueUnits.size(); i++)
+    {
+      outputFile << blueUnits[i].writeToFile() << std::endl;
+    }
+    for (size_t i = 0; i < redUnits.size(); i++)
+    {
+      outputFile << redUnits[i].writeToFile() << std::endl;
+    }
+  }
+  else
+  {
+    std::cout << "Error opening the save file." << std::endl;
+    return;
+  }
+  outputFile.close();
+}
+
+//* Function to read units info from file--------------------------------------------------TESTED OK (i think)
 // TODO: uses chrono so need to change 4 linux
-bool readUnits(bool auxteam, int turnTIME)
+bool readUnits(int turnTIME)
 {
   long gold;
   extern fs::path readBlue;
@@ -486,7 +639,7 @@ bool readUnits(bool auxteam, int turnTIME)
   int setIdCounter;
 
   // assign path depending on team
-  if (auxteam == true)
+  if (playerTeam == true)
   {
     filePath = readBlue;
   }
@@ -510,7 +663,7 @@ bool readUnits(bool auxteam, int turnTIME)
       // execute a different function and return false.
       return false;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
   // If file appears within turnTIME:
@@ -524,43 +677,45 @@ bool readUnits(bool auxteam, int turnTIME)
     std::getline(file, line);
     gold = std::stol(line);
     // reading blue constructor
+    iss.clear();
     std::getline(file, line);
 
     iss.str(line);
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
-    if (auxteam == true)
-       blueBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, gold);
+    if (playerTeam == true)
+      blueBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, gold);
     else
-       blueBase.readFromFile( readHp, readDeployType, readRemainingTime, setIdCounter);
+      blueBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter);
 
     // reading red constructor
+    iss.clear();
     std::getline(file, line);
 
-    iss.clear();
     iss.str(line);
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
-    std::cout<<readTeam<<readType<<readID<<readX<<readY<<readHp<<std::endl;
-    if (auxteam == true)
-      redBase.readFromFile(true, readHp, readDeployType, readRemainingTime, setIdCounter);
+    std::cout << readTeam << readType << readID << readX << readY << readHp << std::endl;
+    if (playerTeam == true)
+      redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter);
     else
-      redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter,gold);
-
+      redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, gold);
+    iss.clear();
     while (std::getline(file, line))
     {
-      iss.clear();
+
       iss.str(line);
       iss >> readTeam >> readType >> readID >> readX >> readY >> readHp;
-      std::cout<<readTeam<<readType<<readID<<readX<<readY<<readHp<<std::endl;
+
       if (readTeam == 'B')
       {
         bool boolTeam = true;
         blueUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
       }
-      else
+      else if (readTeam == 'R')
       {
         bool boolTeam = false;
         redUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
       }
+      iss.clear();
     }
     file.close();
   }
@@ -573,4 +728,8 @@ bool readUnits(bool auxteam, int turnTIME)
   }
 
   return true;
+}
+
+void moveMenu()
+{
 }
