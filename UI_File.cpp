@@ -511,7 +511,6 @@ void relocateMap(Unit &selectedUnit)
         {
 
           std::cout << unitsMap[i][j];
-          
         }
       }
       else if (unitsMap[i][j] == '0' || unitsMap[i][j] == '6')
@@ -534,8 +533,20 @@ void relocateMap(Unit &selectedUnit)
     }
     std::cout << std::endl;
   }
+ //kinda basic but i'm done with this function and just want to make those ranges correct if i can't print the range in colour properly
   int relocateX;
   int relocateY;
+  int relocateXmin=posX-range;
+  int relocateYmin=posY-range;
+  int relocateXmax=posX+range;
+  int relocateYmax=posY+range;
+
+  if (relocateXmin<0) relocateXmin=0;
+  if (relocateYmin<0) relocateYmin=0;
+  if (relocateXmax>row-1) relocateXmax=row-1;
+  if (relocateYmax>col-1) relocateYmax=col-1;
+
+
   std::cout << "Please enter the x and later y coordinates of the unit,\n looking from top to bottom and from left to right" << std::endl;
   std::cout << "unit's range is x: " << (posX - range) << "-" << (posX + range) << " y: " << (posY - range) << "-" << (posY + range) << std::endl;
   std::cout << "X:" << std::endl;
