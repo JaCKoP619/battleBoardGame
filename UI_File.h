@@ -17,7 +17,7 @@ std::array<std::array<char,ROWS>,COLS> readMap();
 void printMap();
 char menu();
 void updateUnitMap();
-void printUnitMap();
+void relocateMap( Unit& selectedUnit);
 void printBothMaps();
 void listUnitsInfo(int coun);
 void recruitmentMenu();

@@ -259,6 +259,11 @@ void Unit::relocate(int movX, int movY)
     }
 };
 
+int Unit::getSpd()
+{
+return spd;
+}
+
 int Unit::getID() const
 {
     return ID;

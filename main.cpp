@@ -50,11 +50,12 @@ updateUnitMap();
                 if (input == '1')
                 {
                         system("cls");
+                        updateUnitMap();
                         navigateList();
                 }
                 else if (input == '2')
                 {
-                        break;
+                        relocateMenu();
                 }
                 else if (input == '3')
                 {

@@ -455,11 +455,16 @@ void recruitmentMenu()
     }
   }
 }
-//*function printing unitMap array, with checking units aligance and changing print colour for them, also sets 'M' value to indicate multiple units at the same position, TESTED OK
-void printUnitMap()
+//*function printing unitMap array, with checking units aligance and changing print colour for them, also sets 'M' value to indicate multiple units at the same position, TESTED OK, colouring zone not okey but droping that
+void relocateMap(Unit &selectedUnit)
 {
   std::size_t x;
   std::size_t y;
+  system("cls");
+
+  int posX = selectedUnit.positionX();
+  int posY = selectedUnit.positionY();
+  int range = selectedUnit.getSpd();
   bool unitFound;
 
   for (std::size_t i = 0; i < row; ++i)
@@ -504,20 +509,40 @@ void printUnitMap()
         // If unit not found, print regular character
         if (!unitFound)
         {
+
           std::cout << unitsMap[i][j];
+          
         }
       }
-      else if (unitsMap[i][j] == '0' || unitsMap[i][j]== '6')
+      else if (unitsMap[i][j] == '0' || unitsMap[i][j] == '6')
       {
+        if (i > posX - range && i < posX + range && j > posY - range && j < posY + range)
+        {
+          std::cout << "\x1B[32m" << unitsMap[i][j] << "\x1B[0m";
+          continue;
+        }
 
-
+        else
+        {
+          std::cout << unitsMap[i][j]; // Print regular character for tiles outside the range
+        }
       }
+      else
       {
         std::cout << unitsMap[i][j];
       }
     }
     std::cout << std::endl;
   }
+  int relocateX;
+  int relocateY;
+  std::cout << "Please enter the x and later y coordinates of the unit,\n looking from top to bottom and from left to right" << std::endl;
+  std::cout << "unit's range is x: " << (posX - range) << "-" << (posX + range) << " y: " << (posY - range) << "-" << (posY + range) << std::endl;
+  std::cout << "X:" << std::endl;
+  std::cin >> relocateX;
+  std::cout << "\nY:" << std::endl;
+  std::cin >> relocateY;
+  selectedUnit.relocate(relocateX, relocateY);
 }
 
 //* Function to conviniently print both maps at same level, with keeping their funcionality ------------------------------TESTED OK
@@ -925,9 +950,9 @@ bool readUnits(int turnTIME)
       iss.clear();
     }
     file.close();
-    //remove the file to prevent it from being wrotten in a wrong way
-    if (std::remove(filePath.string().c_str())==0)
-    std::cout << "Orders red!" << std::endl;
+    // remove the file to prevent it from being wrotten in a wrong way
+    if (std::remove(filePath.string().c_str()) == 0)
+      std::cout << "Orders red!" << std::endl;
   }
 
   catch (const std::filesystem::filesystem_error &e)
@@ -970,13 +995,40 @@ void relocateMenu()
       std::cout << "Please enter the Id number of the unit you would like to relocate: " << std::endl;
       std::cin >> selectedId;
       std::cout << std::endl;
-      if (playerTeam==true)
+      if (playerTeam == true)
       {
-        auto it=std::find_if(blueUnits.begin(),blueUnits.end(),[selectedId](const Unit& unit)
-        {return unit.getID() == selectedId;});
+        auto it = std::find_if(blueUnits.begin(), blueUnits.end(), [selectedId](Unit &unit)
+                               { return unit.getID() == selectedId; });
+
+        if (it != blueUnits.end())
+        {
+          Unit &foundUnit = *it;
+          relocateMap(foundUnit);
+        }
+        else
+        {
+          std::cout << "Invalid unit Id, press anything to go back" << std::endl;
+          getch();
+          break;
+        }
       }
+      else if (playerTeam == false)
+      {
+        auto it = std::find_if(redUnits.begin(), redUnits.end(), [selectedId](Unit &unit)
+                               { return unit.getID() == selectedId; });
 
-
+        if (it != redUnits.end())
+        {
+          Unit &foundUnit = *it;
+          relocateMap(foundUnit);
+        }
+        else
+        {
+          std::cout << "Invalid unit Id, press anything to go back" << std::endl;
+          getch();
+          break;
+        }
+      }
     }
   }
 }

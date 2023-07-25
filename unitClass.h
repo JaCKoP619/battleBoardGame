@@ -42,6 +42,7 @@ public:
         std::string writeToFile();
         int getID() const;
         int getHp();
+        int getSpd();
 };
 class Base : public Unit
 {
