@@ -108,6 +108,37 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
   system("cls");
 }
 
+void displayTeam()
+{
+  if (playerTeam == true)
+  {
+    std::cout << "\x1B[34m"
+              << R"(
+ ______   _____                          _                                     
+|_   _ \ |_   _|                        / \                                    
+  | |_) |  | |     __   _   .---.      / _ \     _ .--.  _ .--..--.    _   __  
+  |  __'.  | |   _[  | | | / /__\\    / ___ \   [ `/'`\][ `.-. .-. |  [ \ [  ] 
+ _| |__) |_| |__/ || \_/ |,| \__.,  _/ /   \ \_  | |     | | | | | |   \ '/ /  
+|_______/|________|'.__.'_/ '.__.' |____| |____|[___]   [___||__||__][\_:  /   
+                                                                      \__.'          
+    )"
+              << "\x1B[0m" << std::endl;
+  }
+  else if (playerTeam == false)
+  {
+    std::cout << "\x1B[31m"
+              << R"(
+ _______                 __        _                                     
+|_   __ \               |  ]      / \                                    
+  | |__) |  .---.   .--.| |      / _ \     _ .--.  _ .--..--.    _   __  
+  |  __ /  / /__\\/ /'`\' |     / ___ \   [ `/'`\][ `.-. .-. |  [ \ [  ] 
+ _| |  \ \_| \__.,| \__/  |   _/ /   \ \_  | |     | | | | | |   \ '/ /  
+|____| |___|'.__.' '.__.;__] |____| |____|[___]   [___||__||__][\_:  /   
+                                                                \__.'         
+    )"
+              << "\x1B[0m" << std::endl;
+  }
+}
 void loadSaveMenu()
 {
 
@@ -476,7 +507,11 @@ void printUnitMap()
           std::cout << unitsMap[i][j];
         }
       }
-      else
+      else if (unitsMap[i][j] == '0' || unitsMap[i][j]== '6')
+      {
+
+
+      }
       {
         std::cout << unitsMap[i][j];
       }
@@ -613,21 +648,24 @@ void writeUnits(bool team)
 {
   if (team == true)
   {
+    // empty the file via trunc and write to it
     std::ofstream outputFile("list4Blue.txt", std::ios::out);
 
     if (outputFile.is_open())
     {
       outputFile << blueBase.getGold() << std::endl;
       outputFile << blueBase.writeToFile() << std::endl;
-      outputFile << redBase.writeToFile() << std::endl;
+      outputFile << redBase.writeToFile();
 
       for (size_t i = 0; i < blueUnits.size(); i++)
       {
-        outputFile << blueUnits[i].writeToFile() << std::endl;
+        outputFile << std::endl
+                   << blueUnits[i].writeToFile();
       }
       for (size_t i = 0; i < redUnits.size(); i++)
       {
-        outputFile << redUnits[i].writeToFile() << std::endl;
+        outputFile << std::endl
+                   << redUnits[i].writeToFile();
       }
 
       std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
@@ -648,14 +686,19 @@ void writeUnits(bool team)
 
       outputFile << blueBase.getGold() << std::endl;
       outputFile << blueBase.writeToFile() << std::endl;
-      outputFile << redBase.writeToFile() << std::endl;
+      outputFile << redBase.writeToFile();
 
       for (size_t i = 0; i < blueUnits.size(); i++)
       {
-        outputFile << blueUnits[i].writeToFile() << std::endl;
+        outputFile << std::endl
+                   << blueUnits[i].writeToFile();
       }
-      std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
-      _getch();
+      for (size_t i = 0; i < redUnits.size(); i++)
+      {
+        outputFile << std::endl
+                   << redUnits[i].writeToFile();
+      }
+
       outputFile.close();
     }
     else
@@ -664,6 +707,8 @@ void writeUnits(bool team)
       return;
     }
   }
+  std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
+  _getch();
 }
 //* function to read saved files-------------------------------------------------TESTED OK
 void readSave()
@@ -784,8 +829,6 @@ void writeSave()
 bool readUnits(int turnTIME)
 {
   long gold;
-  extern fs::path readBlue;
-  extern fs::path readRed;
   fs::path filePath;
   std::string line;
   char readTeam;
@@ -819,8 +862,10 @@ bool readUnits(int turnTIME)
 
     if (elapsedSeconds >= turnTIME)
     {
-      // If the file doesn't appear within the maximum wait time,
-      // execute a different function and return false.
+
+      // TODO do something when the file doesn't appear
+      //  If the file doesn't appear within the maximum wait time,
+
       return false;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -859,6 +904,8 @@ bool readUnits(int turnTIME)
     else
       redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, gold);
     iss.clear();
+
+    // reading units
     while (std::getline(file, line))
     {
 
@@ -878,6 +925,9 @@ bool readUnits(int turnTIME)
       iss.clear();
     }
     file.close();
+    //remove the file to prevent it from being wrotten in a wrong way
+    if (std::remove(filePath.string().c_str())==0)
+    std::cout << "Orders red!" << std::endl;
   }
 
   catch (const std::filesystem::filesystem_error &e)
@@ -920,6 +970,11 @@ void relocateMenu()
       std::cout << "Please enter the Id number of the unit you would like to relocate: " << std::endl;
       std::cin >> selectedId;
       std::cout << std::endl;
+      if (playerTeam==true)
+      {
+        auto it=std::find_if(blueUnits.begin(),blueUnits.end(),[selectedId](const Unit& unit)
+        {return unit.getID() == selectedId;});
+      }
 
 
     }

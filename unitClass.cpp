@@ -259,7 +259,7 @@ void Unit::relocate(int movX, int movY)
     }
 };
 
-int Unit::getID()
+int Unit::getID() const
 {
     return ID;
 }

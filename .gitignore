@@ -2,3 +2,4 @@ build/Debug/main.o
 build/Debug/outDebug.exe
 build/Debug/UI_File.o
 build/Debug/unitClass.o
+*.json

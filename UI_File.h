@@ -12,6 +12,7 @@ extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
 extern bool playerTeam;
 void greet();
+void displayTeam();
 std::array<std::array<char,ROWS>,COLS> readMap();
 void printMap();
 char menu();
@@ -27,6 +28,7 @@ void writeSave();
 void navigateList();
 void loadSaveMenu();
 void relocateMenu();
+
 
 
 #endif

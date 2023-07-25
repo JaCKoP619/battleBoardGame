@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <vector>
 #include <chrono>
+#include <thread>
 
 extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
@@ -17,10 +18,12 @@ int main()
         blueUnits.clear();
         redUnits.clear();
 
-       readUnits(15);
-std::chrono::seconds pauseDuration(1);
+readUnits(15);
+ std::this_thread::sleep_for(std::chrono::seconds(1));
 terainMap = readMap();
 updateUnitMap();
+ std::this_thread::sleep_for(std::chrono::seconds(1));
+
 
         //         redBase.info();
         //         blueBase.info();
@@ -32,6 +35,7 @@ updateUnitMap();
         while (true)
         {       readUnits(playerTeam);
                 system("cls");
+                displayTeam();
                 printBothMaps();
                 std::cout<<std::endl;
                 std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;

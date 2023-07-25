@@ -40,7 +40,7 @@ public:
         bool getStatus();
         void attack();
         std::string writeToFile();
-        int getID();
+        int getID() const;
         int getHp();
 };
 class Base : public Unit
