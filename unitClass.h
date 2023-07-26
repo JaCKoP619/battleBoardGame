@@ -22,6 +22,7 @@ protected:
         int spdMax;    // unit default movement range
         int spd;       // unit movement speed decrementing while moving
         int range;     // unit attack range
+
 private:
         int cost; // unit deployment cost
 
@@ -43,6 +44,8 @@ public:
         int getID() const;
         int getHp();
         int getSpd();
+        int getRng();
+        bool getTeam();
 };
 class Base : public Unit
 {

@@ -257,7 +257,7 @@ void Unit::relocate(int movX, int movY)
         std::cout << "pres any key to continue..." << std::endl;
         getch();
     }
-    else if (spd < sqrt(pow((x - movX), 2) + pow((y - movY), 2))) // check if outside range of unit movment
+    else if (spd >= abs(x - movX) + abs(y - movY)) // check if outside range of unit movment
     {
         std::cout << "Exceeded unit's range!" << std::endl;
         std::cout << "pres any key to continue..." << std::endl;
@@ -269,18 +269,25 @@ void Unit::relocate(int movX, int movY)
         std::cout << "pres any key to continue..." << std::endl;
         getch();
     }
-    else if (spd >= sqrt(pow((x - movX), 2) + pow((y - movY), 2)))
+    else if (spd >= abs(x - movX) + abs(y - movY))
     {
 
         x = movX;
         y = movY;
-        spd -= (sqrt(pow((x - movX), 2)) + sqrt(pow((y - movY), 2))); // formula for range
+        spd -= (spd >= abs(x - movX) + abs(y - movY)); // formula for range
     }
 };
 
 int Unit::getSpd()
 {
     return spd;
+}
+int Unit::getRng(){
+    return range;
+}
+bool Unit::getTeam()
+{
+    return team;
 }
 
 int Unit::getID() const
