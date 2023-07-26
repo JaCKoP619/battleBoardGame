@@ -107,7 +107,7 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
   _getch();
   system("cls");
 }
-
+//* functions for mediator to load at the startup
 void displayTeam()
 {
   if (playerTeam == true)
@@ -155,6 +155,14 @@ void loadSaveMenu()
     }
     else if (input == 'n')
       break;
+  }
+  while(true)
+  {
+    std::cout << "would you like to load saved file? If not, program will start a new game.\n Y/N?" << std::endl;
+    char input = static_cast<char>(getch());
+    system("cls");
+
+
   }
 }
 
@@ -681,9 +689,9 @@ void navigateList()
   }
 }
 //* Function to write units to file-------------------------------------------------------------------------------------------------TESTED OK
-void writeUnits(bool team)
+void writeUnits()
 {
-  if (team == true)
+  if (playerTeam == true)
   {
     // empty the file via trunc and write to it
     std::ofstream outputFile("list4Blue.txt", std::ios::out);
@@ -1043,4 +1051,77 @@ void relocateMenu()
       }
     }
   }
+}
+
+void attackMenu()
+{
+
+  int selectedId;
+  int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
+  while (true)
+  {
+    system("cls");
+    // printBothMaps();
+    listUnitsInfo(setcount);
+    std::cout << "press 'e' to enter unit selection mode, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
+    char option = static_cast<char>(getch());
+    if (option == 'q')
+    {
+      break; // quits the loop
+    }
+    else if (option == 'n')
+    {
+      if (setcount * 10 < blueUnits.size())
+        setcount++;
+    }
+    else if (option == 'p')
+    {
+      if (setcount > 0)
+        setcount--;
+    }
+    else if (option == 'e')
+    {
+      std::cout << "Please enter the Id number of the unit you would like to relocate: " << std::endl;
+      std::cin >> selectedId;
+      std::cout << std::endl;
+      if (playerTeam == true)
+      {
+        auto it = std::find_if(blueUnits.begin(), blueUnits.end(), [selectedId](Unit &unit)
+                               { return unit.getID() == selectedId; });
+
+        if (it != blueUnits.end())
+        {
+          Unit &foundUnit = *it;
+          attackMap(foundUnit);
+        }
+        else
+        {
+          std::cout << "Invalid unit Id, press anything to go back" << std::endl;
+          getch();
+          break;
+        }
+      }
+      else if (playerTeam == false)
+      {
+        auto it = std::find_if(redUnits.begin(), redUnits.end(), [selectedId](Unit &unit)
+                               { return unit.getID() == selectedId; });
+
+        if (it != redUnits.end())
+        {
+          Unit &foundUnit = *it;
+          attackMap(foundUnit);
+        }
+        else
+        {
+          std::cout << "Invalid unit Id, press anything to go back" << std::endl;
+          getch();
+          break;
+        }
+      }
+    }
+  }
+}
+void attackMap(Unit& selectedUnit)
+{
+
 }

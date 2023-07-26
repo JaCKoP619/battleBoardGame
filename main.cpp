@@ -59,7 +59,7 @@ updateUnitMap();
                 }
                 else if (input == '3')
                 {
-                        break;
+                        attackMenu();
                 }
                 else if (input == '4')
                 {
@@ -68,7 +68,7 @@ updateUnitMap();
                 else if (input == '5')
                 {
                         system("cls");
-                        writeUnits(playerTeam);
+                        writeUnits();
                        
                         break;
                 }
