@@ -28,7 +28,7 @@ int col = int(COLS);
 //* maps: terrain and strategic
 std::array<std::array<char, ROWS>, COLS> terainMap;
 std::array<std::array<char, ROWS>, COLS> unitsMap;
-//* opening text message display and wait for input to carry on---------------------------------------------------------------TESTED OK
+//* opening text message display and wait for input to carry on---------------------------------------------------------------------TESTED OK
 void greet()
 
 {
@@ -158,7 +158,7 @@ void loadSaveMenu()
   }
 }
 
-//* read map out of trxt file function ---------------------------------------------------------------------------------------TESTED OK
+//* read map out of trxt file function ---------------------------------------------------------------------------------------------TESTED OK
 std::array<std::array<char, ROWS>, COLS> readMap()
 {
   extern fs::path mapFile;
@@ -205,7 +205,7 @@ std::array<std::array<char, ROWS>, COLS> readMap()
   return terainMap;
 }
 
-// * print map function(mostly 4 testing but may reuse) ---------------------------------------------------------------------TESTED OK
+// * print map function(mostly 4 testing but may reuse) ----------------------------------------------------------------------------TESTED OK
 void printMap()
 {
 
@@ -556,11 +556,12 @@ void relocateMap(Unit &selectedUnit)
   selectedUnit.relocate(relocateX, relocateY);
 }
 
-//* Function to conviniently print both maps at same level, with keeping their funcionality ------------------------------TESTED OK
+//* Function to conviniently print both maps at same level, with keeping their funcionality ---------------------------------------TESTED OK
 void printBothMaps()
 {
   std::size_t x;
   std::size_t y;
+  updateUnitMap();
   std::cout << "Terrain map:                                              Unit Positions map:" << std::endl;
   for (std::size_t i = 0; i < row; ++i)
   {
@@ -627,7 +628,7 @@ void printBothMaps()
     std::cout << std::endl;
   }
 }
-//* function to list player's units, now intended for use inside navigateList() ------------------------------------------TESTED OK
+//* function to list player's units, now intended for use inside navigateList() ----------------------------------------------------TESTED OK
 void listUnitsInfo(int count)
 {
 
@@ -679,7 +680,7 @@ void navigateList()
     }
   }
 }
-//* Function to write units to file------------------------------------------------TESTED OK
+//* Function to write units to file-------------------------------------------------------------------------------------------------TESTED OK
 void writeUnits(bool team)
 {
   if (team == true)
@@ -746,7 +747,7 @@ void writeUnits(bool team)
   std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
   _getch();
 }
-//* function to read saved files-------------------------------------------------TESTED OK
+//* function to read saved files----------------------------------------------------------------------------------------------------TESTED OK
 void readSave()
 
 {
@@ -829,7 +830,7 @@ void readSave()
   }
 }
 
-//*function to write save to text file, similar to writeUnits() but with added gold value for both players-----------------TESTED OK
+//*function to write save to text file, similar to writeUnits() but with added gold value for both players--------------------------TESTED OK
 void writeSave()
 {
   std::ofstream outputFile("saveFile.txt", std::ios::out);

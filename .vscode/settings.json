@@ -115,5 +115,9 @@
     "semaphore": "cpp",
     "stop_token": "cpp",
     "thread": "cpp"
+  },
+  "workbench.colorCustomizations": {
+    "minimap.background": "#00000000",
+    "scrollbar.shadow": "#00000000"
   }
 }

@@ -5,7 +5,7 @@
 #include "unitClass.h"
 #include "UI_File.h"
 #include <vector>
-
+#include <algorithm>
 std::vector<Unit> blueUnits;
 std::vector<Unit> redUnits;
 
@@ -229,6 +229,19 @@ bool Unit::getStatus()
 // TODO: implement blocking movement to space occupied by enemy unit
 void Unit::relocate(int movX, int movY)
 {
+    bool free;
+//check if ordered tile is occupied by enemy unit
+    if (playerTeam == true)
+    {
+        free = std::none_of(redUnits.begin(), redUnits.end(), [&](Unit &unit)
+                            { return (unit.positionX() == movX && unit.positionY() == movY); });
+    }
+    else if (playerTeam == false)
+    {
+        free = std::none_of(blueUnits.begin(), redUnits.end(), [&](Unit &unit)
+                            { return (unit.positionX() == movX && unit.positionY() == movY); });
+    }
+
     if (movX >= maxX || movX < 0 || movY >= maxY || movY < 0) // check if order is leading outside map range
     {
         std::cout << "Leaving map, belay that order!\n"
@@ -236,7 +249,7 @@ void Unit::relocate(int movX, int movY)
         std::cout << "pres any key to continue..." << std::endl;
         getch();
     }
-    else if (terainMap[std::size_t(movX)][std::size_t(movY)] == '9')
+    else if (terainMap[std::size_t(movX)][std::size_t(movY)] == '9') // check for inpassable terrain
     {
 
         std::cout << "Inaccessible terrain, belay that order!\n"
@@ -244,9 +257,15 @@ void Unit::relocate(int movX, int movY)
         std::cout << "pres any key to continue..." << std::endl;
         getch();
     }
-    else if (spd < sqrt(pow((x - movX), 2) + pow((y - movY), 2)))
+    else if (spd < sqrt(pow((x - movX), 2) + pow((y - movY), 2))) // check if outside range of unit movment
     {
         std::cout << "Exceeded unit's range!" << std::endl;
+        std::cout << "pres any key to continue..." << std::endl;
+        getch();
+    }
+    else if (free == false)
+    {
+        std::cout << "Tile is occupied by the enemy" << std::endl;
         std::cout << "pres any key to continue..." << std::endl;
         getch();
     }
@@ -255,13 +274,13 @@ void Unit::relocate(int movX, int movY)
 
         x = movX;
         y = movY;
-        spd -= sqrt(pow((x - movX), 2) + pow((y - movY), 2));
+        spd -= (sqrt(pow((x - movX), 2)) + sqrt(pow((y - movY), 2))); // formula for range
     }
 };
 
 int Unit::getSpd()
 {
-return spd;
+    return spd;
 }
 
 int Unit::getID() const
@@ -469,13 +488,13 @@ void Base::recruitUnit(char giveType)
     }
 };
 //*workaround method for reading and updating the base class from textfile-------------------------------TESTED OK
-void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining,  int setIdCount, long setGold)
+void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, int setIdCount, long setGold)
 {
     hp = setHp;
     deployedUnit = setDeployedType;
     timeRemaining = setTimeRemaining;
-    
-        gold = setGold;
+
+    gold = setGold;
     idCount = setIdCount;
 }
 //*workaround method for reading and updating the base class from textfile, overloaded-------------------------------TESTED OK
@@ -484,8 +503,8 @@ void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, i
     hp = setHp;
     deployedUnit = setDeployedType;
     timeRemaining = setTimeRemaining;
-    
-        gold = 2000;
+
+    gold = 2000;
     idCount = setIdCount;
 }
 

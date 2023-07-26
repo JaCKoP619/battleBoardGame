@@ -3,3 +3,4 @@ build/Debug/outDebug.exe
 build/Debug/UI_File.o
 build/Debug/unitClass.o
 *.json
+.vscode/settings.json
