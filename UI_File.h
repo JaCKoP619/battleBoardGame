@@ -12,21 +12,23 @@ extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
 extern bool playerTeam;
 void greet();
+void displayTeam();
 std::array<std::array<char,ROWS>,COLS> readMap();
 void printMap();
 char menu();
 void updateUnitMap();
-void printUnitMap();
+void relocateMap( Unit& selectedUnit);
 void printBothMaps();
 void listUnitsInfo(int coun);
 void recruitmentMenu();
-void writeUnits(bool team);
+void writeUnits();
 bool readUnits(int TurnTIME);
 void readSave();
 void writeSave();
 void navigateList();
 void loadSaveMenu();
 void relocateMenu();
-
+void attackMenu();
+void attackMap(Unit& selectedUnit);
 
 #endif
