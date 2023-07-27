@@ -257,7 +257,7 @@ void Unit::relocate(int movX, int movY)
         std::cout << "pres any key to continue..." << std::endl;
         getch();
     }
-    else if (spd >= abs(x - movX) + abs(y - movY)) // check if outside range of unit movment
+    else if (spd < abs(x - movX) + abs(y - movY)) // check if outside range of unit movment
     {
         std::cout << "Exceeded unit's range!" << std::endl;
         std::cout << "pres any key to continue..." << std::endl;

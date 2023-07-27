@@ -267,26 +267,6 @@ void updateUnitMap()
   }
 };
 
-char menu()
-{ // moved to main
-  char input;
-  while (true)
-  {
-    printBothMaps();
-    std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;
-    std::cout << "Press 2 give order to relocate to unit." << std::endl;
-    std::cout << "Press 3 give order for unit to attack" << std::endl;
-    std::cout << "Press 4 to check your base status and recruitment menu." << std::endl;
-    std::cout << "Press 5 to send orders to your men. This will send data to moderator.exe and close this program." << std::endl;
-    std::cout << "Press 6 to create save file." << std::endl;
-
-    input = static_cast<char>(getch());
-
-    if (input == '1' || input == '2' || input == '3' || input == '4' || input == '5' || input == '6')
-      break;
-    return input;
-  }
-}
 //* menu for recruiting units, prints base info and lists of units ----------------------------------------------------------------TESTED OK
 void recruitmentMenu()
 {
@@ -498,9 +478,9 @@ void relocateMap(Unit &selectedUnit)
           unitFound = true;
         }
         else
-          {
-            std::cout << unitsMap[i][j]; // Print regular character for tiles outside the range
-          }
+        {
+          std::cout << unitsMap[i][j]; // Print regular character for tiles outside the range
+        }
       }
 
       else if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
@@ -678,9 +658,14 @@ void listUnitsInfo(int count)
 //* function to list player's units, with menu allowing to navigate between lists of 10 to prevent overwhelming -----------TESTED OK, after initial issues workls like a charm
 void navigateList()
 {
+  int size;
   int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
   while (true)
   {
+    if (playerTeam)
+      size = blueUnits.size();
+    else
+      size = redUnits.size();
     system("cls");
     // printBothMaps();
     listUnitsInfo(setcount);
@@ -692,7 +677,7 @@ void navigateList()
     }
     else if (option == 'n')
     {
-      if (setcount * 10 < blueUnits.size())
+      if (setcount * 10 > size)
         setcount++;
     }
     else if (option == 'p')
@@ -1001,8 +986,14 @@ bool readUnits(int turnTIME)
 
 void relocateMenu()
 {
+  int size;
   int selectedId;
   int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
+
+  if (playerTeam)
+    size = blueUnits.size();
+  else
+    size = redUnits.size();
   while (true)
   {
     system("cls");
@@ -1016,7 +1007,7 @@ void relocateMenu()
     }
     else if (option == 'n')
     {
-      if (setcount * 10 < blueUnits.size())
+      if (setcount * 10 > size)
         setcount++;
     }
     else if (option == 'p')
@@ -1069,14 +1060,19 @@ void relocateMenu()
 
 void attackMenu()
 {
-
+int size;
   int selectedId;
   int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
+
+  if (playerTeam)
+    size = blueUnits.size();
+  else
+    size = redUnits.size();
   while (true)
   {
     system("cls");
     // printBothMaps();
-        std::cout << "Attack Orders" << std::endl;
+    std::cout << "Attack Orders" << std::endl;
     listUnitsInfo(setcount);
     std::cout << "press 'e' to enter unit selection mode, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
     char option = static_cast<char>(getch());
@@ -1086,7 +1082,7 @@ void attackMenu()
     }
     else if (option == 'n')
     {
-      if (setcount * 10 < blueUnits.size())
+      if (setcount * 10 < size)
         setcount++;
     }
     else if (option == 'p')
@@ -1141,11 +1137,28 @@ void attackMap(Unit &selectedUnit)
   std::size_t x;
   std::size_t y;
   system("cls");
-
-  int posX = selectedUnit.positionX();
-  int posY = selectedUnit.positionY();
-  int range = selectedUnit.getRng();
   bool unitFound;
+  std::vector<Unit *> targetUnits;
+  if (playerTeam)
+  {
+    for (Unit &unit : redUnits)
+    {
+      if (selectedUnit.getRng() >= abs(selectedUnit.positionX() - unit.positionX()) + abs(selectedUnit.positionY() - unit.positionY()))
+      {
+        targetUnits.push_back(&unit);
+      }
+    }
+  }
+  else
+  {
+    for (Unit &unit : blueUnits)
+    {
+      if (selectedUnit.getRng() >= abs(selectedUnit.positionX() - unit.positionX()) + abs(selectedUnit.positionY() - unit.positionY()))
+      {
+        targetUnits.push_back(&unit);
+      }
+    }
+  }
 
   for (std::size_t i = 0; i < row; ++i)
   {
@@ -1163,20 +1176,6 @@ void attackMap(Unit &selectedUnit)
         std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
         unitFound = true;
       }
-
-      else if (unitsMap[i][j] == '0' || unitsMap[i][j] == '6')
-      {
-        if (i >= posX - range && i <= posX + range && j >= posY - range && j <= posY + range)
-        {
-          std::cout << "\x1B[32m" << unitsMap[i][j] << "\x1B[0m";
-          unitFound = true;
-        }
-        else
-          {
-            std::cout << unitsMap[i][j]; // Print regular character for tiles outside the range
-          }
-      }
-
       else if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
       {
 
@@ -1188,6 +1187,14 @@ void attackMap(Unit &selectedUnit)
 
           if (x == i && y == j) // <-- Adjusted comparison here
           {
+            bool noneInRange = std::none_of(targetUnits.begin(), targetUnits.end(), [i, j](Unit *unitPtr)
+                                            { return unitPtr->positionX() == i && unitPtr->positionY() == j; });
+            if (!noneInRange)
+            {
+              std::cout << "\x1B[33m" << unitsMap[i][j] << "\x1B[0m";
+              unitFound = true;
+              break;
+            }
             std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
             unitFound = true;
             break;
@@ -1227,27 +1234,15 @@ void attackMap(Unit &selectedUnit)
     std::cout << std::endl;
   }
   // kinda basic but i'm done with this function and just want to make those ranges correct if i can't print the range in colour properly
-  int relocateX;
-  int relocateY;
-  int relocateXmin = posX - range;
-  int relocateYmin = posY - range;
-  int relocateXmax = posX + range;
-  int relocateYmax = posY + range;
 
-  if (relocateXmin < 0)
-    relocateXmin = 0;
-  if (relocateYmin < 0)
-    relocateYmin = 0;
-  if (relocateXmax > row - 1)
-    relocateXmax = row - 1;
-  if (relocateYmax > col - 1)
-    relocateYmax = col - 1;
+  std::cout << "Please select one of enemy unit's Id's in range to give order to attack." << std::endl;
+  std::cout << "Enemy units in range: " << std::endl;
 
-  std::cout << "Please enter the x and later y coordinates of the unit,\n looking from top to bottom and from left to right" << std::endl;
-  std::cout << "unit's range is x: " << (posX - range) << "-" << (posX + range) << " y: " << (posY - range) << "-" << (posY + range) << std::endl;
-  std::cout << "X:" << std::endl;
-  std::cin >> relocateX;
-  std::cout << "\nY:" << std::endl;
-  std::cin >> relocateY;
-  selectedUnit.relocate(relocateX, relocateY);
+  for (Unit *unitPtr : targetUnits)
+  {
+    Unit &unit = *unitPtr;
+    unit.info();
+  }
+  int targetId;
+  std::cin >> targetId;
 }
