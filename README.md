@@ -7,9 +7,10 @@ The game has setup maximum turn limit that is set to 1000 turns. After reaching 
   
 - If no bases are destroyed at uppon reaching the turn limit, the number of units on the board is counted. The owner of the larger army wins the game.
 
-The game is divided into three applications, that communicate with each other by generating and reading intended to eachother .txt files, that contain informations about state of the game and changes made. changing the file artificialy might break and crash the game, also might resault in the loss of honor. 
+The game is divided into three applications, that communicate with each other by generating and reading intended to eachother .txt files, that contain informations about state of the game and changes made. changing the file artificialy might break and crash the game, also will resault in the loss of honor. 
 
 ### The mediator
+The mediator is program starting the game, controling the data transfer between the player programs, performing end turn operations and checking if the victory condition has been met. it also implemens the turn clock and turn counter. Uppon starting the app the greeting message will appear. Later user will be asked if the save file will be provided. the save file can be generated at the main menu of the plaer program, to save the current state of the game for later. 
 
 ### The player
 
