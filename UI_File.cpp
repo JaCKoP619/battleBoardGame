@@ -212,19 +212,6 @@ std::array<std::array<char, ROWS>, COLS> readMap()
   return terainMap;
 }
 
-// * print map function(mostly 4 testing but may reuse) ----------------------------------------------------------------------------TESTED OK
-void printMap()
-{
-
-  for (std::size_t i = 0; i < row; ++i)
-  {
-    for (std::size_t j = 0; j < col; ++j)
-    {
-      std::cout << terainMap[j][i];
-    }
-    std::cout << std::endl;
-  }
-}
 // * function updating values of unit map based on terrainMap and unit positons
 void updateUnitMap()
 {
@@ -244,10 +231,10 @@ void updateUnitMap()
 
     x = std::size_t(blueUnits[i].positionX());
     y = std::size_t(blueUnits[i].positionY());
-    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6')
-    {if (blueUnits[i].getHp()>0)
+    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6'&&blueUnits[i].getHp()>0)
+    
       unitsMap[y][x] = blueUnits[i].getUnitType();
-    }
+    
     else if (unitsMap[y][x] == 'K' || unitsMap[y][x] == 'S' || unitsMap[y][x] == 'A' || unitsMap[y][x] == 'P' || unitsMap[y][x] == 'R' || unitsMap[y][x] == 'C' || unitsMap[y][x] == 'W' || unitsMap[y][x] == 'B')
     {if (blueUnits[i].getHp()>0)
       unitsMap[y][x] = 'M';
@@ -257,10 +244,10 @@ void updateUnitMap()
   {
     x = std::size_t(redUnits[i].positionX());
     y = std::size_t(redUnits[i].positionY());
-    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6')
-    {if (redUnits[i].getHp()>0)
+    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6'&&redUnits[i].getHp()>0)
+ 
       unitsMap[y][x] = redUnits[i].getUnitType();
-    }
+
     else if (unitsMap[y][x] == 'K' || unitsMap[y][x] == 'S' || unitsMap[y][x] == 'A' || unitsMap[y][x] == 'P' || unitsMap[y][x] == 'R' || unitsMap[y][x] == 'C' || unitsMap[y][x] == 'W' || unitsMap[y][x] == 'B')
     {if (redUnits[i].getHp()>0)
       unitsMap[y][x] = 'M';
@@ -493,7 +480,7 @@ void relocateMap(Unit &selectedUnit)
           x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
 
-          if (x == i && y == j) // <-- Adjusted comparison here
+          if (x == j && y == i) // <-- Adjusted comparison here
           {
             std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
@@ -509,7 +496,7 @@ void relocateMap(Unit &selectedUnit)
             x = std::size_t(blueUnits[k].positionX());
             y = std::size_t(blueUnits[k].positionY());
 
-            if (x == i && y == j) // <-- Adjusted comparison here
+            if (x == j && y == i) // <-- Adjusted comparison here
             {
               std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
@@ -609,7 +596,7 @@ void printBothMaps()
               unitFound = true;
               break;
             }
-            else if (x == i && y == j)
+            else if (x == i&& y == j)
             {
               std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
@@ -1187,7 +1174,7 @@ void attackMap(Unit &selectedUnit)
           x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
 
-          if (x == i && y == j) // <-- Adjusted comparison here
+          if (x == j && y == i) // <-- Adjusted comparison here
           {
             bool noneInRange = std::none_of(targetUnits.begin(), targetUnits.end(), [i, j](Unit *unitPtr)
                                             { return unitPtr->positionX() == i && unitPtr->positionY() == j; });
@@ -1211,7 +1198,7 @@ void attackMap(Unit &selectedUnit)
             x = std::size_t(blueUnits[k].positionX());
             y = std::size_t(blueUnits[k].positionY());
 
-            if (x == i && y == j) // <-- Adjusted comparison here
+            if (x == j && y == i) // <-- Adjusted comparison here
             {
               std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
