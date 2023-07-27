@@ -6,7 +6,7 @@
 extern int typeToModifierArr(char chartype);
 extern int typeToModifier(char chartype);
 extern const int unitModifiers[7][5];
-
+extern const int damageTable[7][8];
 class Unit
 {
 protected:
@@ -46,6 +46,7 @@ public:
         int getSpd();
         int getRng();
         bool getTeam();
+       
 };
 class Base : public Unit
 {

@@ -18,12 +18,13 @@ namespace fs = std::filesystem;
 fs::path readRed = "list4Red.txt";
 fs::path readBlue = "list4Blue.txt";
 fs::path mapFile = "map.txt";
-
+extern int typeToModifierArr(char chartype);
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
 extern const int unitModifiers[7][5];
+extern const int damageTable[7][8];
 
-int row = int(ROWS);
+    int row = int(ROWS);
 int col = int(COLS);
 //* maps: terrain and strategic
 std::array<std::array<char, ROWS>, COLS> terainMap;
@@ -181,7 +182,7 @@ std::array<std::array<char, ROWS>, COLS> readMap()
         {
           for (std::size_t j = 0; j < col; ++j)
           {
-            file >> terainMap[i][j];
+            file >> terainMap[j][i];
           }
         }
 
@@ -219,7 +220,7 @@ void printMap()
   {
     for (std::size_t j = 0; j < col; ++j)
     {
-      std::cout << terainMap[i][j];
+      std::cout << terainMap[j][i];
     }
     std::cout << std::endl;
   }
@@ -243,26 +244,26 @@ void updateUnitMap()
 
     x = std::size_t(blueUnits[i].positionX());
     y = std::size_t(blueUnits[i].positionY());
-    if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6')
-    {
-      unitsMap[x][y] = blueUnits[i].getUnitType();
+    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6')
+    {if (blueUnits[i].getHp()>0)
+      unitsMap[y][x] = blueUnits[i].getUnitType();
     }
-    else if (unitsMap[x][y] == 'K' || unitsMap[x][y] == 'S' || unitsMap[x][y] == 'A' || unitsMap[x][y] == 'P' || unitsMap[x][y] == 'R' || unitsMap[x][y] == 'C' || unitsMap[x][y] == 'W' || unitsMap[x][y] == 'B')
-    {
-      unitsMap[x][y] = 'M';
+    else if (unitsMap[y][x] == 'K' || unitsMap[y][x] == 'S' || unitsMap[y][x] == 'A' || unitsMap[y][x] == 'P' || unitsMap[y][x] == 'R' || unitsMap[y][x] == 'C' || unitsMap[y][x] == 'W' || unitsMap[y][x] == 'B')
+    {if (blueUnits[i].getHp()>0)
+      unitsMap[y][x] = 'M';
     }
   }
   for (std::size_t i = 0; i < redUnits.size(); i++)
   {
     x = std::size_t(redUnits[i].positionX());
     y = std::size_t(redUnits[i].positionY());
-    if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6')
-    {
-      unitsMap[x][y] = redUnits[i].getUnitType();
+    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6')
+    {if (redUnits[i].getHp()>0)
+      unitsMap[y][x] = redUnits[i].getUnitType();
     }
-    else if (unitsMap[x][y] == 'K' || unitsMap[x][y] == 'S' || unitsMap[x][y] == 'A' || unitsMap[x][y] == 'P' || unitsMap[x][y] == 'R' || unitsMap[x][y] == 'C' || unitsMap[x][y] == 'W' || unitsMap[x][y] == 'B')
-    {
-      unitsMap[x][y] = 'M';
+    else if (unitsMap[y][x] == 'K' || unitsMap[y][x] == 'S' || unitsMap[y][x] == 'A' || unitsMap[y][x] == 'P' || unitsMap[y][x] == 'R' || unitsMap[y][x] == 'C' || unitsMap[y][x] == 'W' || unitsMap[y][x] == 'B')
+    {if (redUnits[i].getHp()>0)
+      unitsMap[y][x] = 'M';
     }
   }
 };
@@ -461,29 +462,29 @@ void relocateMap(Unit &selectedUnit)
 
       if (i == 34 && j == 34) // <-- Adjusted comparison here
       {
-        std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+        std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
         unitFound = true;
       }
       else if (i == 0 && j == 0) // <-- Adjusted comparison here
       {
-        std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+        std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
         unitFound = true;
       }
 
-      else if (unitsMap[i][j] == '0' || unitsMap[i][j] == '6')
+      else if (unitsMap[j][i] == '0' || unitsMap[j][i] == '6')
       {
-        if (i >= posX - range && i <= posX + range && j >= posY - range && j <= posY + range)
+        if (i >= posY - range && i <= posY + range && j >= posX - range && j <= posX + range)
         {
-          std::cout << "\x1B[32m" << unitsMap[i][j] << "\x1B[0m";
+          std::cout << "\x1B[32m" << unitsMap[j][i] << "\x1B[0m";
           unitFound = true;
         }
         else
         {
-          std::cout << unitsMap[i][j]; // Print regular character for tiles outside the range
+          std::cout << unitsMap[j][i]; // Print regular character for tiles outside the range
         }
       }
 
-      else if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
+      else if (unitsMap[j][i] != '0' && unitsMap[j][i] != '6' && unitsMap[j][i] != '9')
       {
 
         // Check red units
@@ -494,7 +495,7 @@ void relocateMap(Unit &selectedUnit)
 
           if (x == i && y == j) // <-- Adjusted comparison here
           {
-            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
             break;
           }
@@ -510,7 +511,7 @@ void relocateMap(Unit &selectedUnit)
 
             if (x == i && y == j) // <-- Adjusted comparison here
             {
-              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
               break;
             }
@@ -521,13 +522,13 @@ void relocateMap(Unit &selectedUnit)
         if (!unitFound)
         {
 
-          std::cout << unitsMap[i][j];
+          std::cout << unitsMap[j][i];
         }
       }
 
       else
       {
-        std::cout << unitsMap[i][j];
+        std::cout << unitsMap[j][i];
       }
     }
     std::cout << std::endl;
@@ -550,7 +551,7 @@ void relocateMap(Unit &selectedUnit)
     relocateYmax = col - 1;
 
   std::cout << "Please enter the x and later y coordinates of the unit,\n looking from top to bottom and from left to right" << std::endl;
-  std::cout << "unit's range is x: " << (posX - range) << "-" << (posX + range) << " y: " << (posY - range) << "-" << (posY + range) << std::endl;
+  std::cout << "unit's range is x: " << (posY - range) << "-" << (posY + range) << " y: " <<(posX - range) << "-" << (posX + range)  << std::endl;
   std::cout << "X:" << std::endl;
   std::cin >> relocateX;
   std::cout << "\nY:" << std::endl;
@@ -569,12 +570,12 @@ void printBothMaps()
   {
     for (std::size_t j = 0; j < col; ++j)
     {
-      std::cout << terainMap[i][j];
+      std::cout << terainMap[j][i];
     }
     std::cout << "                       ";
     for (std::size_t j = 0; j < col; ++j)
     {
-      if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
+      if (unitsMap[j][i] != '0' && unitsMap[j][i] != '6' && unitsMap[j][i] != '9')
       {
         bool unitFound = false;
 
@@ -584,13 +585,13 @@ void printBothMaps()
           y = std::size_t(redUnits[k].positionY());
           if (34 == i && 34 == j)
           {
-            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
             break;
           }
           if (x == i && y == j)
           {
-            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
             break;
           }
@@ -604,13 +605,13 @@ void printBothMaps()
             y = std::size_t(blueUnits[k].positionY());
             if (0 == i && 0 == j)
             {
-              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
               break;
             }
             else if (x == i && y == j)
             {
-              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
               break;
             }
@@ -619,12 +620,12 @@ void printBothMaps()
 
         if (!unitFound)
         {
-          std::cout << unitsMap[i][j];
+          std::cout << unitsMap[j][i];
         }
       }
       else
       {
-        std::cout << unitsMap[i][j];
+        std::cout << unitsMap[j][i];
       }
     }
     std::cout << std::endl;
@@ -660,6 +661,7 @@ void navigateList()
 {
   int size;
   int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
+
   while (true)
   {
     if (playerTeam)
@@ -1057,10 +1059,10 @@ void relocateMenu()
     }
   }
 }
-
+//tested ok
 void attackMenu()
 {
-int size;
+  int size;
   int selectedId;
   int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
 
@@ -1092,7 +1094,7 @@ int size;
     }
     else if (option == 'e')
     {
-      std::cout << "Please enter the Id number of the unit you would like to relocate: " << std::endl;
+      std::cout << "Please enter the Id number of the unit you would like to command to attack: " << std::endl;
       std::cin >> selectedId;
       std::cout << std::endl;
       if (playerTeam == true)
@@ -1100,7 +1102,7 @@ int size;
         auto it = std::find_if(blueUnits.begin(), blueUnits.end(), [selectedId](Unit &unit)
                                { return unit.getID() == selectedId; });
 
-        if (it != blueUnits.end())
+        if (it != blueUnits.end() )
         {
           Unit &foundUnit = *it;
           attackMap(foundUnit);
@@ -1168,15 +1170,15 @@ void attackMap(Unit &selectedUnit)
 
       if (i == 34 && j == 34) // <-- Adjusted comparison here
       {
-        std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+        std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
         unitFound = true;
       }
       else if (i == 0 && j == 0) // <-- Adjusted comparison here
       {
-        std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+        std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
         unitFound = true;
       }
-      else if (unitsMap[i][j] != '0' && unitsMap[i][j] != '6' && unitsMap[i][j] != '9')
+      else if (unitsMap[j][i] != '0' && unitsMap[j][i] != '6' && unitsMap[j][i] != '9')
       {
 
         // Check red units
@@ -1191,11 +1193,11 @@ void attackMap(Unit &selectedUnit)
                                             { return unitPtr->positionX() == i && unitPtr->positionY() == j; });
             if (!noneInRange)
             {
-              std::cout << "\x1B[33m" << unitsMap[i][j] << "\x1B[0m";
+              std::cout << "\x1B[33m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
               break;
             }
-            std::cout << "\x1B[31m" << unitsMap[i][j] << "\x1B[0m";
+            std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
             break;
           }
@@ -1211,7 +1213,7 @@ void attackMap(Unit &selectedUnit)
 
             if (x == i && y == j) // <-- Adjusted comparison here
             {
-              std::cout << "\x1B[34m" << unitsMap[i][j] << "\x1B[0m";
+              std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
               break;
             }
@@ -1222,27 +1224,89 @@ void attackMap(Unit &selectedUnit)
         if (!unitFound)
         {
 
-          std::cout << unitsMap[i][j];
+          std::cout << unitsMap[j][i];
         }
       }
 
       else
       {
-        std::cout << unitsMap[i][j];
+        std::cout << unitsMap[j][i];
       }
     }
     std::cout << std::endl;
   }
-  // kinda basic but i'm done with this function and just want to make those ranges correct if i can't print the range in colour properly
 
+  bool baseInRange;
   std::cout << "Please select one of enemy unit's Id's in range to give order to attack." << std::endl;
   std::cout << "Enemy units in range: " << std::endl;
+  if (playerTeam)
+  {
+    if (selectedUnit.getRng() >= abs(selectedUnit.positionX() - 34) + abs(selectedUnit.positionY() - 34))
+    {
+      redBase.info();
+      baseInRange = true;
+    }
+  }
+  else if (!playerTeam)
+  {
+    if (selectedUnit.getRng() >= abs(selectedUnit.positionX() - 0) + abs(selectedUnit.positionY() - 0))
+    {
+      blueBase.info();
+      baseInRange = true;
+    }
+  }
 
   for (Unit *unitPtr : targetUnits)
   {
     Unit &unit = *unitPtr;
-    unit.info();
+    if (unit.getHp() > 0)
+      unit.info();
   }
+  std::cout << "Target's Id: " << std::endl;
   int targetId;
   std::cin >> targetId;
+
+  bool wrongId = true;
+  Unit *target;
+  if (targetId == 0 && baseInRange == true)
+  {
+    if (playerTeam)
+    {
+      target = &redBase;
+      wrongId = false;
+    }
+    else
+    {
+      target = &blueBase;
+      wrongId = false;
+    }
+  }
+  else
+  {
+    auto it = std::find_if(targetUnits.begin(), targetUnits.end(), [targetId](Unit *unitPtr)
+                           { return unitPtr->getID() == targetId; });
+    wrongId = false;
+    target = *it;
+  }
+  // targetID good
+  if (!wrongId)
+  {
+
+    int targetModifier;
+    int attackerModifier = typeToModifierArr(selectedUnit.getUnitType());
+    if (targetId == 0)
+      targetModifier = 7;
+    else
+      targetModifier = typeToModifierArr(target->getUnitType());
+    const int damage = damageTable[attackerModifier][targetModifier];
+
+    target->takeDamage(damage);
+    selectedUnit.setActive();
+  }
+  else
+  {
+    std::cout << "Incorrect Target's Id." << std::endl;
+    std::cout << "Press any key to continue..." << std::endl;
+    _getch();
+  }
 }

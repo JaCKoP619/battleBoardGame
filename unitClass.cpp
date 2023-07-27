@@ -130,14 +130,13 @@ int Unit::positionY()
     return y;
 };
 //* method to set iddle to false when unit conducted an attack
-void Unit::setActive()
-{
-    Unit::iddle = false;
-};
 // TODO: implement properly and test, add damage table
 void Unit::takeDamage(int damage)
 {
     Unit::hp -= damage;
+    std::cout << "Unit " << ID << " has taken damage of " << damage << " and now has" << hp << " HP" << std::endl;
+    std::cout << "Press any key to continue..." << std::endl;
+    _getch();
 };
 //* checking if unit hp is less than 0, implemented inside turn(),
 bool Unit::checkIfDead()
@@ -230,7 +229,7 @@ bool Unit::getStatus()
 void Unit::relocate(int movX, int movY)
 {
     bool free;
-//check if ordered tile is occupied by enemy unit
+    // check if ordered tile is occupied by enemy unit
     if (playerTeam == true)
     {
         free = std::none_of(redUnits.begin(), redUnits.end(), [&](Unit &unit)
@@ -277,12 +276,17 @@ void Unit::relocate(int movX, int movY)
         spd -= (spd >= abs(x - movX) + abs(y - movY)); // formula for range
     }
 };
+void Unit::setActive(){
+
+    iddle=false;
+}
 
 int Unit::getSpd()
 {
     return spd;
 }
-int Unit::getRng(){
+int Unit::getRng()
+{
     return range;
 }
 bool Unit::getTeam()
@@ -447,14 +451,14 @@ void Base::info()
             break;
         }
 
-        std::cout << "This is a " << teamStr << "Position: " << x << " / " << y << ". Hp: " << hp << "/" << hpMax << std::endl;
+        std::cout << "Unit ID: " << ID << ". This is a " << teamStr << "Position: " << x << " / " << y << ". Hp: " << hp << "/" << hpMax << std::endl;
         std::cout << "Currently Deploying " << typeStr << " unit. Time left: " << timeRemaining << std::endl;
         std::cout << gold << " golden coins in the treasury.\n"
                   << std::endl;
     }
     else // Base is iddle
     {
-        std::cout << "This is a " << teamStr << "Position: " << x << " / " << y << ". Hp: " << hp << std::endl;
+        std::cout << "Unit ID: " << ID << ". This is a " << teamStr << "Position: " << x << " / " << y << ". Hp: " << hp << std::endl;
         std::cout << "Currently Iddle" << std::endl;
         std::cout << gold << " golden coins in the treasury.\n"
                   << std::endl;
