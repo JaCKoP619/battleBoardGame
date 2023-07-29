@@ -10,7 +10,7 @@
 #include <thread>
 #include <sstream>
 #include <algorithm>
-
+/// i=y j=x
 // TODO: temp bool team variable 4 testing
 bool playerTeam = false;
 // namespace and paths for unit txt files for both teams
@@ -24,7 +24,7 @@ extern std::vector<Unit> redUnits;
 extern const int unitModifiers[7][5];
 extern const int damageTable[7][8];
 
-    int row = int(ROWS);
+int row = int(ROWS);
 int col = int(COLS);
 //* maps: terrain and strategic
 std::array<std::array<char, ROWS>, COLS> terainMap;
@@ -231,26 +231,28 @@ void updateUnitMap()
 
     x = std::size_t(blueUnits[i].positionX());
     y = std::size_t(blueUnits[i].positionY());
-    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6'&&blueUnits[i].getHp()>0)
-    
-      unitsMap[y][x] = blueUnits[i].getUnitType();
-    
-    else if (unitsMap[y][x] == 'K' || unitsMap[y][x] == 'S' || unitsMap[y][x] == 'A' || unitsMap[y][x] == 'P' || unitsMap[y][x] == 'R' || unitsMap[y][x] == 'C' || unitsMap[y][x] == 'W' || unitsMap[y][x] == 'B')
-    {if (blueUnits[i].getHp()>0)
-      unitsMap[y][x] = 'M';
+    if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6' && blueUnits[i].getHp() > 0)
+
+      unitsMap[x][y] = blueUnits[i].getUnitType();
+
+    else if (unitsMap[x][y] == 'K' || unitsMap[x][y] == 'S' || unitsMap[x][y] == 'A' || unitsMap[x][y] == 'P' || unitsMap[x][y] == 'R' || unitsMap[x][y] == 'C' || unitsMap[x][y] == 'W' || unitsMap[x][y] == 'B')
+    {
+      if (blueUnits[i].getHp() > 0)
+        unitsMap[x][y] = 'M';
     }
   }
   for (std::size_t i = 0; i < redUnits.size(); i++)
   {
     x = std::size_t(redUnits[i].positionX());
     y = std::size_t(redUnits[i].positionY());
-    if (unitsMap[y][x] == '0' || unitsMap[y][x] == '6'&&redUnits[i].getHp()>0)
- 
-      unitsMap[y][x] = redUnits[i].getUnitType();
+    if (unitsMap[x][y] == '0' || unitsMap[x][y] == '6' && redUnits[i].getHp() > 0)
 
-    else if (unitsMap[y][x] == 'K' || unitsMap[y][x] == 'S' || unitsMap[y][x] == 'A' || unitsMap[y][x] == 'P' || unitsMap[y][x] == 'R' || unitsMap[y][x] == 'C' || unitsMap[y][x] == 'W' || unitsMap[y][x] == 'B')
-    {if (redUnits[i].getHp()>0)
-      unitsMap[y][x] = 'M';
+      unitsMap[x][y] = redUnits[i].getUnitType();
+
+    else if (unitsMap[x][y] == 'K' || unitsMap[x][y] == 'S' || unitsMap[x][y] == 'A' || unitsMap[x][y] == 'P' || unitsMap[x][y] == 'R' || unitsMap[x][y] == 'C' || unitsMap[x][y] == 'W' || unitsMap[x][y] == 'B')
+    {
+      if (redUnits[i].getHp() > 0)
+        unitsMap[x][y] = 'M';
     }
   }
 };
@@ -447,14 +449,14 @@ void relocateMap(Unit &selectedUnit)
     {
       unitFound = false;
 
-      if (i == 34 && j == 34) // <-- Adjusted comparison here
-      {
-        std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
-        unitFound = true;
-      }
-      else if (i == 0 && j == 0) // <-- Adjusted comparison here
+      if (i == 34 && j == 34)
       {
         std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
+        unitFound = true;
+      }
+      else if (i == 0 && j == 0)
+      {
+        std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
         unitFound = true;
       }
 
@@ -480,7 +482,7 @@ void relocateMap(Unit &selectedUnit)
           x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
 
-          if (x == j && y == i) // <-- Adjusted comparison here
+          if (y == i && x == j) // <-- Adjusted comparison here
           {
             std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
@@ -496,7 +498,7 @@ void relocateMap(Unit &selectedUnit)
             x = std::size_t(blueUnits[k].positionX());
             y = std::size_t(blueUnits[k].positionY());
 
-            if (x == j && y == i) // <-- Adjusted comparison here
+            if (y == i && x == j) // <-- Adjusted comparison here
             {
               std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
@@ -538,7 +540,7 @@ void relocateMap(Unit &selectedUnit)
     relocateYmax = col - 1;
 
   std::cout << "Please enter the x and later y coordinates of the unit,\n looking from top to bottom and from left to right" << std::endl;
-  std::cout << "unit's range is x: " << (posY - range) << "-" << (posY + range) << " y: " <<(posX - range) << "-" << (posX + range)  << std::endl;
+  std::cout << "unit's range is x: " << (posY - range) << "-" << (posY + range) << " y: " << (posX - range) << "-" << (posX + range) << std::endl;
   std::cout << "X:" << std::endl;
   std::cin >> relocateX;
   std::cout << "\nY:" << std::endl;
@@ -562,9 +564,9 @@ void printBothMaps()
     std::cout << "                       ";
     for (std::size_t j = 0; j < col; ++j)
     {
+      bool unitFound = false;
       if (unitsMap[j][i] != '0' && unitsMap[j][i] != '6' && unitsMap[j][i] != '9')
       {
-        bool unitFound = false;
 
         for (size_t k = 0; k < redUnits.size(); k++)
         {
@@ -576,7 +578,7 @@ void printBothMaps()
             unitFound = true;
             break;
           }
-          if (x == i && y == j)
+          if (x == j && y == i)
           {
             std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
@@ -596,7 +598,7 @@ void printBothMaps()
               unitFound = true;
               break;
             }
-            else if (x == i&& y == j)
+            else if (x == j && y == i)
             {
               std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
@@ -948,12 +950,12 @@ bool readUnits(int turnTIME)
       if (readTeam == 'B')
       {
         bool boolTeam = true;
-        blueUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
+        blueUnits.push_back(Unit(readType, readID, boolTeam, readX, readY, readHp));
       }
       else if (readTeam == 'R')
       {
         bool boolTeam = false;
-        redUnits.push_back(Unit(readType, readID, boolTeam, readY, readX, readHp));
+        redUnits.push_back(Unit(readType, readID, boolTeam, readX, readY, readHp));
       }
       iss.clear();
     }
@@ -976,8 +978,8 @@ bool readUnits(int turnTIME)
 void relocateMenu()
 {
   int size;
-  int selectedId;
-  int setcount = 0; // this counter is later multiplied by 10 to dislplay 10 units at a time
+
+  int setcount = 1; // this counter is later multiplied by 10 to dislplay 10 units at a time
 
   if (playerTeam)
     size = blueUnits.size();
@@ -986,9 +988,11 @@ void relocateMenu()
   while (true)
   {
     system("cls");
+    updateUnitMap();
     // printBothMaps();
-    listUnitsInfo(setcount);
+    listUnitsInfo(setcount - 1);
     std::cout << "press 'e' to enter unit selection mode, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
+
     char option = static_cast<char>(getch());
     if (option == 'q')
     {
@@ -996,16 +1000,17 @@ void relocateMenu()
     }
     else if (option == 'n')
     {
-      if (setcount * 10 > size)
+      if (setcount * 10 < size)
         setcount++;
     }
     else if (option == 'p')
     {
-      if (setcount > 0)
+      if (setcount > 1)
         setcount--;
     }
     else if (option == 'e')
     {
+      int selectedId;
       std::cout << "Please enter the Id number of the unit you would like to relocate: " << std::endl;
       std::cin >> selectedId;
       std::cout << std::endl;
@@ -1046,7 +1051,7 @@ void relocateMenu()
     }
   }
 }
-//tested ok
+// tested ok
 void attackMenu()
 {
   int size;
@@ -1088,8 +1093,9 @@ void attackMenu()
       {
         auto it = std::find_if(blueUnits.begin(), blueUnits.end(), [selectedId](Unit &unit)
                                { return unit.getID() == selectedId; });
+        ;
 
-        if (it != blueUnits.end() )
+        if (it != blueUnits.end())
         {
           Unit &foundUnit = *it;
           attackMap(foundUnit);
@@ -1174,7 +1180,7 @@ void attackMap(Unit &selectedUnit)
           x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
 
-          if (x == j && y == i) // <-- Adjusted comparison here
+          if (y == i && x == j) // <-- Adjusted comparison here
           {
             bool noneInRange = std::none_of(targetUnits.begin(), targetUnits.end(), [i, j](Unit *unitPtr)
                                             { return unitPtr->positionX() == i && unitPtr->positionY() == j; });
@@ -1198,7 +1204,7 @@ void attackMap(Unit &selectedUnit)
             x = std::size_t(blueUnits[k].positionX());
             y = std::size_t(blueUnits[k].positionY());
 
-            if (x == j && y == i) // <-- Adjusted comparison here
+            if (y == i && x == j) // <-- Adjusted comparison here
             {
               std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
