@@ -17,6 +17,8 @@ bool playerTeam = false;
 namespace fs = std::filesystem;
 fs::path readRed = "list4Red.txt";
 fs::path readBlue = "list4Blue.txt";
+fs::path writeRed = "..\\list4Red.txt";
+fs::path writeBlue = "..\\list4Blue.txt";
 fs::path mapFile = "map.txt";
 extern int typeToModifierArr(char chartype);
 extern std::vector<Unit> blueUnits;

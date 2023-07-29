@@ -1,17 +1,25 @@
-#include "unitClass.h"
-#include "UI_File.h"
+#include "..\unitClass.h"
+#include "..\UI_File.h"
 #include <array>
 #include <iostream>
 #include <conio.h>
 #include <vector>
 #include <chrono>
 #include <thread>
+#include <filesystem>
 
 extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
+extern bool playerTeam= true;
 
+
+namespace fs = std::filesystem;
+
+extern fs::path readBlue = "list4Blue.txt";
+extern fs::path writeBlue = "..\\listFromBlue.txt";
+extern fs::path mapFile = "map.txt";
 
 int main()
 {
