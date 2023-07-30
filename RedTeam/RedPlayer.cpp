@@ -12,25 +12,28 @@ extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
-extern bool playerTeam= false;
+extern bool playerTeam;
 
 namespace fs = std::filesystem;
-extern fs::path readRed = "list4Red.txt";
-extern fs::path writeRed = "..\\listFromRed.txt";
-extern fs::path mapFile = "..\\map.txt";
-
+extern fs::path readRed;
+extern fs::path writeRed;
+extern fs::path mapFile;
 
 int main()
 {
+
+        playerTeam = false;
+        readRed = "list4Red.txt";
+        writeRed = "listFromRed.txt";
+        mapFile = "map.txt";
         blueUnits.clear();
         redUnits.clear();
 
-readUnits(15);
- std::this_thread::sleep_for(std::chrono::seconds(1));
-terainMap = readMap();
-updateUnitMap();
- std::this_thread::sleep_for(std::chrono::seconds(1));
-
+        readUnits(15);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        terainMap = readMap();
+        updateUnitMap();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         //         redBase.info();
         //         blueBase.info();
@@ -40,11 +43,12 @@ updateUnitMap();
         //         updateUnitMap();
         //         navigateList();
         while (true)
-        {       readUnits(playerTeam);
+        {
+                readUnits(playerTeam);
                 system("cls");
                 displayTeam();
                 printBothMaps();
-                std::cout<<std::endl;
+                std::cout << std::endl;
                 std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;
                 std::cout << "Press 2 give order to relocate to unit." << std::endl;
                 std::cout << "Press 3 give order for unit to attack" << std::endl;
@@ -76,18 +80,19 @@ updateUnitMap();
                 {
                         system("cls");
                         writeUnits();
-                       
+
                         break;
                 }
                 else if (input == '6')
-                {       system("cls");
+                {
+                        system("cls");
                         writeSave();
                         break;
                 }
         }
 
         // TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
-        //TODO: fix coordinates bug, test unit activation, setup moderator.exe and clean shit up
+        // TODO: fix coordinates bug, test unit activation, setup moderator.exe and clean shit up
 
         // recruitmentMenu();
         // greet();

@@ -276,10 +276,9 @@ void Unit::relocate(int movX, int movY)
         spd -= (spd >= abs(x - movX) + abs(y - movY)); // formula for range
     }
 };
-void Unit::setActive()
-{
+void Unit::setActive(){
 
-    iddle = false;
+    iddle=false;
 }
 
 int Unit::getSpd()
@@ -319,7 +318,6 @@ std::string Unit::writeToFile()
 //! base starting constructor ---------------------------TESTED OK------------------------------------
 Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 {
-    deployedUnit = '0';
     spdMax = 0;
     range = 0;
     unitType = 'B';
@@ -344,7 +342,6 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
 //! constructor for friendly base for reading from textfile
 Base::Base(bool assignTeam, int setHp, char setDeployedType, int setTimeRemaining, long setGold, int setIdCount) : Unit('B', 0, assignTeam)
 {
-
     spdMax = 0;
     range = 0;
     unitType = 'B';

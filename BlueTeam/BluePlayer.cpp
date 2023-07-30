@@ -1,5 +1,5 @@
-#include "..\unitClass.h"
-#include "..\UI_File.h"
+#include "unitClass.h"
+#include "UI_File.h"
 #include <array>
 #include <iostream>
 #include <conio.h>
@@ -12,40 +12,40 @@ extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
 extern std::vector<Unit> blueUnits;
 extern std::vector<Unit> redUnits;
-extern bool playerTeam= true;
+extern bool playerTeam;
+extern fs::path readRed;   // = "listFromRed.txt";';'
+extern fs::path writeRed;  //= "RedTeam\\list4Red.txt";
+extern fs::path writeBlue; //= "BlueTeam\\list4Blue.txt";
+extern fs::path mapFile;   //= "map.txt";
 
-
+extern Base blueBase;
+extern Base redBase;    
+extern int turnTIME;
 namespace fs = std::filesystem;
 
-extern fs::path readBlue = "list4Blue.txt";
-extern fs::path writeBlue = "..\\listFromBlue.txt";
-extern fs::path mapFile = "map.txt";
-
 int main()
-{
+{       turnTIME=1;
+        playerTeam=true;
+        readBlue = "list4Blue.txt";
+        writeBlue = "listFromBlue.txt";
+        mapFile = "map.txt";
         blueUnits.clear();
         redUnits.clear();
 
-readUnits(15);
- std::this_thread::sleep_for(std::chrono::seconds(1));
-terainMap = readMap();
-updateUnitMap();
- std::this_thread::sleep_for(std::chrono::seconds(1));
+        //readUnits();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        terainMap = readMap();
+        updateUnitMap();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
 
-        //         redBase.info();
-        //         blueBase.info();
-        //         std::cout << "Press any key to continue..." << std::endl;
-        //         _getch();
-        //         terainMap = readMap();
-        //         updateUnitMap();
-        //         navigateList();
         while (true)
-        {       readUnits(playerTeam);
+        {
+                readUnits();
                 system("cls");
                 displayTeam();
                 printBothMaps();
-                std::cout<<std::endl;
+                std::cout << std::endl;
                 std::cout << "Press 1 to get strategic information, along with maps and list of your units." << std::endl;
                 std::cout << "Press 2 give order to relocate to unit." << std::endl;
                 std::cout << "Press 3 give order for unit to attack" << std::endl;
@@ -77,49 +77,20 @@ updateUnitMap();
                 {
                         system("cls");
                         writeUnits();
-                       
+
                         break;
                 }
                 else if (input == '6')
-                {       system("cls");
+                {
+                        system("cls");
                         writeSave();
                         break;
                 }
         }
 
         // TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
-        //TODO: fix coordinates bug, test unit activation, setup moderator.exe and clean shit up
+        // TODO: fix coordinates bug, test unit activation, setup moderator.exe and clean shit up
 
-        // recruitmentMenu();
-        // greet();
-        // terainMap = readMap();
-        // unitsMap = terainMap; //! do not delete those two at main start
-
-        // blueBase.addGold();
-        // blueBase.info();
-        // redBase.info();
-        // blueBase.recruitUnit('K');
-        // redBase.recruitUnit('S');
-        // std::cout<<blueBase.getUnitType()<<std::endl;
-        // std::cout<<blueBase.writeToFile()<<std::endl;
-        // for (int i = 0; i <= 5; i++)
-        // {
-        //         redBase.turn();
-        //         blueBase.turn();
-        // }
-        // blueBase.recruitUnit('A');
-        // redBase.recruitUnit('P');
-        // for (int i = 0; i <= 5; i++)
-        // {
-        //         redBase.turn();
-        //         blueBase.turn();
-        // }
-        // blueUnits[0].relocate(3,2);             //! (y,x), (rows,columns)
-        // redUnits[0].relocate(33, 32);
-        // writeUnits(true);
-
-        // updateUnitMap();
-        // listUnitsInfo(true);
 
         std::cout << "Press any key to continue..." << std::endl;
         _getch();

@@ -912,7 +912,7 @@ void writeSave()
 
 //* Function to read units info from file--------------------------------------------------TESTED OK (i think)
 // TODO: uses chrono so need to change 4 linux
-bool readUnits()
+bool readUnits(int turnTIME)
 {
   long goldB;
   long goldR;
@@ -939,11 +939,11 @@ bool readUnits()
   else
     filePath = readRed;
 
-  std::filesystem::path tryfile(filePath);
+  std::filesystem::path file(filePath);
   auto startTime = std::chrono::steady_clock::now();
 
   // waiting 4 file to appear
-  while (!std::filesystem::exists(tryfile))
+  while (!std::filesystem::exists(file))
   {
     auto currentTime = std::chrono::steady_clock::now();
     auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
@@ -1351,68 +1351,5 @@ void attackMap(Unit &selectedUnit)
     std::cout << "Incorrect Target's Id." << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
     _getch();
-  }
-}
-
-void mediatorWriteUnits()
-{
-  if (playerTeam == true)
-  {
-    // empty the file via trunc and write to it
-    std::ofstream outputFile(writeBlue, std::ios::out);
-
-    if (outputFile.is_open())
-    {
-      outputFile << blueBase.getGold() << std::endl;
-      outputFile << blueBase.writeToFile() << std::endl;
-      outputFile << redBase.getGold() << std::endl;
-      outputFile << redBase.writeToFile();
-
-      for (size_t i = 0; i < blueUnits.size(); i++)
-      {
-        outputFile << std::endl
-                   << blueUnits[i].writeToFile();
-      }
-      for (size_t i = 0; i < redUnits.size(); i++)
-      {
-        outputFile << std::endl
-                   << redUnits[i].writeToFile();
-      }
-      outputFile.close();
-    }
-    else
-    {
-      std::cout << "Error opening the file." << std::endl;
-      return;
-    }
-  }
-  else
-  {
-    std::ofstream outputFile(writeRed, std::ios::out);
-    if (outputFile.is_open())
-    {
-
-      outputFile << blueBase.getGold() << std::endl;
-      outputFile << blueBase.writeToFile() << std::endl;
-      outputFile << redBase.writeToFile();
-
-      for (size_t i = 0; i < blueUnits.size(); i++)
-      {
-        outputFile << std::endl
-                   << blueUnits[i].writeToFile();
-      }
-      for (size_t i = 0; i < redUnits.size(); i++)
-      {
-        outputFile << std::endl
-                   << redUnits[i].writeToFile();
-      }
-
-      outputFile.close();
-    }
-    else
-    {
-      std::cout << "Error opening the file." << std::endl;
-      return;
-    }
   }
 }
