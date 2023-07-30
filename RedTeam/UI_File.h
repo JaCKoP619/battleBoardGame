@@ -34,7 +34,7 @@ void printBothMaps();
 void listUnitsInfo(int coun);
 void recruitmentMenu();
 void writeUnits();
-bool readUnits(int TurnTIME);
+bool readUnits();
 void readSave();
 void writeSave();
 void navigateList();
@@ -43,5 +43,6 @@ void relocateMenu();
 void attackMenu();
 void attackMap(Unit& selectedUnit);
 void attackList(int count);
+void mediatorWriteUnits();
 
 #endif

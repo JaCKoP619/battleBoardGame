@@ -975,7 +975,7 @@ bool readUnits()
 
     iss.str(line);
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
-    blueBase.readFromFile(readHp, readDeployType, readRemainingTime, goldB, setIdCounter);
+    blueBase.readFromFile(readHp, readDeployType, readRemainingTime,  setIdCounter, goldB);
 
     // reading red constructor
     iss.clear();
@@ -987,7 +987,7 @@ bool readUnits()
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
     std::cout << readTeam << readType << readID << readX << readY << readHp << std::endl;
 
-    redBase.readFromFile(readHp, readDeployType, readRemainingTime, goldR, setIdCounter);
+    redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, goldR);
     iss.clear();
 
     // reading units

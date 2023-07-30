@@ -324,7 +324,7 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     range = 0;
     unitType = 'B';
     ID = 0;
-    idCount = 1;
+    idCount = 2;
     team = assignTeam;
     hp = hpMax = 200; // starting hp points, hpMax is constant
     gold = 2000;      // starting gold

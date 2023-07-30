@@ -18,10 +18,13 @@ namespace fs = std::filesystem;
 extern fs::path readRed;
 extern fs::path writeRed;
 extern fs::path mapFile;
+extern Base blueBase;
+extern Base redBase;
+extern int turnTIME;
 
 int main()
 {
-
+        turnTIME=3;
         playerTeam = false;
         readRed = "list4Red.txt";
         writeRed = "listFromRed.txt";
@@ -29,7 +32,7 @@ int main()
         blueUnits.clear();
         redUnits.clear();
 
-        readUnits(15);
+        readUnits();
         std::this_thread::sleep_for(std::chrono::seconds(1));
         terainMap = readMap();
         updateUnitMap();
@@ -44,7 +47,6 @@ int main()
         //         navigateList();
         while (true)
         {
-                readUnits(playerTeam);
                 system("cls");
                 displayTeam();
                 printBothMaps();

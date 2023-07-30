@@ -912,7 +912,7 @@ void writeSave()
 
 //* Function to read units info from file--------------------------------------------------TESTED OK (i think)
 // TODO: uses chrono so need to change 4 linux
-bool readUnits(int turnTIME)
+bool readUnits()
 {
   long goldB;
   long goldR;
@@ -939,11 +939,11 @@ bool readUnits(int turnTIME)
   else
     filePath = readRed;
 
-  std::filesystem::path file(filePath);
+  std::filesystem::path tryfile(filePath);
   auto startTime = std::chrono::steady_clock::now();
 
   // waiting 4 file to appear
-  while (!std::filesystem::exists(file))
+  while (!std::filesystem::exists(tryfile))
   {
     auto currentTime = std::chrono::steady_clock::now();
     auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
@@ -975,7 +975,7 @@ bool readUnits(int turnTIME)
 
     iss.str(line);
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
-    blueBase.readFromFile(readHp, readDeployType, readRemainingTime, goldB, setIdCounter);
+    blueBase.readFromFile(readHp, readDeployType, readRemainingTime,  setIdCounter, goldB);
 
     // reading red constructor
     iss.clear();
@@ -987,7 +987,7 @@ bool readUnits(int turnTIME)
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
     std::cout << readTeam << readType << readID << readX << readY << readHp << std::endl;
 
-    redBase.readFromFile(readHp, readDeployType, readRemainingTime, goldR, setIdCounter);
+    redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, goldR);
     iss.clear();
 
     // reading units
@@ -1351,5 +1351,68 @@ void attackMap(Unit &selectedUnit)
     std::cout << "Incorrect Target's Id." << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
     _getch();
+  }
+}
+
+void mediatorWriteUnits()
+{
+  if (playerTeam == true)
+  {
+    // empty the file via trunc and write to it
+    std::ofstream outputFile(writeBlue, std::ios::out);
+
+    if (outputFile.is_open())
+    {
+      outputFile << blueBase.getGold() << std::endl;
+      outputFile << blueBase.writeToFile() << std::endl;
+      outputFile << redBase.getGold() << std::endl;
+      outputFile << redBase.writeToFile();
+
+      for (size_t i = 0; i < blueUnits.size(); i++)
+      {
+        outputFile << std::endl
+                   << blueUnits[i].writeToFile();
+      }
+      for (size_t i = 0; i < redUnits.size(); i++)
+      {
+        outputFile << std::endl
+                   << redUnits[i].writeToFile();
+      }
+      outputFile.close();
+    }
+    else
+    {
+      std::cout << "Error opening the file." << std::endl;
+      return;
+    }
+  }
+  else
+  {
+    std::ofstream outputFile(writeRed, std::ios::out);
+    if (outputFile.is_open())
+    {
+
+      outputFile << blueBase.getGold() << std::endl;
+      outputFile << blueBase.writeToFile() << std::endl;
+      outputFile << redBase.writeToFile();
+
+      for (size_t i = 0; i < blueUnits.size(); i++)
+      {
+        outputFile << std::endl
+                   << blueUnits[i].writeToFile();
+      }
+      for (size_t i = 0; i < redUnits.size(); i++)
+      {
+        outputFile << std::endl
+                   << redUnits[i].writeToFile();
+      }
+
+      outputFile.close();
+    }
+    else
+    {
+      std::cout << "Error opening the file." << std::endl;
+      return;
+    }
   }
 }

@@ -19,29 +19,29 @@ extern fs::path writeBlue; //= "BlueTeam\\list4Blue.txt";
 extern fs::path mapFile;   //= "map.txt";
 
 extern Base blueBase;
-extern Base redBase;    
+extern Base redBase;
 extern int turnTIME;
 namespace fs = std::filesystem;
 
 int main()
-{       turnTIME=1;
-        playerTeam=true;
+{
+
+        turnTIME = 1;
+        playerTeam = true;
         readBlue = "list4Blue.txt";
         writeBlue = "listFromBlue.txt";
         mapFile = "map.txt";
         blueUnits.clear();
         redUnits.clear();
 
-        //readUnits();
+        readUnits();
         std::this_thread::sleep_for(std::chrono::seconds(1));
         terainMap = readMap();
         updateUnitMap();
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-
         while (true)
         {
-                readUnits();
                 system("cls");
                 displayTeam();
                 printBothMaps();
@@ -90,7 +90,6 @@ int main()
 
         // TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
         // TODO: fix coordinates bug, test unit activation, setup moderator.exe and clean shit up
-
 
         std::cout << "Press any key to continue..." << std::endl;
         _getch();

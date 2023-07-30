@@ -37,9 +37,8 @@ extern bool playerTeam;
 extern int turnTIME;
 int main()
 {
-
-
-
+        blueUnits.clear();
+        redUnits.clear();
         bool victoryBool;
         playerTeam = true;
         turn = 1;
@@ -49,7 +48,8 @@ int main()
         writeRed = "list4Red.txt";
         writeBlue = "list4Blue.txt";
         mapFile = "map.txt";
-
+        blueUnits.push_back(Unit('W', 1, true));
+        redUnits.push_back(Unit('W', 1, false));
         greet();
         loadSaveMenu();
 
@@ -58,9 +58,9 @@ int main()
                 std::system("cls");
                 std::cout << "Turn: " << turn << std::endl;
                 if (playerTeam)
-                        std::cout << "Blue Army turn." << turn << std::endl;
+                        std::cout << "\x1B[34mBlue Army turn.\x1B[0m" << std::endl;
                 else
-                        std::cout << "Red Army turn." << turn << std::endl;
+                        std::cout << "\x1B[31mRed Army turn.\x1B[0m" << std::endl;
 
                 mediatorWriteUnits();
 
@@ -117,6 +117,13 @@ int main()
 
                 playerTeam = !playerTeam;
         }
+        // TODO: make it preatier
+        if (victoryBool)
+        {
+                std::cout << "Blue team Victory!" << std::endl;
+        }
+        else
+                std::cout << "red team Victory!" << std::endl;
 
         return 0;
 }
