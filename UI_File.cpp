@@ -794,8 +794,6 @@ void writeUnits()
       return;
     }
   }
-  std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
-  _getch();
 }
 //* function to read saved files----------------------------------------------------------------------------------------------------TESTED OK
 void readSave()
