@@ -10,7 +10,7 @@ std::vector<Unit> blueUnits;
 std::vector<Unit> redUnits;
 
 extern std::array<std::array<char, ROWS>, COLS> terainMap;
-const int maxX = 35;
+const int maxX = 34;
 const int maxY = maxX;
 const int unitModifiers[7][5] = {
     //? format:
@@ -92,8 +92,8 @@ Unit::Unit(char setType, int id, bool assignTeam)
     }
     else
     {
-        x = maxX - 1;
-        y = maxY - 1;
+        x = maxX;
+        y = maxY;
     }
     hp = hpMax;
 };
@@ -154,27 +154,21 @@ bool Unit::checkIfDead()
 //*contains checkifDead() method, returns false if unit is dead, to be used with destructor method at the higher scope
 bool Unit::turn()
 {
-    if (hp <= 0)
+
+    spd = spdMax;
+    iddle = true;
+    if (unitType == 'W' && terainMap[std::size_t(positionY())][std::size_t(positionX())] == '6')
     {
-        return false;
-    }
-    else
-    {
-        spd = spdMax;
-        iddle = true;
-        if (unitType == 'W' && terainMap[std::size_t(positionY())][std::size_t(positionX())] == '6')
+        if (team == true)
         {
-            if (team == true)
-            {
-                blueBase.addGold();
-            }
-            else
-            {
-                redBase.addGold();
-            }
+            blueBase.addGold();
         }
-        return true;
+        else
+        {
+            redBase.addGold();
+        }
     }
+    return true;
 };
 //* method to display info about the unit (possibly for listing units)--------------------------TESTED OK---------------
 void Unit::info()
@@ -237,15 +231,15 @@ void Unit::relocate(int movX, int movY)
     }
     else if (playerTeam == false)
     {
-        free = std::none_of(blueUnits.begin(), redUnits.end(), [&](Unit &unit)
+        free = std::none_of(blueUnits.begin(), blueUnits.end(), [&](Unit &unit)
                             { return (unit.positionX() == movX && unit.positionY() == movY); });
     }
 
-    if (movX >= maxX || movX < 0 || movY >= maxY || movY < 0) // check if order is leading outside map range
+    if (movX > maxX || movX < 0 || movY > maxY || movY < 0) // check if order is leading outside map range
     {
         std::cout << "Leaving map, belay that order!\n"
                   << std::endl;
-        std::cout << "pres any key to continue..." << std::endl;
+        std::cout << "press any key to continue..." << std::endl;
         getch();
     }
     else if (terainMap[std::size_t(movX)][std::size_t(movY)] == '9') // check for inpassable terrain
@@ -253,13 +247,13 @@ void Unit::relocate(int movX, int movY)
 
         std::cout << "Inaccessible terrain, belay that order!\n"
                   << std::endl;
-        std::cout << "pres any key to continue..." << std::endl;
+        std::cout << "press any key to continue..." << std::endl;
         getch();
     }
     else if (spd < abs(x - movX) + abs(y - movY)) // check if outside range of unit movment
     {
         std::cout << "Exceeded unit's range!" << std::endl;
-        std::cout << "pres any key to continue..." << std::endl;
+        std::cout << "press any key to continue..." << std::endl;
         getch();
     }
     else if (free == false)
@@ -271,11 +265,15 @@ void Unit::relocate(int movX, int movY)
     else if (spd >= abs(x - movX) + abs(y - movY))
     {
 
+        spd -= (abs(x - movX) + abs(y - movY)); // formula for range
+
         x = movX;
         y = movY;
-        spd -= (spd >= abs(x - movX) + abs(y - movY)); // formula for range
+        std::cout << "Unit relocated sucesfully" << std::endl;
+        std::cout << "pres any key to continue..." << std::endl;
     }
 };
+//* method for changing unit status after attack to forbid more than one attack per turn
 void Unit::setActive()
 {
 
@@ -335,8 +333,8 @@ Base::Base(bool assignTeam) : Unit('B', 0, assignTeam)
     }
     else
     {
-        x = maxX - 1;
-        y = maxY - 1;
+        x = maxX;
+        y = maxY;
     }
     iddle = true;
     timeRemaining = 0;
@@ -507,18 +505,11 @@ void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, i
     hp = setHp;
     deployedUnit = setDeployedType;
     timeRemaining = setTimeRemaining;
+    
+    if (timeRemaining > 0)
+        iddle = false;
 
     gold = setGold;
-    idCount = setIdCount;
-}
-//*workaround method for reading and updating the base class from textfile, overloaded-------------------------------TESTED OK
-void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, int setIdCount)
-{
-    hp = setHp;
-    deployedUnit = setDeployedType;
-    timeRemaining = setTimeRemaining;
-
-    gold = 2000;
     idCount = setIdCount;
 }
 

@@ -286,6 +286,7 @@ void updateUnitMap()
 };
 
 //* menu for recruiting units, prints base info and lists of units ----------------------------------------------------------------TESTED OK
+//* it works but a bit wierd, need to work on base parameters read write. Recruitment only via mediator dunno if it's a bug or a feature
 void recruitmentMenu()
 {
 
@@ -476,20 +477,22 @@ void relocateMap(Unit &selectedUnit)
     for (std::size_t j = 0; j < col; ++j)
     {
       unitFound = false;
+      // check for blueBASE
+      if (i == 0 && j == 0)
 
-      if (i == 34 && j == 34)
-      {
-        std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
-        unitFound = true;
-      }
-      else if (i == 0 && j == 0)
       {
         std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
         unitFound = true;
       }
+      // check for red base
+      else if (i == 34 && j == 34)
+      {
+        std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
+        unitFound = true;
+      }
 
       else if (unitsMap[j][i] == '0' || unitsMap[j][i] == '6')
-      {
+      { //check if in range, if yes print green color
         if (i >= posY - range && i <= posY + range && j >= posX - range && j <= posX + range)
         {
           std::cout << "\x1B[32m" << unitsMap[j][i] << "\x1B[0m";
@@ -504,21 +507,22 @@ void relocateMap(Unit &selectedUnit)
       else if (unitsMap[j][i] != '0' && unitsMap[j][i] != '6' && unitsMap[j][i] != '9')
       {
 
-        // Check red units
+        // Check for red units
         for (size_t k = 0; k < redUnits.size(); k++)
         {
-          x = std::size_t(redUnits[k].positionX());
+          if (!unitFound)
+            x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
 
-          if (y == i && x == j) // <-- Adjusted comparison here
-          {
+          if (y == i && x == j)
+          { // print red color
             std::cout << "\x1B[31m" << unitsMap[j][i] << "\x1B[0m";
             unitFound = true;
             break;
           }
         }
 
-        // Check blue units if red unit not found
+        // Check blue units if
         if (!unitFound)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
@@ -526,8 +530,8 @@ void relocateMap(Unit &selectedUnit)
             x = std::size_t(blueUnits[k].positionX());
             y = std::size_t(blueUnits[k].positionY());
 
-            if (y == i && x == j) // <-- Adjusted comparison here
-            {
+            if (y == i && x == j)
+            { // print blue color
               std::cout << "\x1B[34m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
               break;
@@ -550,7 +554,7 @@ void relocateMap(Unit &selectedUnit)
     }
     std::cout << std::endl;
   }
-  // kinda basic but i'm done with this function and just want to make those ranges correct if i can't print the range in colour properly
+
   int relocateX;
   int relocateY;
   int relocateXmin = posX - range;
@@ -568,7 +572,7 @@ void relocateMap(Unit &selectedUnit)
     relocateYmax = col - 1;
 
   std::cout << "Please enter the x and later y coordinates of the unit,\n looking from top to bottom and from left to right" << std::endl;
-  std::cout << "unit's range is x: " << (posY - range) << "-" << (posY + range) << " y: " << (posX - range) << "-" << (posX + range) << std::endl;
+  std::cout << "unit's range is x: " << relocateXmin << " - " << relocateXmax << " y: " << relocateYmin << " - " << relocateYmax << std::endl;
   std::cout << "X:" << std::endl;
   std::cin >> relocateX;
   std::cout << "\nY:" << std::endl;
@@ -711,7 +715,7 @@ void navigateList()
     system("cls");
     // printBothMaps();
     listUnitsInfo(setcount);
-    std::cout << "Enter the unit ID to select, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
+    std::cout << "Press 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
     char option = static_cast<char>(getch());
     if (option == 'q')
     {
@@ -901,6 +905,7 @@ void writeSave()
 
     std::cout << "Game saved, window will close now." << std::endl;
     outputFile.close();
+    exit (0);
   }
   else
   {
@@ -974,7 +979,7 @@ bool readUnits()
 
     iss.str(line);
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
-    blueBase.readFromFile(readHp, readDeployType, readRemainingTime,  setIdCounter, goldB);
+    blueBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, goldB);
 
     // reading red constructor
     iss.clear();
@@ -984,7 +989,6 @@ bool readUnits()
     std::getline(file, line);
     iss.str(line);
     iss >> readTeam >> readType >> readID >> readX >> readY >> readHp >> readDeployType >> readRemainingTime >> setIdCounter;
-    std::cout << readTeam << readType << readID << readX << readY << readHp << std::endl;
 
     redBase.readFromFile(readHp, readDeployType, readRemainingTime, setIdCounter, goldR);
     iss.clear();

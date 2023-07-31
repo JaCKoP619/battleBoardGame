@@ -51,6 +51,7 @@ int main()
         blueUnits.push_back(Unit('W', 1, true));
         redUnits.push_back(Unit('W', 1, false));
         greet();
+        terainMap = readMap();
         loadSaveMenu();
 
         while (true)
@@ -73,7 +74,8 @@ int main()
                         // Wait for BluePlayer.exe to finish
                         bluePlayerThread.join();
 
-
+                        std::cout << "BP1" << std::endl;
+                        getch();
                         readUnits();
                         blueBase.info();
                         redBase.info();
@@ -82,7 +84,10 @@ int main()
                         redUnits.erase(std::remove_if(redUnits.begin(), redUnits.end(), [](Unit &unit)
                                                       { return unit.getHp() <= 0; }),
                                        redUnits.end());
-
+                        for (size_t i = 0; i < blueUnits.size(); i++)
+                        {
+                                blueUnits[i].turn();
+                        }
 
                         if (redBase.getHp() <= 0)
                         {
@@ -94,19 +99,23 @@ int main()
                 else
                 {
 
-
                         std::thread redPlayerThread([]()
                                                     { std::system(runRed); });
 
                         // Wait for BluePlayer.exe to finish
                         redPlayerThread.join();
-
+                        std::cout << "BP2" << std::endl;
+                        getch();
                         readUnits();
                         redBase.turn();
 
                         blueUnits.erase(std::remove_if(blueUnits.begin(), blueUnits.end(), [](Unit &unit)
                                                        { return unit.getHp() <= 0; }),
                                         blueUnits.end());
+                        for (size_t i = 0; i < redUnits.size(); i++)
+                        {
+                                redUnits[i].turn();
+                        }
                         if (blueBase.getHp() <= 0)
                         {
                                 std::cout << "Blue Base destroyed." << std::endl;
