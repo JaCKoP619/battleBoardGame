@@ -8,8 +8,8 @@
 #include <thread>
 #include <filesystem>
 #include <algorithm>
-#include <windows.h>
 #include <cstdlib>
+#include <future>
 
 extern Base redBase; // Base declaration
 extern Base blueBase;
@@ -44,7 +44,7 @@ int main()
         turn = 1;
         // setup variables for files location from the mediator point of view
         readRed = "listFromRed.txt";
-        readBlue = "ListFromBlue.txt";
+        readBlue = "listFromBlue.txt";
         writeRed = "list4Red.txt";
         writeBlue = "list4Blue.txt";
         mapFile = "map.txt";
@@ -67,23 +67,40 @@ int main()
                 if (playerTeam)
                 {
 
-                        system(runBlue);
+                        std::thread bluePlayerThread([]()
+                                                     { std::system(runBlue); });
+
+                        // Wait for BluePlayer.exe to finish
+                        bluePlayerThread.join();
+
+
                         readUnits();
+                        blueBase.info();
+                        redBase.info();
+                        getch();
                         blueBase.turn();
                         redUnits.erase(std::remove_if(redUnits.begin(), redUnits.end(), [](Unit &unit)
                                                       { return unit.getHp() <= 0; }),
                                        redUnits.end());
-                        // Checking for victory conditions, breaking the loop if met
+
+
                         if (redBase.getHp() <= 0)
                         {
-                                std::cout << "Red Base destroyed." << std::endl;
+                                std::cout << "Red Base destroyed. " << redBase.getHp() << std::endl;
                                 victoryBool = true;
                                 break;
                         }
                 }
                 else
                 {
-                        system(runRed);
+
+
+                        std::thread redPlayerThread([]()
+                                                    { std::system(runRed); });
+
+                        // Wait for BluePlayer.exe to finish
+                        redPlayerThread.join();
+
                         readUnits();
                         redBase.turn();
 
@@ -99,8 +116,9 @@ int main()
                 }
 
                 if (turn >= maxTurn)
-                        std::cout << "Last turn. The victory is determined by larger number of units on field" << std::endl;
+
                 {
+                        std::cout << "Last turn. The victory is determined by larger number of units on field" << std::endl;
                         if (blueUnits.size() > redUnits.size())
                         {
                                 victoryBool = true;
@@ -112,6 +130,7 @@ int main()
                                 break;
                         }
                 }
+
                 if (playerTeam == false)
                         turn++;
 
@@ -121,9 +140,10 @@ int main()
         if (victoryBool)
         {
                 std::cout << "Blue team Victory!" << std::endl;
+                getch();
         }
         else
                 std::cout << "red team Victory!" << std::endl;
-
+        getch();
         return 0;
 }

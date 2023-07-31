@@ -88,11 +88,9 @@ int main()
                 }
         }
 
-        // TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
-        // TODO: fix coordinates bug, test unit activation, setup moderator.exe and clean shit up
+        // // TODO: damage dealing method, exe file handling, menu for all, menu for damage with movement range indication, same for damage with attack range indication,
+        // // TODO: fix coordinates bug, test unit activation, setup moderator.exe and clean shit up
 
-        std::cout << "Press any key to continue..." << std::endl;
-        _getch();
 
         return 0;
 }

@@ -773,6 +773,7 @@ void writeUnits()
 
       outputFile << blueBase.getGold() << std::endl;
       outputFile << blueBase.writeToFile() << std::endl;
+      outputFile << redBase.getGold() << std::endl;
       outputFile << redBase.writeToFile();
 
       for (size_t i = 0; i < blueUnits.size(); i++)
@@ -1392,6 +1393,7 @@ void mediatorWriteUnits()
 
       outputFile << blueBase.getGold() << std::endl;
       outputFile << blueBase.writeToFile() << std::endl;
+      outputFile << redBase.getGold() << std::endl;
       outputFile << redBase.writeToFile();
 
       for (size_t i = 0; i < blueUnits.size(); i++)
