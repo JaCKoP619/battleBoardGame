@@ -11,6 +11,8 @@
 #include <cstdlib>
 #include <future>
 
+//TODO: test damage for units and bases, killing units and victory conditions checking
+
 extern Base redBase; // Base declaration
 extern Base blueBase;
 

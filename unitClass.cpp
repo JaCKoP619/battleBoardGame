@@ -12,6 +12,7 @@ std::vector<Unit> redUnits;
 extern std::array<std::array<char, ROWS>, COLS> terainMap;
 const int maxX = 34;
 const int maxY = maxX;
+//* unit modyfiers like HP spd etc. table, implemented in Unit constructor to easily get the data
 const int unitModifiers[7][5] = {
     //? format:
     // *{hp,spd,cost,range,timeOfDeployment}
@@ -23,7 +24,7 @@ const int unitModifiers[7][5] = {
     {50, 2, 800, 7, 6}, // Catapults "C"
     {20, 2, 100, 1, 2}  // Workers   "W"
 };
-
+//* damage table, relations of attack values between different types of units
 const int damageTable[7][8] = {
     // Knight,Swordman,Archer,Pikeman,Ram,Catapult,Worker,Base
     {35, 35, 35, 35, 35, 50, 35, 35}, // Knight
@@ -119,12 +120,11 @@ char Unit::getUnitType()
 {
     return unitType;
 };
-
+//*simple return x and y position values------------------------------------------------------TESTED OK-----------
 int Unit::positionX()
 {
     return x;
 };
-
 int Unit::positionY()
 {
     return y;
@@ -150,8 +150,7 @@ bool Unit::checkIfDead()
         return false;
     }
 };
-//* method to manage finishing turn, with reseting modifiers and controll variables and managing gold collection if unit met the conditions
-//*contains checkifDead() method, returns false if unit is dead, to be used with destructor method at the higher scope
+//* method to manage finishing turn, with reseting modifiers and controll variables and managing gold collection if unit met the conditions-------TESTED OK----
 bool Unit::turn()
 {
 
@@ -279,7 +278,7 @@ void Unit::setActive()
 
     iddle = false;
 }
-
+//* simple return membe values ------------------------------------------------------------------TESTED OK---------------
 int Unit::getSpd()
 {
     return spd;
@@ -292,16 +291,15 @@ bool Unit::getTeam()
 {
     return team;
 }
-
 int Unit::getID() const
 {
     return ID;
 }
-
 int Unit::getHp()
 {
     return hp;
 }
+//* prepare string for writing to .txt file--------------------------------------------------TESTED OK---------------
 std::string Unit::writeToFile()
 {
     std::string output;
@@ -472,10 +470,7 @@ void Base::addGold()
     gold += 50;
 };
 
-int Base::getTimeRemaining()
-{
-    return timeRemaining;
-}
+
 //*'Base' method for unit recruitment-------------------------------------------TESTED OK--
 void Base::recruitUnit(char giveType)
 {
@@ -513,7 +508,7 @@ void Base::readFromFile(int setHp, char setDeployedType, int setTimeRemaining, i
     idCount = setIdCount;
 }
 
-//* method for progressing the turn for the base--------------------------------TESTED OK
+//* method for progressing the turn for the base, mostly for recruitment --------------------------------TESTED OK
 // TODO maybe will implement something global, this one is for testing 4 now
 void Base::turn()
 {
@@ -541,7 +536,7 @@ void Base::turn()
         }
     }
 };
-
+//* some methods for returning members values from the base class---------------------------------TESTED OK
 char Base::getDeployedUnitType()
 {
     return deployedUnit;
@@ -562,6 +557,10 @@ int Base::getIdCount()
 {
     return idCount;
 }
+int Base::getTimeRemaining()
+{
+    return timeRemaining;
+}
 //* creates string to write to comm file describing the base obiect--------------------------TESTED OK
 std::string Base::writeToFile()
 {
@@ -575,5 +574,7 @@ std::string Base::writeToFile()
     return output;
 }
 
+
+//* base global class declaration,, it is in wierd place but can't put it in main, works here 
 Base redBase(false); // Base declaration with constructor for external use
 Base blueBase(true);
