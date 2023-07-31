@@ -2,16 +2,15 @@
 #include "UI_File.h"
 #include <array>
 #include <iostream>
-#include <conio.h>
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <filesystem>
 #include <algorithm>
 #include <cstdlib>
-#include <future>
 
-//TODO: test damage for units and bases, killing units and victory conditions checking
+
+// TODO: test damage for units and bases, killing units and victory conditions checking
 
 extern Base redBase; // Base declaration
 extern Base blueBase;
@@ -28,8 +27,8 @@ extern fs::path writeRed;  //= "RedTeam\\list4Red.txt";
 extern fs::path writeBlue; //= "BlueTeam\\list4Blue.txt";
 extern fs::path mapFile;   //= "map.txt";
 
-const char *runRed = "RedPlayer.exe";
-const char *runBlue = "BluePlayer.exe";
+const char *runRed = "./RedPlayer.exe";
+const char *runBlue = "./BluePlayer.exe";
 
 const wchar_t *flagsAndValues = L"-f value1 -g value2";
 
@@ -58,7 +57,7 @@ int main()
 
         while (true)
         {
-                std::system("cls");
+                std::system("clear");
                 std::cout << "Turn: " << turn << std::endl;
                 if (playerTeam)
                         std::cout << "\x1B[34mBlue Army turn.\x1B[0m" << std::endl;
@@ -77,21 +76,19 @@ int main()
                         bluePlayerThread.join();
 
                         readUnits();
-                        blueBase.info();
-                        redBase.info();
-                        getch();
-                        //turn tick for base to progres recruitment
+
+                        // turn tick for base to progres recruitment
                         blueBase.turn();
-                        //check for dead units and delete them
+                        // check for dead units and delete them
                         redUnits.erase(std::remove_if(redUnits.begin(), redUnits.end(), [](Unit &unit)
                                                       { return unit.getHp() <= 0; }),
                                        redUnits.end());
                         for (size_t i = 0; i < blueUnits.size(); i++)
                         {
-                                //turn tik for units, reset mostly happens via reopening player.exe but it works for gold production.
+                                // turn tik for units, reset mostly happens via reopening player.exe but it works for gold production.
                                 blueUnits[i].turn();
                         }
-                        //check for dead base and break the loop if so
+                        // check for dead base and break the loop if so
                         if (redBase.getHp() <= 0)
                         {
                                 std::cout << "Red Base destroyed. " << redBase.getHp() << std::endl;
@@ -107,8 +104,6 @@ int main()
 
                         // Wait for BluePlayer.exe to finish
                         redPlayerThread.join();
-                        std::cout << "BP2" << std::endl;
-                        getch();
                         readUnits();
                         redBase.turn();
 
@@ -152,10 +147,10 @@ int main()
         if (victoryBool)
         {
                 std::cout << "Blue team Victory!" << std::endl;
-                getch();
+                getchar();
         }
         else
                 std::cout << "red team Victory!" << std::endl;
-        getch();
+        getchar();
         return 0;
 }

@@ -2,11 +2,11 @@
 #include "UI_File.h"
 #include <array>
 #include <iostream>
-#include <conio.h>
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <filesystem>
+
 
 extern std::array<std::array<char, ROWS>, COLS> terainMap;
 extern std::array<std::array<char, ROWS>, COLS> unitsMap;
@@ -42,7 +42,7 @@ int main()
 
         while (true)
         {
-                system("cls");
+                system("clear");
                 displayTeam();
                 printBothMaps();
                 std::cout << std::endl;
@@ -53,11 +53,12 @@ int main()
                 std::cout << "Press 5 to send orders to your men. This will send data to moderator.exe and close this program." << std::endl;
                 std::cout << "Press 6 to create save file." << std::endl;
 
-                char input = static_cast<char>(getch());
+                char input = getchar();
+
 
                 if (input == '1')
                 {
-                        system("cls");
+                        system("clear");
                         updateUnitMap();
                         navigateList();
                 }
@@ -75,14 +76,14 @@ int main()
                 }
                 else if (input == '5')
                 {
-                        system("cls");
+                        system("clear");
                         writeUnits();
 
                         break;
                 }
                 else if (input == '6')
                 {
-                        system("cls");
+                        system("clear");
                         writeSave();
                         break;
                 }

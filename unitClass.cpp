@@ -1,5 +1,4 @@
 #include <iostream>
-#include <conio.h>
 #include <cmath>
 #include <string>
 #include "unitClass.h"
@@ -136,7 +135,7 @@ void Unit::takeDamage(int damage)
     Unit::hp -= damage;
     std::cout << "Unit " << ID << " has taken damage of " << damage << " and now has" << hp << " HP" << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
-    _getch();
+    getchar();
 };
 //* checking if unit hp is less than 0, implemented inside turn(),
 bool Unit::checkIfDead()
@@ -239,7 +238,7 @@ void Unit::relocate(int movX, int movY)
         std::cout << "Leaving map, belay that order!\n"
                   << std::endl;
         std::cout << "press any key to continue..." << std::endl;
-        getch();
+        getchar();
     }
     else if (terainMap[std::size_t(movX)][std::size_t(movY)] == '9') // check for inpassable terrain
     {
@@ -247,19 +246,19 @@ void Unit::relocate(int movX, int movY)
         std::cout << "Inaccessible terrain, belay that order!\n"
                   << std::endl;
         std::cout << "press any key to continue..." << std::endl;
-        getch();
+        getchar();
     }
     else if (spd < abs(x - movX) + abs(y - movY)) // check if outside range of unit movment
     {
         std::cout << "Exceeded unit's range!" << std::endl;
         std::cout << "press any key to continue..." << std::endl;
-        getch();
+        getchar();
     }
     else if (free == false)
     {
         std::cout << "Tile is occupied by the enemy" << std::endl;
         std::cout << "pres any key to continue..." << std::endl;
-        getch();
+        getchar();
     }
     else if (spd >= abs(x - movX) + abs(y - movY))
     {

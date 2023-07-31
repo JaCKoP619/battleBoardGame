@@ -2,7 +2,6 @@
 #include "UI_File.h"
 #include "unitClass.h"
 #include <iostream>
-#include <conio.h>
 #include <chrono>
 #include <fstream>
 #include <filesystem>
@@ -10,6 +9,7 @@
 #include <thread>
 #include <sstream>
 #include <algorithm>
+#include <cstdio>
 
 // namespace and paths for unit txt files for both teams
 namespace fs = std::filesystem;
@@ -112,8 +112,8 @@ __|          ;     |MM"MM"""""---..._______...--""MM"MM]                   |
             << std::endl;
 
   std::cout << "Press any key to continue..." << std::endl;
-  _getch();
-  system("cls");
+  getchar();
+  system("clear");
 }
 //* functions for mediator to load at the startup
 void displayTeam()
@@ -153,8 +153,8 @@ void loadSaveMenu()
   while (true)
   {
     std::cout << "would you like to load saved file? If not, program will start a new game.\n Y/N?" << std::endl;
-    char input = static_cast<char>(getch());
-    system("cls");
+    char input = getchar();
+    system("clear");
 
     if (input == 'y')
     {
@@ -220,7 +220,7 @@ std::array<std::array<char, ROWS>, COLS> readMap()
       {
         std::cout << e.what() << std::endl;
         std::cout << "Press any key to continue..." << std::endl;
-        _getch();
+        getchar();
       }
     }
     else
@@ -235,7 +235,7 @@ std::array<std::array<char, ROWS>, COLS> readMap()
   {
     std::cout << e.what() << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
-    _getch();
+    getchar();
   }
   return terainMap;
 }
@@ -291,7 +291,7 @@ void recruitmentMenu()
 {
 
   char input;
-  system("cls");
+  system("clear");
 
   while (true)
   {
@@ -300,16 +300,16 @@ void recruitmentMenu()
 
       if (blueBase.getStatus() == true)
       {
-        system("cls");
+        system("clear");
         blueBase.info();
         std::cout << "Base is not recruiting at this moment. Would you like to begin recruitment? Y/N" << std::endl;
-        input = static_cast<char>(getch());
+        input = getchar();
 
         if (input == 'y')
         {
           while (true)
           {
-            system("cls");
+            system("clear");
             std::cout << "Input:  | Unit:   |  HP:  | Speed: |  Cost: | Range| Time of deployment" << std::endl;
             std::cout << "1.      |Knight   |  " << unitModifiers[0][0] << "   | " << unitModifiers[0][1] << "      |  " << unitModifiers[0][2] << "   | " << unitModifiers[0][3] << "    | " << unitModifiers[0][4] << " turns" << std::endl;
             std::cout << "2.      |Swordsman|  " << unitModifiers[1][0] << "   | " << unitModifiers[1][1] << "      |  " << unitModifiers[1][2] << "   | " << unitModifiers[1][3] << "    | " << unitModifiers[1][4] << " turns" << std::endl;
@@ -320,7 +320,7 @@ void recruitmentMenu()
             std::cout << "7.      |Workers  |  " << unitModifiers[6][0] << "   | " << unitModifiers[6][1] << "      |  " << unitModifiers[6][2] << "   | " << unitModifiers[6][3] << "    | " << unitModifiers[6][4] << " turns" << std::endl;
             std::cout << "press the input number to order rectrutation of an unit. To quit press 'q'" << std::endl;
 
-            char recruitmentInput = static_cast<char>(getch());
+            char recruitmentInput = getchar();
 
             if (recruitmentInput == '1')
             {
@@ -368,11 +368,11 @@ void recruitmentMenu()
       }
       else
       {
-        system("cls");
+        system("clear");
         blueBase.info();
         std::cout << "Base is currently recruiting. Come back when it deploys recruited unit" << std::endl;
         std::cout << "Press any key to continue..." << std::endl;
-        _getch();
+        getchar();
         break;
       }
     }
@@ -382,16 +382,16 @@ void recruitmentMenu()
 
       if (redBase.getStatus() == true)
       {
-        system("cls");
+        system("clear");
         redBase.info();
         std::cout << "Base is not recruiting at this moment. Would you like to begin recruitment? Y/N" << std::endl;
-        input = static_cast<char>(getch());
+        input = getchar();
 
         if (input == 'y')
         {
           while (true)
           {
-            system("cls");
+            system("clear");
             std::cout << "Input:  | Unit:   |  HP:  | Speed: |  Cost: | Range| Time of deployment" << std::endl;
             std::cout << "1.      |Knight   |  " << unitModifiers[0][0] << "   | " << unitModifiers[0][1] << "      |  " << unitModifiers[0][2] << "   | " << unitModifiers[0][3] << "    | " << unitModifiers[0][4] << " turns" << std::endl;
             std::cout << "2.      |Swordsman|  " << unitModifiers[1][0] << "   | " << unitModifiers[1][1] << "      |  " << unitModifiers[1][2] << "   | " << unitModifiers[1][3] << "    | " << unitModifiers[1][4] << " turns" << std::endl;
@@ -402,7 +402,7 @@ void recruitmentMenu()
             std::cout << "7.      |Workers  |  " << unitModifiers[6][0] << "   | " << unitModifiers[6][1] << "      |  " << unitModifiers[6][2] << "   | " << unitModifiers[6][3] << "    | " << unitModifiers[6][4] << " turns" << std::endl;
             std::cout << "press the input number to order rectrutation of an unit. To quit press 'q'" << std::endl;
 
-            char recruitmentInput = static_cast<char>(getch());
+            char recruitmentInput = getchar();;
 
             if (recruitmentInput == '1')
             {
@@ -450,11 +450,11 @@ void recruitmentMenu()
       }
       else
       {
-        system("cls");
+        system("clear");
         redBase.info();
         std::cout << "Base is currently recruiting. Come back when it deploys recruited unit" << std::endl;
         std::cout << "Press any key to continue..." << std::endl;
-        _getch();
+        getchar();
         break;
       }
     }
@@ -465,7 +465,7 @@ void relocateMap(Unit &selectedUnit)
 {
   std::size_t x;
   std::size_t y;
-  system("cls");
+  system("clear");
 
   int posX = selectedUnit.positionX();
   int posY = selectedUnit.positionY();
@@ -523,7 +523,7 @@ void relocateMap(Unit &selectedUnit)
         }
 
         // Check blue units if
-        if (unitFound==false)
+        if (unitFound == false)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
           {
@@ -540,7 +540,7 @@ void relocateMap(Unit &selectedUnit)
         }
 
         // If unit not found, print regular character
-        if (unitFound==false)
+        if (unitFound == false)
         {
 
           std::cout << unitsMap[j][i];
@@ -618,7 +618,7 @@ void printBothMaps()
           }
         }
 
-        if (unitFound==false)
+        if (unitFound == false)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
           {
@@ -639,7 +639,7 @@ void printBothMaps()
           }
         }
 
-        if (unitFound==false)
+        if (unitFound == false)
         {
           std::cout << unitsMap[j][i];
         }
@@ -712,11 +712,11 @@ void navigateList()
       size = blueUnits.size();
     else
       size = redUnits.size();
-    system("cls");
+    system("clear");
     // printBothMaps();
     listUnitsInfo(setcount);
     std::cout << "Press 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
-    char option = static_cast<char>(getch());
+    char option = getchar();
     if (option == 'q')
     {
       break; // quits the loop
@@ -760,7 +760,7 @@ void writeUnits()
       }
 
       std::cout << "Orders sent and will be caried out. press anything to close this window" << std::endl;
-      _getch();
+      getchar();
       outputFile.close();
     }
     else
@@ -879,7 +879,7 @@ void readSave()
   {
     std::cout << e.what() << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
-    _getch();
+    getchar();
   }
 }
 //*function to write save to text file, similar to writeUnits() but with added gold value for both players--------------------------TESTED OK
@@ -1022,7 +1022,7 @@ bool readUnits()
   {
     std::cout << e.what() << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
-    _getch();
+    getchar();
   }
 
   return true;
@@ -1040,13 +1040,13 @@ void relocateMenu()
     size = redUnits.size();
   while (true)
   {
-    system("cls");
+    system("clear");
     updateUnitMap();
     // printBothMaps();
     listUnitsInfo(setcount - 1);
     std::cout << "press 'e' to enter unit selection mode, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
 
-    char option = static_cast<char>(getch());
+    char option = getchar();
     if (option == 'q')
     {
       break; // quits the loop
@@ -1080,7 +1080,7 @@ void relocateMenu()
         else
         {
           std::cout << "Invalid unit Id, press anything to go back" << std::endl;
-          getch();
+          getchar();
           break;
         }
       }
@@ -1097,7 +1097,7 @@ void relocateMenu()
         else
         {
           std::cout << "Invalid unit Id, press anything to go back" << std::endl;
-          getch();
+          getchar();
           break;
         }
       }
@@ -1117,12 +1117,12 @@ void attackMenu()
     size = redUnits.size();
   while (true)
   {
-    system("cls");
+    system("clear");
     // printBothMaps();
     std::cout << "Attack Orders" << std::endl;
     attackList(setcount);
     std::cout << "press 'e' to enter unit selection mode, tap 'n' for the next page, tap'p' for the previous page, or 'q' to quit. " << std::endl;
-    char option = static_cast<char>(getch());
+    char option = getchar();
     if (option == 'q')
     {
       break; // quits the loop
@@ -1156,7 +1156,7 @@ void attackMenu()
         else
         {
           std::cout << "Invalid unit Id, press anything to go back" << std::endl;
-          getch();
+          getchar();
           break;
         }
       }
@@ -1173,7 +1173,7 @@ void attackMenu()
         else
         {
           std::cout << "Invalid unit Id, press anything to go back" << std::endl;
-          getch();
+          getchar();
           break;
         }
       }
@@ -1184,7 +1184,7 @@ void attackMap(Unit &selectedUnit)
 {
   std::size_t x;
   std::size_t y;
-  system("cls");
+  system("clear");
   bool unitFound;
   std::vector<Unit *> targetUnits;
   if (playerTeam)
@@ -1237,7 +1237,7 @@ void attackMap(Unit &selectedUnit)
           {
             bool noneInRange = std::none_of(targetUnits.begin(), targetUnits.end(), [i, j](Unit *unitPtr)
                                             { return unitPtr->positionX() == i && unitPtr->positionY() == j; });
-            if (noneInRange==false)
+            if (noneInRange == false)
             {
               std::cout << "\x1B[33m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
@@ -1250,7 +1250,7 @@ void attackMap(Unit &selectedUnit)
         }
 
         // Check blue units if red unit not found
-        if (unitFound==false)
+        if (unitFound == false)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
           {
@@ -1267,7 +1267,7 @@ void attackMap(Unit &selectedUnit)
         }
 
         // If unit not found, print regular character
-        if (unitFound==false)
+        if (unitFound == false)
         {
 
           std::cout << unitsMap[j][i];
@@ -1293,7 +1293,7 @@ void attackMap(Unit &selectedUnit)
       baseInRange = true;
     }
   }
-  else if (playerTeam==false)
+  else if (playerTeam == false)
   {
     if (selectedUnit.getRng() >= abs(selectedUnit.positionX() - 0) + abs(selectedUnit.positionY() - 0))
     {
@@ -1357,7 +1357,8 @@ void attackMap(Unit &selectedUnit)
   {
     std::cout << "Incorrect Target's Id." << std::endl;
     std::cout << "Press any key to continue..." << std::endl;
-    _getch();
+    fflush(stdout); // Flush the output buffer
+    getchar();
   }
 }
 
