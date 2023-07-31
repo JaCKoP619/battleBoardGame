@@ -492,8 +492,8 @@ void relocateMap(Unit &selectedUnit)
       }
 
       else if (unitsMap[j][i] == '0' || unitsMap[j][i] == '6')
-      { //check if in range, if yes print green color
-        if (i >= posY - range && i <= posY + range && j >= posX - range && j <= posX + range)
+      { // check if in range, if yes print green color
+        if (i >= (posY - range) && i <= (posY + range) && j >= (posX - range) && j <= (posX + range))
         {
           std::cout << "\x1B[32m" << unitsMap[j][i] << "\x1B[0m";
           unitFound = true;
@@ -510,7 +510,7 @@ void relocateMap(Unit &selectedUnit)
         // Check for red units
         for (size_t k = 0; k < redUnits.size(); k++)
         {
-          if (!unitFound)
+          if (unitFound)
             x = std::size_t(redUnits[k].positionX());
           y = std::size_t(redUnits[k].positionY());
 
@@ -523,7 +523,7 @@ void relocateMap(Unit &selectedUnit)
         }
 
         // Check blue units if
-        if (!unitFound)
+        if (unitFound==false)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
           {
@@ -540,7 +540,7 @@ void relocateMap(Unit &selectedUnit)
         }
 
         // If unit not found, print regular character
-        if (!unitFound)
+        if (unitFound==false)
         {
 
           std::cout << unitsMap[j][i];
@@ -618,7 +618,7 @@ void printBothMaps()
           }
         }
 
-        if (!unitFound)
+        if (unitFound==false)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
           {
@@ -639,7 +639,7 @@ void printBothMaps()
           }
         }
 
-        if (!unitFound)
+        if (unitFound==false)
         {
           std::cout << unitsMap[j][i];
         }
@@ -905,7 +905,7 @@ void writeSave()
 
     std::cout << "Game saved, window will close now." << std::endl;
     outputFile.close();
-    exit (0);
+    exit(0);
   }
   else
   {
@@ -1237,7 +1237,7 @@ void attackMap(Unit &selectedUnit)
           {
             bool noneInRange = std::none_of(targetUnits.begin(), targetUnits.end(), [i, j](Unit *unitPtr)
                                             { return unitPtr->positionX() == i && unitPtr->positionY() == j; });
-            if (!noneInRange)
+            if (noneInRange==false)
             {
               std::cout << "\x1B[33m" << unitsMap[j][i] << "\x1B[0m";
               unitFound = true;
@@ -1250,7 +1250,7 @@ void attackMap(Unit &selectedUnit)
         }
 
         // Check blue units if red unit not found
-        if (!unitFound)
+        if (unitFound==false)
         {
           for (size_t k = 0; k < blueUnits.size(); k++)
           {
@@ -1267,7 +1267,7 @@ void attackMap(Unit &selectedUnit)
         }
 
         // If unit not found, print regular character
-        if (!unitFound)
+        if (unitFound==false)
         {
 
           std::cout << unitsMap[j][i];
@@ -1293,7 +1293,7 @@ void attackMap(Unit &selectedUnit)
       baseInRange = true;
     }
   }
-  else if (!playerTeam)
+  else if (playerTeam==false)
   {
     if (selectedUnit.getRng() >= abs(selectedUnit.positionX() - 0) + abs(selectedUnit.positionY() - 0))
     {
@@ -1331,11 +1331,15 @@ void attackMap(Unit &selectedUnit)
   {
     auto it = std::find_if(targetUnits.begin(), targetUnits.end(), [targetId](Unit *unitPtr)
                            { return unitPtr->getID() == targetId; });
-    wrongId = false;
-    target = *it;
+
+    if (it != targetUnits.end())
+    {
+      wrongId = false;
+      target = *it;
+    }
   }
   // targetID good
-  if (!wrongId)
+  if (wrongId == false)
   {
 
     int targetModifier;

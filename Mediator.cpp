@@ -76,21 +76,22 @@ int main()
                         // Wait for BluePlayer.exe to finish
                         bluePlayerThread.join();
 
-                        std::cout << "BP1" << std::endl;
-                        getch();
                         readUnits();
                         blueBase.info();
                         redBase.info();
                         getch();
+                        //turn tick for base to progres recruitment
                         blueBase.turn();
+                        //check for dead units and delete them
                         redUnits.erase(std::remove_if(redUnits.begin(), redUnits.end(), [](Unit &unit)
                                                       { return unit.getHp() <= 0; }),
                                        redUnits.end());
                         for (size_t i = 0; i < blueUnits.size(); i++)
                         {
+                                //turn tik for units, reset mostly happens via reopening player.exe but it works for gold production.
                                 blueUnits[i].turn();
                         }
-
+                        //check for dead base and break the loop if so
                         if (redBase.getHp() <= 0)
                         {
                                 std::cout << "Red Base destroyed. " << redBase.getHp() << std::endl;
